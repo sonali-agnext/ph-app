@@ -87,3 +87,12 @@ Route::post('/update-scheme','Admin\SettingController@updateScheme')->name('upda
 Route::post('/delete-scheme','Admin\SettingController@deleteScheme')->name('delete-scheme');
 Route::get('/add-scheme','Admin\SettingController@addScheme')->name('add-scheme');
 Route::post('/add-scheme','Admin\SettingController@createScheme')->name('add-scheme');
+
+//manage farmer
+
+Route::get('/manage-farmer','Admin\FarmerController@manageFarmers')->name('manage-farmer');
+Route::get('/add-farmer','Admin\FarmerController@addFarmer')->name('add-farmer');
+Route::post('/add-farmer','Admin\FarmerController@createFarmer')->name('add-farmer');
+Route::get('/edit-farmer','Admin\FarmerController@editFarmer')->name('edit-farmer');
+Route::post('/update-farmer','Admin\FarmerController@updateFarmer')->name('update-farmer');
+Route::post('/delete-farmer','Admin\FarmerController@deleteFarmer')->name('delete-farmer');

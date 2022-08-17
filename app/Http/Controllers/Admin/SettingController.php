@@ -12,6 +12,7 @@ use App\Models\City;
 use App\Models\SchemeCategory;
 use App\Models\SchemeSubCategory;
 use App\Models\Scheme;
+use App\Models\Farmer;
 use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
@@ -440,12 +441,46 @@ class SettingController extends Controller
 
     public function updateScheme(Request $request){
         $id = $request->id;
-        $scheme = Scheme::where('id',$id)->update(['scheme_subcategory_id'=> $request->scheme_subcategory_id,'scheme_name'=> $request->scheme_name]);
-        if($scheme){
-            return back()->with('success','Scheme updated successfully!');
+        if($request->hasFile('scheme_image')){
+            $filename = $request->scheme_image->getClientOriginalName();
+            $request->scheme_image->storeAs('scheme-images',$filename,'public');
+            $scheme = Scheme::where('id',$id)->update([
+                'scheme_subcategory_id' => $request->scheme_subcategory_id,
+                'scheme_name' => $request->scheme_name,
+                'subsidy' => $request->subsidy,
+                'sector' => json_encode($request->sector),
+                'sector_description' => json_encode($request->sector_description),
+                'terms' => json_encode($request->terms),
+                'cost_norms' => $request->cost_norms,
+                'detailed_description' => $request->detailed_description,
+                'scheme_image' => $filename,
+                'videos' => json_encode($request->video),
+                'videos_title' => json_encode($request->title),
+            ]);
+            if($scheme){
+                return back()->with('success','Schemes created successfully!');
+            }else{
+                return back()->with('error','Something Went Wrong!');
+            }
         }else{
-            return back()->with('error','Something Went Wrong!');
-        }        
+            $scheme = Scheme::where('id',$id)->update([
+                'scheme_subcategory_id' => $request->scheme_subcategory_id,
+                'scheme_name' => $request->scheme_name,
+                'subsidy' => $request->subsidy,
+                'sector' => json_encode($request->sector),
+                'sector_description' => json_encode($request->sector_description),
+                'terms' => json_encode($request->terms),
+                'cost_norms' => $request->cost_norms,
+                'detailed_description' => $request->detailed_description,
+                'videos' => json_encode($request->video),
+                'videos_title' => json_encode($request->title),
+            ]);
+            if($scheme){
+                return back()->with('success','Schemes created successfully!');
+            }else{
+                return back()->with('error','Something Went Wrong!');
+            }
+        }       
     }
 
     public function deleteScheme(Request $request){
@@ -474,12 +509,32 @@ class SettingController extends Controller
         if ($validator->fails()) {
             return back()->with('error','Scheme name should be unique and required!');
         }else{
-            $scheme = Scheme::create(['scheme_subcategory_id' => $request->scheme_subcategory_id,'scheme_name'=> $request->scheme_name,'subsidy'=>$request->subsidy]);
-            if($scheme){
-                return back()->with('success','Scheme Sub Category created successfully!');
+            if($request->hasFile('scheme_image')){
+                $filename = $request->scheme_image->getClientOriginalName();
+                $request->scheme_image->storeAs('scheme-images',$filename,'public');
+                $scheme = Scheme::create([
+                    'scheme_subcategory_id' => $request->scheme_subcategory_id,
+                    'scheme_name' => $request->scheme_name,
+                    'subsidy' => $request->subsidy,
+                    'sector' => json_encode($request->sector),
+                    'sector_description' => json_encode($request->sector_description),
+                    'terms' => json_encode($request->terms),
+                    'cost_norms' => $request->cost_norms,
+                    'detailed_description' => $request->detailed_description,
+                    'scheme_image' => $filename,
+                    'videos' => json_encode($request->video),
+                    'videos_title' => json_encode($request->title),
+                ]);
+                if($scheme){
+                    return back()->with('success','Schemes created successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                }
             }else{
                 return back()->with('error','Something Went Wrong!');
             }
+            
         }        
     }
+
 }

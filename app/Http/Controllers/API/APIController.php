@@ -16,6 +16,7 @@ use App\Models\Scheme;
 use App\Models\SchemeCategory;
 use App\Models\SchemeSubCategory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class APIController extends Controller
 {
@@ -159,7 +160,7 @@ class APIController extends Controller
         $user = Farmer::where('user_id', $id)->first();
         if($user){
                 return response()
-            ->json(['message' => 'User Information','data'=> $user], 201);
+            ->json(['message' => 'User Information','media_url'=>'storage/images/' ,'data'=> $user], 201);
         }else{
             return response()
             ->json(['message' => 'Something Went Wrong'], 401);
@@ -176,40 +177,23 @@ class APIController extends Controller
         $aadhar_no = $request->aadhar_no;
         $pan_no = $request->pan_no;
         $caste_category = $request->caste_category_id;
-        $state = $request->state;
-        $district_id = $request->district_id;
-        $tehsil_id = $request->tehsil_id;
-        $city_id = $request->city_id;
-        $full_address = $request->full_address;
-        $postal_code = $request->postal_code;
         $farmer_unique_id = '';
-        if(!empty($district_id) && !empty($tehsil_id)){ 
-            $district = District::findOrFail($district_id);
-            $tehsil = Tehsil::findOrFail($tehsil_id);
-            $district_two = substr($district->district_name, 0,2);
-            $tehsil_two = substr($tehsil->tehsil_name, 0,2);
-            $farmer_unique_id = 'PU'.$district_two.$tehsil_two;
-        }
         if(!empty($id)){
             if($request->hasFile('avatar')){
-                $filename = $request->avatar->getClientOriginalName();
+                $filename = time().$request->avatar->getClientOriginalName();
                 $request->avatar->storeAs('images',$filename,'public');
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code, 'avatar' => $filename]);
+                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no,'caste_category_id'=> $caste_category,'avatar' => $filename]);
             }else{
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
+                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category]);
             }            
         
             if(!empty($farmer_profile)){
                 $user = Farmer::where('user_id', $id)->first();
-                if(empty($user->farmer_unique_id)){ 
-                    $unique_id= $farmer_unique_id.str_pad($user->id, 6, '0', STR_PAD_LEFT);
-                    $farmer_unique_id = strtoupper($unique_id);
-                    $farmer_id = Farmer::where('user_id', $id)->update(['farmer_unique_id' => $farmer_unique_id]);
-                }else{
+                if(!empty($user->farmer_unique_id)){ 
                     $farmer_unique_id = $user->farmer_unique_id;
                 }
                 return response()
-                ->json(['message' => 'Profile Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
+                ->json(['message' => 'Profile Updated Successfully','media_url'=>'storage/images/' ,'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
             }else{
                 return response()
                 ->json(['message' => 'Something Went Wrong'], 401);
@@ -223,14 +207,6 @@ class APIController extends Controller
 
     public function AddressUpdate(Request $request){
         $id = $request->user_id;
-        $applicant_type_id = $request->applicant_type_id;
-        $applicant_name = $request->applicant_name;
-        $father_husband_name = $request->father_husband_name;
-        $gender = $request->gender;
-        $resident = $request->resident;
-        $aadhar_no = $request->aadhar_no;
-        $pan_no = $request->pan_no;
-        $caste_category = $request->caste_category_id;
         $state = $request->state;
         $district_id = $request->district_id;
         $tehsil_id = $request->tehsil_id;
@@ -246,25 +222,16 @@ class APIController extends Controller
             $farmer_unique_id = 'PU'.$district_two.$tehsil_two;
         }
         if(!empty($id)){
-            if($request->hasFile('avatar')){
-                $filename = $request->avatar->getClientOriginalName();
-                $request->avatar->storeAs('images',$filename,'public');
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code, 'avatar' => $filename]);
-            }else{
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
-            }            
+            $farmer_profile = Farmer::where('user_id', $id)->update(['state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
+          
         
             if(!empty($farmer_profile)){
                 $user = Farmer::where('user_id', $id)->first();
-                if(empty($user->farmer_unique_id)){ 
-                    $unique_id= $farmer_unique_id.str_pad($user->id, 6, '0', STR_PAD_LEFT);
-                    $farmer_unique_id = strtoupper($unique_id);
-                    $farmer_id = Farmer::where('user_id', $id)->update(['farmer_unique_id' => $farmer_unique_id]);
-                }else{
+                if(!empty($user->farmer_unique_id)){ 
                     $farmer_unique_id = $user->farmer_unique_id;
                 }
                 return response()
-                ->json(['message' => 'Profile Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
+                ->json(['message' => 'Address Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
             }else{
                 return response()
                 ->json(['message' => 'Something Went Wrong'], 401);
@@ -293,6 +260,7 @@ class APIController extends Controller
         $full_address = $request->full_address;
         $postal_code = $request->postal_code;
         $farmer_unique_id = '';
+        Log::debug(json_encode($request));
         if(!empty($district_id) && !empty($tehsil_id)){ 
             $district = District::findOrFail($district_id);
             $tehsil = Tehsil::findOrFail($tehsil_id);
@@ -302,7 +270,7 @@ class APIController extends Controller
         }
         if(!empty($id)){
             if($request->hasFile('avatar')){
-                $filename = $request->avatar->getClientOriginalName();
+                $filename = time().$request->avatar->getClientOriginalName();
                 $request->avatar->storeAs('images',$filename,'public');
                 $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code, 'avatar' => $filename]);
             }else{
@@ -319,7 +287,7 @@ class APIController extends Controller
                     $farmer_unique_id = $user->farmer_unique_id;
                 }
                 return response()
-                ->json(['message' => 'Profile Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
+                ->json(['message' => 'Profile Updated Successfully', 'media_url'=>'storage/images/', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
             }else{
                 return response()
                 ->json(['message' => 'Something Went Wrong'], 401);
@@ -377,6 +345,9 @@ class APIController extends Controller
                             foreach($schemes as $ckey => $scheme){
                                 $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
                                 $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = $scheme->terms;
                             }
                         }
                     }

@@ -28,5 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/language-update', [APIController::class, 'languageUpdate']);
     Route::get('/schemes', [APIController::class, 'fetchSchemes']);
     Route::get('/fetch-profile', [APIController::class, 'fetchProfile']);
+    Route::post('/profile-personal', [APIController::class, 'personalInfoUpdate']);
+    Route::post('/profile-address', [APIController::class, 'AddressUpdate']);
 });
 // Route::post('/register', [API/APIController::class, 'register']);

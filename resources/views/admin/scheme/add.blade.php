@@ -32,7 +32,6 @@
 
 <section class="section dashboard">
     <div class="row">
-
         <!-- Left side columns -->
         <div class="col-lg-12">  
              <div class="card">
@@ -52,7 +51,7 @@
                         </div>
                         @endif
                             <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST" action="{{ route('add-scheme') }}">
+                            <form class="row g-3" method="POST" enctype="multipart/form-data" action="{{ route('add-scheme') }}">
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-floating mb-3">
@@ -78,9 +77,9 @@
                                         <label for="subsidy">Subsidy Range</label>
                                     </div>
                                 </div>
-
+                                <hr />
                                 <div class="row" style="align-items: center;">
-                                    <div class="col-md-12 pt-3 mb-2">
+                                    <div class="col-md-12 mb-2">
                                         <p>Subsidy Sector</p>
                                     </div>
                                     <div class="col-md-10 sector-field mb-1" id="sector-field-1">
@@ -101,13 +100,40 @@
                                     </div>
                                     <div class="col-md-2 mt-30 append-buttons">
                                         <div class="clearfix">
-                                        <button type="button" id="add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
+                                        <button type="button" id="add-sector-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
                                         </button>
-                                        <button type="button" id="remove-button" class="btn btn-secondary float-left text-uppercase ml-1" disabled="disabled"><i class="bi bi-dash"></i>
+                                        <button type="button" id="remove-sector-button" class="btn btn-secondary float-left text-uppercase ml-1" disabled="disabled"><i class="bi bi-dash"></i>
                                         </button>
                                         </div>
                                     </div>
                                 </div>
+
+                                <hr />
+
+                                <div class="row" style="align-items: center;">
+                                    <div class="col-md-12 mb-2">
+                                        <p>Terms</p>
+                                    </div>
+                                    <div class="col-md-10 terms-field mb-1" id="terms-field-1">
+                                        <div class="row" >
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <input type="text" name="terms[]" required class="form-control" id="terms" placeholder="Enter Terms" value="">
+                                                    <label for="terms">Title</label>
+                                                </div>
+                                            </div>                                              
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mt-30 append-buttons">
+                                        <div class="clearfix">
+                                        <button type="button" id="add-terms-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
+                                        </button>
+                                        <button type="button" id="remove-terms-button" class="btn btn-secondary float-left text-uppercase ml-1" disabled="disabled"><i class="bi bi-dash"></i>
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
 
                                 <div class="col-md-12">
                                     <div class="form-floating">
@@ -138,8 +164,8 @@
                                         <div class="row" >
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="file" name="video[]" required class="form-control" id="video" placeholder="Enter Cost Norms" value="">
-                                                        <label for="video">Upload Video</label>
+                                                        <input type="url" name="video[]" required class="form-control" id="video" placeholder="Enter Cost Norms" value="">
+                                                        <label for="video">Video URL</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -187,7 +213,7 @@
         var className = ".video-field";
         var count = 0;
         var field = "";
-        var maxFields =50;
+        var maxFields=5;
 
         function totalFields() {
             return $(className).length;
@@ -195,7 +221,7 @@
 
         function addNewField() {
             count = totalFields() + 1;
-            field = $("#video-field").clone();
+            field = $("#video-field-1").clone();
             field.attr("id", "video-field-" + count);
             field.children("label").text("Field " + count);
             field.find("input").val("");
@@ -247,6 +273,141 @@
             disableButtonRemove();
             enableButtonAdd();
         });
+
+        // sector
+        var buttonSectorAdd = $("#add-sector-button");
+        var buttonSectorRemove = $("#remove-sector-button");
+        var classNameSector = ".sector-field";
+        var countSector = 0;
+        var fieldSector = "";
+        var maxFieldsSector=5;
+
+        function totalSectorFields() {
+            return $(classNameSector).length;
+        }
+
+        function addNewSectorField() {
+            countSector = totalFields() + 1;
+            fieldSector = $("#sector-field-1").clone();
+            fieldSector.attr("id", "sector-field-" + countSector);
+            fieldSector.children("label").text("Field " + countSector);
+            fieldSector.find("input").val("");
+            $(classNameSector + ":last").after($(fieldSector));
+        }
+
+        function removeLastSectorField() {
+            if (totalSectorFields() > 1) {
+            $(classNameSector + ":last").remove();
+            }
+        }
+
+        function enableButtonSectorRemove() {
+            if (totalSectorFields() === 2) {
+                buttonSectorRemove.removeAttr("disabled");
+                buttonSectorRemove.addClass("shadow-sm");
+            }
+        }
+
+        function disableButtonSectorRemove() {
+            if (totalSectorFields() === 1) {
+                buttonSectorRemove.attr("disabled", "disabled");
+                buttonSectorRemove.removeClass("shadow-sm");
+            }
+        }
+
+        function disableButtonSectorAdd() {
+            if (totalSectorFields() === maxFieldsSector) {
+                buttonSectorAdd.attr("disabled", "disabled");
+                buttonSectorAdd.removeClass("shadow-sm");
+            }
+        }
+
+        function enableButtonSectorAdd() {
+            if (totalSectorFields() === (maxFieldsSector - 1)) {
+                buttonSectorAdd.removeAttr("disabled");
+                buttonSectorAdd.addClass("shadow-sm");
+            }
+        }
+
+        buttonSectorAdd.click(function() {
+            addNewSectorField();
+            enableButtonSectorRemove();
+            disableButtonSectorAdd();
+        });
+
+        buttonSectorRemove.click(function() {
+            removeLastSectorField();
+            disableButtonSectorRemove();
+            enableButtonSectorAdd();
+        });
+
+        //terms
+        var buttonAddTerms = $("#add-terms-button");
+        var buttonRemoveTerms = $("#remove-terms-button");
+        var classNameTerms = ".terms-field";
+        var countTerms = 0;
+        var fieldTerms = "";
+        var maxFieldsTerms=5;
+
+        function totalTermsFields() {
+            return $(classNameTerms).length;
+        }
+
+        function addNewTermsField() {
+            countTerms = totalTermsFields() + 1;
+            fieldTerms = $("#terms-field-1").clone();
+            fieldTerms.attr("id", "terms-field-" + countTerms);
+            fieldTerms.children("label").text("Field " + countTerms);
+            fieldTerms.find("input").val("");
+            $(classNameTerms + ":last").after($(fieldTerms));
+        }
+
+        function removeLastTermsField() {
+            if (totalTermsFields() > 1) {
+            $(classNameTerms + ":last").remove();
+            }
+        }
+
+        function enableButtonTermsRemove() {
+            if (totalTermsFields() === 2) {
+                buttonRemoveTerms.removeAttr("disabled");
+                buttonRemoveTerms.addClass("shadow-sm");
+            }
+        }
+
+        function disableButtonTermsRemove() {
+            if (totalTermsFields() === 1) {
+                buttonRemoveTerms.attr("disabled", "disabled");
+                buttonRemoveTerms.removeClass("shadow-sm");
+            }
+        }
+
+        function disableButtonTermsAdd() {
+            if (totalTermsFields() === maxFieldsTerms) {
+                buttonAddTerms.attr("disabled", "disabled");
+                buttonAddTerms.removeClass("shadow-sm");
+            }
+        }
+
+        function enableButtonTermsAdd() {
+            if (totalTermsFields() === (maxFieldsTerms - 1)) {
+                buttonAddTerms.removeAttr("disabled");
+                buttonAddTerms.addClass("shadow-sm");
+            }
+        }
+
+        buttonAddTerms.click(function() {
+            addNewTermsField();
+            enableButtonTermsRemove();
+            disableButtonTermsAdd();
+        });
+
+        buttonRemoveTerms.click(function() {
+            removeLastTermsField();
+            disableButtonTermsRemove();
+            enableButtonTermsAdd();
+        });
+
     });
 </script>
 @endpush

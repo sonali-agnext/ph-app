@@ -16,7 +16,7 @@
         </a>
         <ul id="farmers-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="#">
+            <a href="{{route('manage-farmer')}}">
               <i class="bi bi-circle"></i><span>List Farmers</span>
             </a>
           </li>
