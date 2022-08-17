@@ -31,80 +31,104 @@ class APIController extends Controller
     }
 
     public function alreadyExists(Request $request){
-        $mobile_number = $request->mobile_number;
-        $userFound = User::where('name', $mobile_number)->first();
-        if(empty($userFound)){
+        try{
+            $mobile_number = $request->mobile_number;
+            $userFound = User::where('name', $mobile_number)->first();
+            if(empty($userFound)){
+                return response()
+                    ->json(['message' => ''], 200);
+            }else{
+                return response()
+                    ->json(['message' => 'Mobile Number Already Exists!'], 401);
+            }
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => ''], 201);
-        }else{
-            return response()
-                ->json(['message' => 'Mobile Number Already Exists!'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
     }
 
     public function register(Request $request){
-        $mobile_number = $request->mobile_number;
-        $language = $request->language;
-        $role_id = 2;
+        try{
+            $mobile_number = $request->mobile_number;
+            $language = $request->language;
+            $role_id = 2;
 
-        $userFound = User::where('name', $mobile_number)->first();
-        
-        if(empty($userFound)){
-            $user = new User;
-            $user->name = $mobile_number;
-            $user->email = $mobile_number.'@gmail.com';
-            $user->password = Hash::make('phApp@abc');
-            $user->role_id = $role_id;
-            if($user->save()){
-                $farmer = new Farmer;
-                $farmer->mobile_number = $mobile_number;
-                $farmer->language = $language;
-                $farmer->user_id = $user->id;
-                $farmer->save();
-                return response()
-                ->json(['message' => 'Registered Successfully!!','token' => $user->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $user->id], 201);
+            $userFound = User::where('name', $mobile_number)->first();
+            
+            if(empty($userFound)){
+                $user = new User;
+                $user->name = $mobile_number;
+                $user->email = $mobile_number.'@gmail.com';
+                $user->password = Hash::make('phApp@abc');
+                $user->role_id = $role_id;
+                if($user->save()){
+                    $farmer = new Farmer;
+                    $farmer->mobile_number = $mobile_number;
+                    $farmer->language = $language;
+                    $farmer->user_id = $user->id;
+                    $farmer->save();
+                    return response()
+                    ->json(['message' => 'Registered Successfully!!','token' => $user->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $user->id], 200);
+                }else{
+                    return response()
+                    ->json(['message' => 'Something Went Wrong'], 401);
+                }
             }else{
                 return response()
-                ->json(['message' => 'Something Went Wrong'], 401);
+                    ->json(['message' => 'Mobile Number Already Exists!'], 401);
             }
-        }else{
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => 'Mobile Number Already Exists!'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
     }
 
     public function login(Request $request){
-        $mobile_number = $request->mobile_number;
-        $userFound = User::where('name', $mobile_number)->first();
-        if($userFound){
-            $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
+        try{
+            $mobile_number = $request->mobile_number;
+            $userFound = User::where('name', $mobile_number)->first();
+            if($userFound){
+                $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
+                return response()
+                ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
+            }else{
+                return response()
+                ->json(['message' => 'Something Went Wrong'], 401);
+            }
+        }catch (\Exception $e) {
             return response()
-            ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 201);
-        }else{
-            return response()
-            ->json(['message' => 'Something Went Wrong'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
     }
 
     public function logout(Request $request){
-        $bearer = $request->token;
-        [$id, $token] = explode('|', $bearer, 2);
-        $accessToken = PersonalAccessToken::where('id', $id)->delete();
-        if($accessToken){
+        try{
+            $bearer = $request->token;
+            [$id, $token] = explode('|', $bearer, 2);
+            $accessToken = PersonalAccessToken::where('id', $id)->delete();
+            if($accessToken){
+                return response()
+                    ->json(['message' => 'Logout Successfully'], 200);
+            }else{
+                return response()
+                ->json(['message' => 'Something Went Wrong'], 401);
+            }
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => 'Logout Successfully'], 201);
-        }else{
-            return response()
-            ->json(['message' => 'Something Went Wrong'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
     }
 
     public function district(Request $request){ 
-        $district_data = $this->fetchDistrict();  
+        try{
+            $district_data = $this->fetchDistrict();  
 
             return response()
-            ->json(['message' => 'District, Tehsil and Village/City', 'data' => $district_data], 201);
-
+            ->json(['message' => 'District, Tehsil and Village/City', 'data' => $district_data], 200);
+        }catch (\Exception $e) {
+            return response()
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+        }
     }
 
     public function fetchDistrict(){
@@ -141,189 +165,217 @@ class APIController extends Controller
         $applicants = ApplicantType::select('id','applicant_type_name')->get();
         return $applicants;
         // return response()
-        //     ->json(['message' => 'Applicant Type', 'data' => $applicants], 201);
+        //     ->json(['message' => 'Applicant Type', 'data' => $applicants], 200);
     }
 
     public function CasteCategory(){
         $castes = CasteCategory::select('id','caste_name')->get();
         return $castes;
         // return response()
-        //     ->json(['message' => 'Caste Category', 'data' => $castes], 201);
+        //     ->json(['message' => 'Caste Category', 'data' => $castes], 200);
     }
 
-    public function fetchProfile(Request $request){        
-        $id = $request->user_id;
-        if(empty($id)){
-            return response()
-            ->json(['message' => 'Provide User ID'], 401);
-        }
-        $user = Farmer::where('user_id', $id)->first();
-        if($user){
+    public function fetchProfile(Request $request){
+        try{        
+            $id = $request->user_id;
+            
+            if(empty($id)){
                 return response()
-            ->json(['message' => 'User Information','media_url'=>'storage/images/' ,'data'=> $user], 201);
-        }else{
-            return response()
-            ->json(['message' => 'Something Went Wrong'], 401);
-        }
-    }
-
-    public function personalInfoUpdate(Request $request){
-        $id = $request->user_id;
-        $applicant_type_id = $request->applicant_type_id;
-        $applicant_name = $request->applicant_name;
-        $father_husband_name = $request->father_husband_name;
-        $gender = $request->gender;
-        $resident = $request->resident;
-        $aadhar_no = $request->aadhar_no;
-        $pan_no = $request->pan_no;
-        $caste_category = $request->caste_category_id;
-        $farmer_unique_id = '';
-        if(!empty($id)){
-            if($request->hasFile('avatar')){
-                $filename = time().$request->avatar->getClientOriginalName();
-                $request->avatar->storeAs('images',$filename,'public');
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no,'caste_category_id'=> $caste_category,'avatar' => $filename]);
-            }else{
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category]);
-            }            
-        
-            if(!empty($farmer_profile)){
-                $user = Farmer::where('user_id', $id)->first();
-                if(!empty($user->farmer_unique_id)){ 
-                    $farmer_unique_id = $user->farmer_unique_id;
-                }
-                return response()
-                ->json(['message' => 'Profile Updated Successfully','media_url'=>'storage/images/' ,'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
+                ->json(['message' => 'Provide User ID'], 401);
+            }
+            $user = Farmer::where('user_id', $id)->first();
+            if($user){
+                    return response()
+                ->json(['message' => 'User Information','media_url'=>'storage/images/' ,'data'=> $user], 200);
             }else{
                 return response()
                 ->json(['message' => 'Something Went Wrong'], 401);
             }
-        }else{
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => 'Please provide User ID'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+        }
+    }
+
+    public function personalInfoUpdate(Request $request){
+        try{
+            $id = $request->user_id;
+            $applicant_type_id = $request->applicant_type_id;
+            $applicant_name = $request->applicant_name;
+            $father_husband_name = $request->father_husband_name;
+            $gender = $request->gender;
+            $resident = $request->resident;
+            $aadhar_no = $request->aadhar_no;
+            $pan_no = $request->pan_no;
+            $caste_category = $request->caste_category_id;
+            $farmer_unique_id = '';
+            if(!empty($id)){
+                if($request->hasFile('avatar')){
+                    $filename = time().$request->avatar->getClientOriginalName();
+                    $request->avatar->storeAs('images',$filename,'public');
+                    $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no,'caste_category_id'=> $caste_category,'avatar' => $filename]);
+                }else{
+                    $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category]);
+                }            
+            
+                if(!empty($farmer_profile)){
+                    $user = Farmer::where('user_id', $id)->first();
+                    if(!empty($user->farmer_unique_id)){ 
+                        $farmer_unique_id = $user->farmer_unique_id;
+                    }
+                    return response()
+                    ->json(['message' => 'Profile Updated Successfully','media_url'=>'storage/images/' ,'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 200);
+                }else{
+                    return response()
+                    ->json(['message' => 'Something Went Wrong'], 401);
+                }
+            }else{
+                return response()
+                    ->json(['message' => 'Please provide User ID'], 401);
+            }
+        }catch (\Exception $e) {
+            return response()
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
         
     }
 
     public function AddressUpdate(Request $request){
-        $id = $request->user_id;
-        $state = $request->state;
-        $district_id = $request->district_id;
-        $tehsil_id = $request->tehsil_id;
-        $city_id = $request->city_id;
-        $full_address = $request->full_address;
-        $postal_code = $request->postal_code;
-        $farmer_unique_id = '';
-        if(!empty($district_id) && !empty($tehsil_id)){ 
-            $district = District::findOrFail($district_id);
-            $tehsil = Tehsil::findOrFail($tehsil_id);
-            $district_two = substr($district->district_name, 0,2);
-            $tehsil_two = substr($tehsil->tehsil_name, 0,2);
-            $farmer_unique_id = 'PU'.$district_two.$tehsil_two;
-        }
-        if(!empty($id)){
-            $farmer_profile = Farmer::where('user_id', $id)->update(['state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
-          
-        
-            if(!empty($farmer_profile)){
-                $user = Farmer::where('user_id', $id)->first();
-                if(!empty($user->farmer_unique_id)){ 
-                    $farmer_unique_id = $user->farmer_unique_id;
+        try{
+            $id = $request->user_id;
+            $state = $request->state;
+            $district_id = $request->district_id;
+            $tehsil_id = $request->tehsil_id;
+            $city_id = $request->city_id;
+            $full_address = $request->full_address;
+            $postal_code = $request->postal_code;
+            $farmer_unique_id = '';
+            if(!empty($district_id) && !empty($tehsil_id)){ 
+                $district = District::findOrFail($district_id);
+                $tehsil = Tehsil::findOrFail($tehsil_id);
+                $district_two = substr($district->district_name, 0,2);
+                $tehsil_two = substr($tehsil->tehsil_name, 0,2);
+                $farmer_unique_id = 'PU'.$district_two.$tehsil_two;
+            }
+            if(!empty($id)){
+                $farmer_profile = Farmer::where('user_id', $id)->update(['state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
+            
+            
+                if(!empty($farmer_profile)){
+                    $user = Farmer::where('user_id', $id)->first();
+                    if(!empty($user->farmer_unique_id)){ 
+                        $farmer_unique_id = $user->farmer_unique_id;
+                    }
+                    return response()
+                    ->json(['message' => 'Address Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 200);
+                }else{
+                    return response()
+                    ->json(['message' => 'Something Went Wrong'], 401);
                 }
-                return response()
-                ->json(['message' => 'Address Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
             }else{
                 return response()
-                ->json(['message' => 'Something Went Wrong'], 401);
+                    ->json(['message' => 'Please provide User ID'], 401);
             }
-        }else{
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => 'Please provide User ID'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
-        
     }
 
     public function profileUpdate(Request $request){
-        $id = $request->user_id;
-        $applicant_type_id = $request->applicant_type_id;
-        $applicant_name = $request->applicant_name;
-        $father_husband_name = $request->father_husband_name;
-        $gender = $request->gender;
-        $resident = $request->resident;
-        $aadhar_no = $request->aadhar_no;
-        $pan_no = $request->pan_no;
-        $caste_category = $request->caste_category_id;
-        $state = $request->state;
-        $district_id = $request->district_id;
-        $tehsil_id = $request->tehsil_id;
-        $city_id = $request->city_id;
-        $full_address = $request->full_address;
-        $postal_code = $request->postal_code;
-        $farmer_unique_id = '';
-        Log::debug(json_encode($request));
-        if(!empty($district_id) && !empty($tehsil_id)){ 
-            $district = District::findOrFail($district_id);
-            $tehsil = Tehsil::findOrFail($tehsil_id);
-            $district_two = substr($district->district_name, 0,2);
-            $tehsil_two = substr($tehsil->tehsil_name, 0,2);
-            $farmer_unique_id = 'PU'.$district_two.$tehsil_two;
-        }
-        if(!empty($id)){
-            if($request->hasFile('avatar')){
-                $filename = time().$request->avatar->getClientOriginalName();
-                $request->avatar->storeAs('images',$filename,'public');
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code, 'avatar' => $filename]);
-            }else{
-                $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
-            }            
-        
-            if(!empty($farmer_profile)){
-                $user = Farmer::where('user_id', $id)->first();
-                if(empty($user->farmer_unique_id)){ 
-                    $unique_id= $farmer_unique_id.str_pad($user->id, 6, '0', STR_PAD_LEFT);
-                    $farmer_unique_id = strtoupper($unique_id);
-                    $farmer_id = Farmer::where('user_id', $id)->update(['farmer_unique_id' => $farmer_unique_id]);
-                }else{
-                    $farmer_unique_id = $user->farmer_unique_id;
-                }
-                return response()
-                ->json(['message' => 'Profile Updated Successfully', 'media_url'=>'storage/images/', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 201);
-            }else{
-                return response()
-                ->json(['message' => 'Something Went Wrong'], 401);
+        try{
+            $id = $request->user_id;
+            $applicant_type_id = $request->applicant_type_id;
+            $applicant_name = $request->applicant_name;
+            $father_husband_name = $request->father_husband_name;
+            $gender = $request->gender;
+            $resident = $request->resident;
+            $aadhar_no = $request->aadhar_no;
+            $pan_no = $request->pan_no;
+            $caste_category = $request->caste_category_id;
+            $state = $request->state;
+            $district_id = $request->district_id;
+            $tehsil_id = $request->tehsil_id;
+            $city_id = $request->city_id;
+            $full_address = $request->full_address;
+            $postal_code = $request->postal_code;
+            $farmer_unique_id = '';
+            Log::debug(json_encode($request));
+            if(!empty($district_id) && !empty($tehsil_id)){ 
+                $district = District::findOrFail($district_id);
+                $tehsil = Tehsil::findOrFail($tehsil_id);
+                $district_two = substr($district->district_name, 0,2);
+                $tehsil_two = substr($tehsil->tehsil_name, 0,2);
+                $farmer_unique_id = 'PU'.$district_two.$tehsil_two;
             }
-        }else{
+            if(!empty($id)){
+                if($request->hasFile('avatar')){
+                    $filename = time().$request->avatar->getClientOriginalName();
+                    $request->avatar->storeAs('images',$filename,'public');
+                    $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code, 'avatar' => $filename]);
+                }else{
+                    $farmer_profile = Farmer::where('user_id', $id)->update(['applicant_type_id' => $applicant_type_id,'name'=> $applicant_name, 'father_husband_name' => $father_husband_name, 'gender' => $gender, 'resident' => $resident, 'aadhar_number'=> $aadhar_no, 'pan_number'=> $pan_no, 'caste_category_id'=> $caste_category, 'state'=> $state, 'district_id' => $district_id, 'tehsil_id' => $tehsil_id, 'city_id' => $city_id, 'full_address'=> $full_address, 'pin_code'=> $postal_code]);
+                }            
+            
+                if(!empty($farmer_profile)){
+                    $user = Farmer::where('user_id', $id)->first();
+                    if(empty($user->farmer_unique_id)){ 
+                        $unique_id= $farmer_unique_id.str_pad($user->id, 6, '0', STR_PAD_LEFT);
+                        $farmer_unique_id = strtoupper($unique_id);
+                        $farmer_id = Farmer::where('user_id', $id)->update(['farmer_unique_id' => $farmer_unique_id]);
+                    }else{
+                        $farmer_unique_id = $user->farmer_unique_id;
+                    }
+                    return response()
+                    ->json(['message' => 'Profile Updated Successfully', 'media_url'=>'storage/images/', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 200);
+                }else{
+                    return response()
+                    ->json(['message' => 'Something Went Wrong'], 401);
+                }
+            }else{
+                return response()
+                    ->json(['message' => 'Please provide User ID'], 401);
+            }
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => 'Please provide User ID'], 401);
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
         }
-        
     }
 
     public function languageUpdate(Request $request){
-        $id = $request->user_id;        
-        $language = $request->language;
-        if(!empty($id)){
-            $farmer_profile = Farmer::where('user_id', $id)->update(['language' => $language]);
-        
-            if(!empty($farmer_profile)){
-                return response()
-                ->json(['message' => 'Language Updated Successfully'], 201);
+        try{
+            $id = $request->user_id;        
+            $language = $request->language;
+            if(!empty($id)){
+                $farmer_profile = Farmer::where('user_id', $id)->update(['language' => $language]);
+            
+                if(!empty($farmer_profile)){
+                    return response()
+                    ->json(['message' => 'Language Updated Successfully'], 200);
+                }else{
+                    return response()
+                    ->json(['message' => 'Something Went Wrong'], 401);
+                }
             }else{
                 return response()
-                ->json(['message' => 'Something Went Wrong'], 401);
+                    ->json(['message' => 'Please provide User ID'], 401);
             }
-        }else{
+        }catch (\Exception $e) {
             return response()
-                ->json(['message' => 'Please provide User ID'], 401);
+                    ->json(['message' => 'Something Went Wrong!'], 401);
         }
-        
     }
 
     public function fetchSchemes(Request $request){
-        $schemes_data = $this->fetchSubSchemes();  
+        try{
+            $schemes_data = $this->fetchSubSchemes();  
 
             return response()
-            ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'data' => $schemes_data], 201);
+            ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'data' => $schemes_data], 200);
+        }catch (\Exception $e) {
+            return response()
+                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+        }
     }
 
     public function fetchSubSchemes(){
