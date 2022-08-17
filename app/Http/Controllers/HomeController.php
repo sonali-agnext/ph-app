@@ -23,6 +23,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if(auth()->user()->role_id == 1){
+            return view('home');
+        }else{
+            // abort(403);
+        }
+        
     }
 }

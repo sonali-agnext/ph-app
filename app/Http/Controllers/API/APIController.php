@@ -48,7 +48,7 @@ class APIController extends Controller
     }
 
     public function register(Request $request){
-        try{
+
             $mobile_number = $request->mobile_number;
             $language = $request->language;
             $role_id = 2;
@@ -64,7 +64,23 @@ class APIController extends Controller
                 if($user->save()){
                     $farmer = new Farmer;
                     $farmer->mobile_number = $mobile_number;
+                    $farmer->applicant_type_id=1;
                     $farmer->language = $language;
+                    $farmer->name = 'null';
+                    $farmer->father_husband_name = 'null';
+                    $farmer->gender = 'null';
+                    $farmer->resident = 'null';
+                    $farmer->aadhar_number = 'null';
+                    $farmer->pan_number = 'null';
+                    $farmer->caste_category_id = 1;
+                    $farmer->state = 'null';
+                    $farmer->district_id = 1;
+                    $farmer->tehsil_id = 1;
+                    $farmer->city_id = 1;
+                    $farmer->farmer_unique_id = 'null';
+                    $farmer->full_address = 'null';
+                    $farmer->pin_code ='null';
+                    $farmer->avatar ='null';
                     $farmer->user_id = $user->id;
                     $farmer->save();
                     return response()
@@ -77,10 +93,6 @@ class APIController extends Controller
                 return response()
                     ->json(['message' => 'Mobile Number Already Exists!'], 401);
             }
-        }catch (\Exception $e) {
-            return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
-        }
     }
 
     public function login(Request $request){
@@ -263,8 +275,11 @@ class APIController extends Controller
             
                 if(!empty($farmer_profile)){
                     $user = Farmer::where('user_id', $id)->first();
-                    if(!empty($user->farmer_unique_id)){ 
-                        $farmer_unique_id = $user->farmer_unique_id;
+                    if(!empty($user->farmer_unique_id)){
+                        if($user->farmer_unique_id == 'null') {
+                            $farmer_un_id = Farmer::where('user_id', $id)->update(['farmer_unique_id'=> $farmer_unique_id]);
+                        }else{
+                        $farmer_unique_id = $user->farmer_unique_id;}
                     }
                     return response()
                     ->json(['message' => 'Address Updated Successfully', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 200);
@@ -324,7 +339,13 @@ class APIController extends Controller
                         $farmer_unique_id = strtoupper($unique_id);
                         $farmer_id = Farmer::where('user_id', $id)->update(['farmer_unique_id' => $farmer_unique_id]);
                     }else{
-                        $farmer_unique_id = $user->farmer_unique_id;
+                        if($user->farmer_unique_id == 'null') {
+                                $unique_id= $farmer_unique_id.str_pad($user->id, 6, '0', STR_PAD_LEFT);
+                                $farmer_unique_id = strtoupper($unique_id);
+                                $farmer_id = Farmer::where('user_id', $id)->update(['farmer_unique_id' => $farmer_unique_id]);
+                        }else{
+                            $farmer_unique_id = $user->farmer_unique_id;
+                        }
                     }
                     return response()
                     ->json(['message' => 'Profile Updated Successfully', 'media_url'=>'storage/images/', 'farmer_unique_id' => $farmer_unique_id,'data'=> $user], 200);
