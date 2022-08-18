@@ -96,3 +96,7 @@ Route::post('/add-farmer','Admin\FarmerController@createFarmer')->name('add-farm
 Route::get('/edit-farmer','Admin\FarmerController@editFarmer')->name('edit-farmer');
 Route::post('/update-farmer','Admin\FarmerController@updateFarmer')->name('update-farmer');
 Route::post('/delete-farmer','Admin\FarmerController@deleteFarmer')->name('delete-farmer');
+
+//setting admin
+Route::get('/admin-profile','Admin\SettingController@viewAdminProfile')->name('admin-profile');
+Route::post('/admin-profile','Admin\SettingController@updateAdminProfile')->name('admin-profile');

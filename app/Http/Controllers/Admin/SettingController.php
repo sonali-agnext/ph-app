@@ -13,14 +13,51 @@ use App\Models\SchemeCategory;
 use App\Models\SchemeSubCategory;
 use App\Models\Scheme;
 use App\Models\Farmer;
+use App\Models\User;
+use App\Models\AdminProfile;
 use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
 {
+    // public function viewAdminProfile(Request $request){
+    //     return view('admin.caste.index');
+    // }
+    public function viewAdminProfile(Request $request){
+        return view('admin.profile.index');
+    }
+
+    public function updateAdminProfile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required'
+        ]);
+ 
+        if ($validator->fails()) {
+            return back()->with('error','Admin Name and email should be required!');
+        }else{
+            if($request->hasFile('avatar')){
+                
+                $filename = time().$request->avatar->getClientOriginalName();                
+                $request->avatar->storeAs('images/admin',$filename,'public');
+                $profile=AdminProfile::where('user_id', auth()->user()->id)->first();
+                if(empty($profile)){
+                    $update_profile = AdminProfile::create(['user_id' => auth()->user()->id,'avatar'=> $filename]);
+                }else{
+                    $update_profile = AdminProfile::where('user_id', auth()->user()->id)->update(['avatar'=> $filename]);
+                }                
+            }
+
+            $user = User::where('id', auth()->user()->id)->update(['name'=> $request->name, 'email' =>$request->email]);
+            if($user){
+                return back()->with('success','Profile updated successfully!');
+            }else{
+                return back()->with('error','Something went wrong!');
+            }
+        }
+    }
     //caste category
     public function manageCasteCategory(Request $request){
         $castes = CasteCategory::all();
-
         return view('admin.caste.index',['castes' => $castes]);
     }
 
@@ -442,7 +479,7 @@ class SettingController extends Controller
     public function updateScheme(Request $request){
         $id = $request->id;
         if($request->hasFile('scheme_image')){
-            $filename = $request->scheme_image->getClientOriginalName();
+            $filename = time().$request->scheme_image->getClientOriginalName();
             $request->scheme_image->storeAs('scheme-images',$filename,'public');
             $scheme = Scheme::where('id',$id)->update([
                 'scheme_subcategory_id' => $request->scheme_subcategory_id,
@@ -510,7 +547,7 @@ class SettingController extends Controller
             return back()->with('error','Scheme name should be unique and required!');
         }else{
             if($request->hasFile('scheme_image')){
-                $filename = $request->scheme_image->getClientOriginalName();
+                $filename = time().$request->scheme_image->getClientOriginalName();
                 $request->scheme_image->storeAs('scheme-images',$filename,'public');
                 $scheme = Scheme::create([
                     'scheme_subcategory_id' => $request->scheme_subcategory_id,

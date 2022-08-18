@@ -1,6 +1,6 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
-
+@php  $image = \App\Models\AdminProfile::where('user_id', Auth::user()->id)->first();  @endphp
 <div class="d-flex align-items-center justify-content-between">
   <a href="index.html" class="logo d-flex align-items-center">
     <img src="{{ asset('img/apple-icon-72x72.png')}}" alt="">
@@ -173,7 +173,16 @@
     <li class="nav-item dropdown pe-3">
 
       <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-        <img src="{{ asset('img/profile-img.jpg')}}" alt="Profile" class="rounded-circle">
+      @if(!empty($image->avatar))
+                        
+          @if(file_exists( public_path('storage/images/admin/'.$image->avatar)))
+            <img src="{{asset('storage/images/admin/'.$image->avatar)}}" alt="Profile" class="rounded-circle">
+          @else
+          @endif
+      @else
+        <img src="{{ asset('img/no-user.png')}}" alt="Profile" class="rounded-circle">
+      @endif
+      
         <span class="d-none d-md-block dropdown-toggle ps-2">{{Auth::user()->name}}</span>
       </a><!-- End Profile Iamge Icon -->
 
@@ -188,7 +197,7 @@
         </li>
 
         <li>
-          <a class="dropdown-item d-flex align-items-center" href="#">
+          <a class="dropdown-item d-flex align-items-center" href="{{route('admin-profile')}}">
             <i class="bi bi-person"></i>
             <span>My Profile</span>
           </a>

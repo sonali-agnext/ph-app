@@ -388,15 +388,15 @@ class APIController extends Controller
     }
 
     public function fetchSchemes(Request $request){
-        try{
+        // try{
             $schemes_data = $this->fetchSubSchemes();  
 
             return response()
             ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'data' => $schemes_data], 200);
-        }catch (\Exception $e) {
-            return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
-        }
+        // }catch (\Exception $e) {
+        //     return response()
+        //             ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+        // }
     }
 
     public function fetchSubSchemes(){
@@ -420,7 +420,33 @@ class APIController extends Controller
                                 $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                 $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
                                 $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = $scheme->terms;
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
+                                $all_videos = [];
+                                if(!empty($scheme->videos)){
+                                    $videos = json_decode($scheme->videos);
+                                    $video_titles = json_decode($scheme->videos_title);
+                                    
+                                    foreach($videos as $jsv => $video){
+                                        $all_videos[$jsv]['video'] = $video;
+                                        $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                                    }
+                                
+                                }
+                                $all_sector = [];
+                                if(!empty($scheme->sector)){
+                                    $sectors = json_decode($scheme->sector);
+                                    $sector_description = json_decode($scheme->sector_description);
+                                    
+                                    foreach($sectors as $jsd => $sector){
+                                        $all_sector[$jsd]['sector'] = $sector;
+                                        $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                                    }
+                                
+                                }
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['videos'] = $all_videos;
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
+                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['sectors'] = $all_sector;
                             }
                         }
                     }
