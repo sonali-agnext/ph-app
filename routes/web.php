@@ -98,5 +98,8 @@ Route::post('/update-farmer','Admin\FarmerController@updateFarmer')->name('updat
 Route::post('/delete-farmer','Admin\FarmerController@deleteFarmer')->name('delete-farmer');
 
 //setting admin
-Route::get('/admin-profile','Admin\SettingController@viewAdminProfile')->name('admin-profile');
-Route::post('/admin-profile','Admin\SettingController@updateAdminProfile')->name('admin-profile');
+Route::get('/admin-profile','Admin\AdminController@viewAdminProfile')->name('admin-profile');
+Route::post('/admin-profile','Admin\AdminController@updateAdminProfile')->name('admin-profile');
+Route::post('/change-password', 'Admin\AdminController@changePassword')->name('change-password');
+
+Route::get('/market', 'CronController@marketPrice');

@@ -15,6 +15,7 @@ use App\Models\PersonalAccessToken;
 use App\Models\Scheme;
 use App\Models\SchemeCategory;
 use App\Models\SchemeSubCategory;
+use App\Models\GovtScheme;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -392,7 +393,7 @@ class APIController extends Controller
             $schemes_data = $this->fetchSubSchemes();  
 
             return response()
-            ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'data' => $schemes_data], 200);
+            ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'media_url' => 'storage/scheme-images/','data' => $schemes_data], 200);
         // }catch (\Exception $e) {
         //     return response()
         //             ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
@@ -400,53 +401,58 @@ class APIController extends Controller
     }
 
     public function fetchSubSchemes(){
-        $scheme_categories = SchemeCategory::all();
+        $all_govts = GovtScheme::all();        
 
         $all_schemes = [];
-        if(!empty($scheme_categories)){
-            foreach($scheme_categories as $key => $scheme_cat){
-                $all_schemes[$key]['scheme_cat_id'] = $scheme_cat->id;
-                $all_schemes[$key]['scheme_cat_name'] = $scheme_cat->category_name;
-                $scheme_subcategories = SchemeSubCategory::where('scheme_category_id', $scheme_cat->id)->get();
-                if(!empty($scheme_subcategories)){
-                    foreach($scheme_subcategories as $subkey => $scheme_subcategory){
-                        $all_schemes[$key]['sub_cat'][$subkey]['subscheme_id'] = $scheme_subcategory->id;
-                        $all_schemes[$key]['sub_cat'][$subkey]['subscheme_name'] = $scheme_subcategory->subcategory_name;
+        if(!empty($all_govts)){
+            foreach($all_govts as $gkey => $all_govt){
+                $all_schemes[$gkey]['govt_scheme_cat_id'] = $all_govt->id;
+                $all_schemes[$gkey]['govt_scheme_cat_name'] = $all_govt->govt_name;
+                $scheme_categories = SchemeCategory::where('govt_scheme_id', $all_govt->id)->get();
+                foreach($scheme_categories as $key => $scheme_cat){
+                    $all_schemes[$gkey]['cat'][$key]['scheme_cat_id'] = $scheme_cat->id;
+                    $all_schemes[$gkey]['cat'][$key]['scheme_cat_name'] = $scheme_cat->category_name;
+                    $scheme_subcategories = SchemeSubCategory::where('scheme_category_id', $scheme_cat->id)->get();
+                    if(!empty($scheme_subcategories)){
+                        foreach($scheme_subcategories as $subkey => $scheme_subcategory){
+                            $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['subscheme_id'] = $scheme_subcategory->id;
+                            $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['subscheme_name'] = $scheme_subcategory->subcategory_name;
 
-                        $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->get();
-                        if(!empty($schemes)){
-                            foreach($schemes as $ckey => $scheme){
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
-                                $all_videos = [];
-                                if(!empty($scheme->videos)){
-                                    $videos = json_decode($scheme->videos);
-                                    $video_titles = json_decode($scheme->videos_title);
+                            $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->get();
+                            if(!empty($schemes)){
+                                foreach($schemes as $ckey => $scheme){
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
+                                    $all_videos = [];
+                                    if(!empty($scheme->videos)){
+                                        $videos = json_decode($scheme->videos);
+                                        $video_titles = json_decode($scheme->videos_title);
+                                        
+                                        foreach($videos as $jsv => $video){
+                                            $all_videos[$jsv]['video'] = $video;
+                                            $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                                        }
                                     
-                                    foreach($videos as $jsv => $video){
-                                        $all_videos[$jsv]['video'] = $video;
-                                        $all_videos[$jsv]['title'] = $video_titles[$jsv];
                                     }
-                                
-                                }
-                                $all_sector = [];
-                                if(!empty($scheme->sector)){
-                                    $sectors = json_decode($scheme->sector);
-                                    $sector_description = json_decode($scheme->sector_description);
+                                    $all_sector = [];
+                                    if(!empty($scheme->sector)){
+                                        $sectors = json_decode($scheme->sector);
+                                        $sector_description = json_decode($scheme->sector_description);
+                                        
+                                        foreach($sectors as $jsd => $sector){
+                                            $all_sector[$jsd]['sector'] = $sector;
+                                            $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                                        }
                                     
-                                    foreach($sectors as $jsd => $sector){
-                                        $all_sector[$jsd]['sector'] = $sector;
-                                        $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
                                     }
-                                
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['videos'] = $all_videos;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['sectors'] = $all_sector;
                                 }
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['videos'] = $all_videos;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
-                                $all_schemes[$key]['sub_cat'][$subkey]['scheme'][$ckey]['sectors'] = $all_sector;
                             }
                         }
                     }

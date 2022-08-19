@@ -6,6 +6,12 @@
         background: #457040;
         color: white;
     }
+    .alert .btn-close{
+        float:right;
+        color: black;
+        margin-top: -12px;
+        margin-right: 8px;
+    }
     .btn-close{
         color: white;
         background: none;
@@ -41,6 +47,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">x</button>
         </div>
         @endif
+
+        @if($errors->any())
+        <div class="alert alert-danger alert-block"> 
+            @foreach($errors->getMessages() as $this_error)
+                <p><strong>{{$this_error[0]}}</strong></p>
+            @endforeach
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">Close</button>
+        </div>
+        @endif 
         </div>
         <div class="col-xl-4">
 
@@ -161,26 +176,26 @@
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form>
-
+                  <form method="POST" action="{{route('change-password')}}">
+                    @csrf
                     <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
+                      <label for="current_password" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="password" type="password" class="form-control" id="currentPassword">
+                        <input name="current_password" type="password" class="form-control" id="current_password">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                      <label for="new_password" class="col-md-4 col-lg-3 col-form-label">New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                        <input name="new_password" type="password" class="form-control" id="new_password">
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                      <label for="new_confirm_password" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                        <input name="new_confirm_password" type="password" class="form-control" id="new_confirm_password">
                       </div>
                     </div>
 
