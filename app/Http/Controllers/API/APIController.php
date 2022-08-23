@@ -16,6 +16,7 @@ use App\Models\Scheme;
 use App\Models\SchemeCategory;
 use App\Models\SchemeSubCategory;
 use App\Models\GovtScheme;
+use App\Models\MarketPrice;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -44,7 +45,7 @@ class APIController extends Controller
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -106,11 +107,11 @@ class APIController extends Controller
                 ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
             }else{
                 return response()
-                ->json(['message' => 'Something Went Wrong'], 401);
+                ->json(['message' => 'Mobile Number not exists!'], 401);
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -128,7 +129,7 @@ class APIController extends Controller
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -140,7 +141,7 @@ class APIController extends Controller
             ->json(['message' => 'District, Tehsil and Village/City', 'data' => $district_data], 200);
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -206,7 +207,7 @@ class APIController extends Controller
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -248,7 +249,7 @@ class APIController extends Controller
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
         
     }
@@ -294,7 +295,7 @@ class APIController extends Controller
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -360,7 +361,7 @@ class APIController extends Controller
             }
         }catch (\Exception $e) {
             return response()
-                    ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+                    ->json(['message' => 'Data not processed!'], 401);
         }
     }
 
@@ -396,7 +397,7 @@ class APIController extends Controller
             ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'media_url' => 'storage/scheme-images/','data' => $schemes_data], 200);
         // }catch (\Exception $e) {
         //     return response()
-        //             ->json(['message' => 'Something Went Wrong! Not able to proceed.'], 401);
+        //             ->json(['message' => 'Data not processed!'], 401);
         // }
     }
 
@@ -460,5 +461,29 @@ class APIController extends Controller
             }
         }
         return $all_schemes;
+    }
+
+    public function fetchMarketRate(Request $request){
+        $marketPrice = MarketPrice::select("*")->get()->groupBy('district');
+        return response()
+            ->json(['message' => 'Market Prices', 'data' => $marketPrice], 200);
+    }
+
+    public function fetchCommodity(Request $request){
+        $marketPrice = MarketPrice::select('commodity')->distinct()->get();
+        return response()
+            ->json(['message' => 'Market Commodities', 'data' => $marketPrice], 200);
+    }
+
+    public function fetchMarketDistrict(Request $request){
+        $marketPrice = MarketPrice::select('district')->distinct()->get();
+        return response()
+            ->json(['message' => 'Market Districts', 'data' => $marketPrice], 200);
+    }
+
+    public function fetchMarket(Request $request){
+        $marketPrice = MarketPrice::select('market')->distinct()->get();
+        return response()
+            ->json(['message' => 'Market Mandi', 'data' => $marketPrice], 200);
     }
 }

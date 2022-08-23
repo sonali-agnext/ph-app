@@ -30,5 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/fetch-profile', [APIController::class, 'fetchProfile']);
     Route::post('/profile-personal', [APIController::class, 'personalInfoUpdate']);
     Route::post('/profile-address', [APIController::class, 'AddressUpdate']);
+    Route::get('/market-price', [APIController::class, 'fetchMarketRate']);
+    Route::get('/market-district', [APIController::class, 'fetchMarketDistrict']);
+    Route::get('/market-commodity', [APIController::class, 'fetchCommodity']);
+    Route::get('/market-mandi', [APIController::class, 'fetchMarket']);
 });
 // Route::post('/register', [API/APIController::class, 'register']);

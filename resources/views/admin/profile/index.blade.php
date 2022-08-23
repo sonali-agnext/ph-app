@@ -148,7 +148,7 @@
                         <input type="file" name="avatar" id="trigger-image" style="display: none" /> 
                         <div class="pt-2">
                           <a href="#" id="upload-image" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                          <!-- <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a> -->
                         </div>
                       </div>
                     </div>

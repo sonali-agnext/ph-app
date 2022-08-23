@@ -15,6 +15,7 @@ class CreateSchemeCategoriesTable extends Migration
     {
         Schema::create('scheme_categories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('govt_scheme_id');
             $table->string('category_name');
             $table->timestamps();
         });

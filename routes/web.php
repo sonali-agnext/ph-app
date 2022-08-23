@@ -81,6 +81,14 @@ Route::get('/add-scheme-subcategory','Admin\SettingController@addSchemeSubCatego
 Route::post('/add-scheme-subcategory','Admin\SettingController@createSchemeSubCategory')->name('add-scheme-subcategory');
 
 // manage scheme
+Route::get('/manage-pscheme-category','Admin\SettingController@managePSchemeCategory')->name('manage-pscheme-category');
+Route::get('/edit-pscheme-category','Admin\SettingController@editPSchemeCategory')->name('edit-pscheme-category');
+Route::post('/update-pscheme-category','Admin\SettingController@updatePSchemeCategory')->name('update-pscheme-category');
+Route::post('/delete-pscheme-category','Admin\SettingController@deletePSchemeCategory')->name('delete-pscheme-category');
+Route::get('/add-pscheme-category','Admin\SettingController@addPSchemeCategory')->name('add-pscheme-category');
+Route::post('/add-pscheme-category','Admin\SettingController@createPSchemeCategory')->name('add-pscheme-category');
+
+// manage scheme
 Route::get('/manage-scheme','Admin\SettingController@manageScheme')->name('manage-scheme');
 Route::get('/edit-scheme','Admin\SettingController@editScheme')->name('edit-scheme');
 Route::post('/update-scheme','Admin\SettingController@updateScheme')->name('update-scheme');

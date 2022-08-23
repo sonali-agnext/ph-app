@@ -15,6 +15,15 @@ class AdminController extends Controller
     // public function viewAdminProfile(Request $request){
     //     return view('admin.caste.index');
     // }
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function viewAdminProfile(Request $request){
         return view('admin.profile.index');
     }

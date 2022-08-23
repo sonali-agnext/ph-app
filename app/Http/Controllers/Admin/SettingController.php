@@ -15,10 +15,20 @@ use App\Models\Scheme;
 use App\Models\Farmer;
 use App\Models\User;
 use App\Models\AdminProfile;
+use App\Models\GovtScheme;
 use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //caste category
     public function manageCasteCategory(Request $request){
         $castes = CasteCategory::all();
@@ -307,33 +317,34 @@ class SettingController extends Controller
             }
         }        
     }
+    
 
-    //scheme category
-    public function manageSchemeCategory(Request $request){
-        $schemecategories = SchemeCategory::all();
+    //parent scheme category
+    public function managePSchemeCategory(Request $request){
+        $schemecategories = GovtScheme::all();
 
-        return view('admin.scheme_category.index',['scheme_categories' => $schemecategories]);
+        return view('admin.pscheme_category.index',['scheme_categories' => $schemecategories]);
     }
 
-    public function editSchemeCategory(Request $request){
+    public function editPSchemeCategory(Request $request){
         $id = $request->id;
-        $schemecategory = SchemeCategory::find($id);
-        return view('admin.scheme_category.edit',['scheme_category' => $schemecategory]);
+        $schemecategory = GovtScheme::find($id);
+        return view('admin.pscheme_category.edit',['scheme_category' => $schemecategory]);
     }
 
-    public function updateSchemeCategory(Request $request){
+    public function updatePSchemeCategory(Request $request){
         $id = $request->id;
-        $district = SchemeCategory::where('id',$id)->update(['category_name'=> $request->category_name]);
+        $district = GovtScheme::where('id',$id)->update(['govt_name'=> $request->category_name]);
         if($district){
-            return back()->with('success','Scheme Category updated successfully!');
+            return back()->with('success','Parent Scheme Category updated successfully!');
         }else{
             return back()->with('error','Something Went Wrong!');
         }        
     }
 
-    public function deleteSchemeCategory(Request $request){
+    public function deletePSchemeCategory(Request $request){
         $id = $request->id;
-        $district = SchemeCategory::where('id',$id)->firstorfail()->delete();
+        $district = GovtScheme::where('id',$id)->firstorfail()->delete();
         if($district){
             return response()
             ->json(['message' => 'success']);
@@ -343,20 +354,82 @@ class SettingController extends Controller
         }        
     }
 
-    public function addSchemeCategory(Request $request){
+    public function addPSchemeCategory(Request $request){
         return view('admin.scheme_category.add');
     }
 
-    public function createSchemeCategory(Request $request){
+    public function createPSchemeCategory(Request $request){
         $validator = Validator::make($request->all(), [
-            'category_name' => 'required|unique:scheme_categories'
+            'category_name' => 'required|unique:govt_schemes'
         ]);
  
         if ($validator->fails()) {
             return back()->with('error','Scheme Category name should be unique and required!');
         }else{
-            $district = SchemeCategory::create(['category_name'=> $request->category_name]);
+            $district = GovtScheme::create(['govt_name'=> $request->category_name]);
             if($district){
+                return back()->with('success','Parent Scheme Category created successfully!');
+            }else{
+                return back()->with('error','Something Went Wrong!');
+            }
+        }        
+    }
+
+    //Scheme Category
+    public function manageSchemeCategory(Request $request){
+        $scheme_sub_categories = SchemeCategory::select('scheme_categories.*','govt_schemes.govt_name')
+        ->join('govt_schemes','scheme_categories.govt_scheme_id','=','govt_schemes.id')
+        ->get();
+
+        return view('admin.scheme_category.index',['scheme_subcategories' => $scheme_sub_categories]);
+    }
+
+    public function editSchemeCategory(Request $request){
+        $id = $request->id;
+        $scheme_sub_category = SchemeCategory::find($id);
+        $scheme_category = GovtScheme::all();
+        return view('admin.scheme_category.edit',['scheme_sub_category' => $scheme_sub_category, 'scheme_category' => $scheme_category]);
+    }
+
+    public function updateSchemeCategory(Request $request){
+        $id = $request->id;
+        // $scheme_sub_category = SchemeCategory::where('id',$id)->update(['govt_scheme_id	'=> $request->scheme_category_id,'category_name'=> "'".$request->subcategory_name."'"]);
+        $scheme_sub_category = SchemeCategory::where('id',$id)->update(['govt_scheme_id'=> $request->scheme_category_id, 'category_name'=> $request->subcategory_name]);
+        if($scheme_sub_category){
+            return back()->with('success','Scheme Category updated successfully!');
+        }else{
+            return back()->with('error','Something Went Wrong!');
+        }        
+    }
+
+    public function deleteSchemeCategory(Request $request){
+        $id = $request->id;
+        $tehsil = SchemeCategory::where('id',$id)->firstorfail()->delete();
+        if($tehsil){
+            return response()
+            ->json(['message' => 'success']);
+        }else{
+            return response()
+            ->json(['message' => 'error']);
+        }        
+    }
+
+    public function addSchemeCategory(Request $request){
+        $scheme_categories = GovtScheme::all();
+        return view('admin.scheme_category.add',['scheme_category' => $scheme_categories]);
+    }
+
+    public function createSchemeCategory(Request $request){
+        $validator = Validator::make($request->all(), [
+            'scheme_category_id'=> 'required',
+            'subcategory_name' => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return back()->with('error','Scheme Sub Category name should be unique and required!');
+        }else{
+            $tehsil = SchemeCategory::create(['govt_scheme_id' => $request->scheme_category_id,'category_name'=> $request->subcategory_name]);
+            if($tehsil){
                 return back()->with('success','Scheme Category created successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');

@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Scheme Category</h1>
+    <h1>Manage Parent Scheme Category</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage Scheme Category</li>
+        <li class="breadcrumb-item active">Manage Parent Scheme Category</li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Add Scheme Category</h5>
+                        <h5 class="card-title">Add Parent Scheme Category</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -44,23 +44,12 @@
                         </div>
                         @endif
                             <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST" action="{{ route('add-scheme-category') }}">
+                            <form class="row g-3" method="POST" action="{{ route('add-pscheme-category') }}">
                                 @csrf
                                 <div class="col-md-12">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="scheme_category_id" id="scheme_category_id" aria-label="Category Name">
-                                            @forelse($scheme_category as $dst)                                            
-                                            <option value="{{ $dst->id }}">{{$dst->govt_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="scheme_category_id">Scheme Category Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Scheme Sub Category" value="">
-                                        <label for="subcategory_name">Scheme Sub Category Name</label>
+                                        <input type="text" name="category_name" required class="form-control" id="category_name" placeholder="Enter Scheme Category" value="">
+                                        <label for="category_name">Scheme Category Name</label>
                                     </div>
                                 </div>
                                 

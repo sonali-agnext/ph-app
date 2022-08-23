@@ -9,6 +9,6 @@ class SchemeCategory extends Model
     public $timestamps = true;
     //
     protected $fillable = [
-        'category_name'
+        'govt_scheme_id','category_name'
     ];
 }

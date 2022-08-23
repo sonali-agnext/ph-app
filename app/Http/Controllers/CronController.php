@@ -18,11 +18,13 @@ class CronController extends Controller
             $records = $data->records;
             foreach($records as $record){
                 if($record->state == "Punjab"){
-                    $market_prices = MarketPrice::where('district', $record->district)->where('market',$record->market)->first();
+                    $market_prices = MarketPrice::where('district', $record->district)->where('market',$record->market)->where('market',$record->commodity)->where('market',$record->variety)->first();
+ 
+                    $date = str_replace('/', '-', $record->arrival_date);
                     if(empty($market_prices)){
-                        // $market
+                        $market = MarketPrice::create(['state'=>$record->state, 'district'=>$record->district, 'market'=>$record->market, 'commodity'=>$record->commodity, 'variety'=>$record->variety, 'arrival_date'=>date('Y-m-d', strtotime($date)), 'min_price'=>$record->min_price, 'max_price'=>$record->max_price, 'modal_price'=>$record->modal_price]);
                     }else{
-
+                        $market = MarketPrice::where('id', $market_prices->id)->update(['state'=>$record->state, 'district'=>$record->district, 'market'=>$record->market, 'commodity'=>$record->commodity, 'variety'=>$record->variety, 'arrival_date'=>date('Y-m-d', strtotime($date)), 'min_price'=>$record->min_price, 'max_price'=>$record->max_price, 'modal_price'=>$record->modal_price]);
                     }
                 }
             }

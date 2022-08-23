@@ -19,6 +19,7 @@
         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
         <li class="breadcrumb-item active">Manage Scheme Category</li>
     </ol>
+    <!-- <img src="{{asset('storage/app/public/image/180X180.png')}}" /> -->
     </nav>
 </div><!-- End Page Title -->
 
@@ -44,14 +45,26 @@
                         </div>
                         @endif
                             <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST" action="{{ route('update-scheme-category',['id' => $scheme_category->id]) }}">
+                            <form class="row g-3" method="POST" action="{{ route('update-scheme-category',['id' => $scheme_sub_category->id]) }}">
                                 @csrf
                                 <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <input type="text" name="category_name" required class="form-control" id="category_name" placeholder="Enter Scheme Category" value="{{$scheme_category->category_name}}">
-                                        <label for="category_name">Scheme Category</label>
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="scheme_category_id" id="scheme_category_id" aria-label="Scheme Category">
+                                            @forelse($scheme_category as $dst)                                            
+                                            <option @if($dst->id == $scheme_sub_category->govt_scheme_id	) {{ __('selected') }}@endif value="{{ $dst->id }}">{{$dst->govt_name}}</option>                                            
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                        <label for="scheme_category_id">Scheme Category</label>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Tehsil" value="{{$scheme_sub_category->category_name}}">
+                                        <label for="subcategory_name">Scheme Sub Category Name</label>
+                                    </div>
+                                </div>
+
                                 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>

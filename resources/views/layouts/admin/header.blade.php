@@ -1,6 +1,6 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
-@php  $image = \App\Models\AdminProfile::where('user_id', Auth::user()->id)->first();  @endphp
+@php $image = \App\Models\AdminProfile::where('user_id', Auth::user()->id)->first();  @endphp
 <div class="d-flex align-items-center justify-content-between">
   <a href="index.html" class="logo d-flex align-items-center">
     <img src="{{ asset('img/apple-icon-72x72.png')}}" alt="">
@@ -206,12 +206,12 @@
           <hr class="dropdown-divider">
         </li>
 
-        <li>
+        <!-- <li>
           <a class="dropdown-item d-flex align-items-center" href="#">
             <i class="bi bi-gear"></i>
             <span>Account Settings</span>
           </a>
-        </li>
+        </li> -->
         <li>
           <hr class="dropdown-divider">
         </li>
