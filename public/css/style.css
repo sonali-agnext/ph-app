@@ -66,7 +66,7 @@ h6 {
   right: 15px;
   bottom: 15px;
   z-index: 99999;
-  background: #4154f1;
+  background: #36613f;
   width: 40px;
   height: 40px;
   border-radius: 4px;
@@ -80,7 +80,7 @@ h6 {
 }
 
 .back-to-top:hover {
-  background: #6776f4;
+  background: #448552;
   color: #fff;
 }
 
@@ -242,7 +242,7 @@ h6 {
   padding: 20px 0 15px 0;
   font-size: 18px;
   font-weight: 500;
-  color: #012970;
+  color: #0f3107c9;
   font-family: "Poppins", sans-serif;
 }
 
@@ -366,7 +366,7 @@ h6 {
 
 @media (min-width: 1200px) {
   .logo {
-    width: 280px;
+        width: 220px;
   }
 }
 
@@ -378,7 +378,7 @@ h6 {
 .logo span {
   font-size: 26px;
   font-weight: 700;
-  color: #012970;
+  color: #0f3107c9;
   font-family: "Nunito", sans-serif;
 }
 
@@ -397,7 +397,7 @@ h6 {
   font-size: 32px;
   padding-left: 10px;
   cursor: pointer;
-  color: #012970;
+  color: #0f3107c9;
 }
 
 .header .search-bar {
@@ -474,13 +474,13 @@ h6 {
 
 .header-nav .nav-icon {
   font-size: 22px;
-  color: #012970;
+  color: #091f04c9;
   margin-right: 25px;
   position: relative;
 }
 
 .header-nav .nav-profile {
-  color: #012970;
+  color: #091f04c9;
 }
 
 .header-nav .nav-profile img {
@@ -704,7 +704,7 @@ h6 {
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
+  color: #091f04c9;
   background: #fff;
 }
 
@@ -811,7 +811,7 @@ h6 {
 
 .dashboard .info-card h6 {
   font-size: 28px;
-  color: #012970;
+  color: #091f04c9;
   font-weight: 700;
   margin: 0;
   padding: 0;
@@ -1247,4 +1247,14 @@ h6 {
   text-align: center;
   font-size: 13px;
   color: #012970;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #0f3107c9 !important;
+  border-color: #0f3107c9 !important;
+}
+
+.btn.btn-link{
+  color: #0f3107c9;
 }

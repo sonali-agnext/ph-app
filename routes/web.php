@@ -57,8 +57,8 @@ Route::get('/add-city','Admin\SettingController@addCity')->name('add-city');
 Route::post('/add-city','Admin\SettingController@createCity')->name('add-city');
 
 // manage tehsil
-Route::get('/manage-tehsil','Admin\SettingController@manageTehsil')->name('manage-tehsil');
-Route::get('/edit-tehsil','Admin\SettingController@editTehsil')->name('edit-tehsil');
+Route::get('/manage-block','Admin\SettingController@manageTehsil')->name('manage-block');
+Route::get('/edit-block','Admin\SettingController@editTehsil')->name('edit-block');
 Route::post('/update-tehsil','Admin\SettingController@updateTehsil')->name('update-tehsil');
 Route::post('/delete-tehsil','Admin\SettingController@deleteTehsil')->name('delete-tehsil');
 Route::get('/add-tehsil','Admin\SettingController@addTehsil')->name('add-tehsil');
@@ -110,4 +110,12 @@ Route::get('/admin-profile','Admin\AdminController@viewAdminProfile')->name('adm
 Route::post('/admin-profile','Admin\AdminController@updateAdminProfile')->name('admin-profile');
 Route::post('/change-password', 'Admin\AdminController@changePassword')->name('change-password');
 
+// cron
 Route::get('/market', 'CronController@marketPrice');
+Route::get('/latest', 'CronController@latestVideos');
+
+
+// ajax
+Route::get('/ajax-tehsil', 'AjaxController@fetchTehsil');
+Route::get('/ajax-village', 'AjaxController@fetchVillage');
+

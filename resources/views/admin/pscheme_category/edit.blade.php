@@ -16,8 +16,8 @@
     <h1>Manage Parent Scheme Category</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage Parent Scheme Category</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-pscheme-category')}}">Manage Parent Scheme Category</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->

@@ -18,7 +18,7 @@
     <h1>Manage Applicant Types</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
         <li class="breadcrumb-item active">Manage Applicant Types</li>
     </ol>
     </nav>

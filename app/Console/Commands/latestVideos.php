@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Http\Controllers\CronController;
 
-class MarketPrice extends Command
+class latestVideos extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'market:price';
+    protected $signature = 'latest:videos';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily Based Fetch Market Price';
+    protected $description = 'Fetch latest videos';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,6 @@ class MarketPrice extends Command
      */
     public function handle()
     {
-        \Log::info("Cron is working fine!");
-        return CronController::marketPrice();
+        return CronController::latestVideos();
     }
 }

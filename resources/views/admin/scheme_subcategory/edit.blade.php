@@ -16,8 +16,8 @@
     <h1>Manage Scheme Sub Category</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage Scheme Sub Category</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-subcategory')}}">Manage Scheme Sub Category</a></li>
     </ol>
     <!-- <img src="{{asset('storage/app/public/image/180X180.png')}}" /> -->
     </nav>

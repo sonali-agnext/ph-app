@@ -24,8 +24,8 @@
     <h1>Manage Scheme</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage Scheme</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme')}}">Manage Scheme</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->

@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Tehsil</h1>
+    <h1>Manage Block</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage Tehsil</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-block')}}">Manage Block</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Add Tehsil</h5>
+                        <h5 class="card-title">Add Block</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -60,7 +60,7 @@
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" name="tehsil_name" required class="form-control" id="tehsil_name" placeholder="Enter Tehsil" value="">
-                                        <label for="tehsil_name">Tehsil Name</label>
+                                        <label for="tehsil_name">Block Name</label>
                                     </div>
                                 </div>
                                 

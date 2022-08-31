@@ -216,7 +216,7 @@ class SettingController extends Controller
         $id = $request->id;
         $tehsil = Tehsil::where('id',$id)->update(['district_id'=> $request->district_id,'tehsil_name'=> $request->tehsil_name]);
         if($tehsil){
-            return back()->with('success','Tehsil updated successfully!');
+            return back()->with('success','Block updated successfully!');
         }else{
             return back()->with('error','Something Went Wrong!');
         }        
@@ -246,11 +246,11 @@ class SettingController extends Controller
         ]);
         
         if ($validator->fails()) {
-            return back()->with('error','Tehsil name should be unique and required!');
+            return back()->with('error','Block name should be unique and required!');
         }else{
             $tehsil = Tehsil::create(['district_id' => $request->district_id,'tehsil_name'=> $request->tehsil_name]);
             if($tehsil){
-                return back()->with('success','Tehsil created successfully!');
+                return back()->with('success','Block created successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');
             }
@@ -277,7 +277,7 @@ class SettingController extends Controller
         $id = $request->id;
         $city = City::where('id',$id)->update(['tehsil_id'=> $request->tehsil_id,'city_name'=> $request->city_name]);
         if($city){
-            return back()->with('success','City updated successfully!');
+            return back()->with('success','Village/City updated successfully!');
         }else{
             return back()->with('error','Something Went Wrong!');
         }        
@@ -307,11 +307,11 @@ class SettingController extends Controller
         ]);
         
         if ($validator->fails()) {
-            return back()->with('error','City name should be unique and required!');
+            return back()->with('error','Village/City name should be unique and required!');
         }else{
             $city = City::create(['tehsil_id' => $request->tehsil_id,'city_name'=> $request->city_name]);
             if($city){
-                return back()->with('success','City created successfully!');
+                return back()->with('success','Village/City created successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');
             }
@@ -532,7 +532,7 @@ class SettingController extends Controller
                 'videos_title' => json_encode($request->title),
             ]);
             if($scheme){
-                return back()->with('success','Schemes created successfully!');
+                return back()->with('success','Schemes updated successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');
             }
@@ -550,7 +550,7 @@ class SettingController extends Controller
                 'videos_title' => json_encode($request->title),
             ]);
             if($scheme){
-                return back()->with('success','Schemes created successfully!');
+                return back()->with('success','Schemes updated successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');
             }

@@ -26,7 +26,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('market:price')
-            ->twiceDaily(1, 16);
+        // ->everyMinute();
+            ->twiceDaily(1, 14);
+        $schedule->command('latest:videos')
+        ->everyMinute();
     }
 
     /**

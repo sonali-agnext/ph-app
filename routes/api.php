@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('/login', [APIController::class, 'login']);
 Route::post('/register', [APIController::class, 'register']);
+Route::post('/logout', [APIController::class, 'logout']);
 Route::post('/mobile-exists', [APIController::class, 'alreadyExists']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/district', [APIController::class, 'district']);
@@ -34,5 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/market-district', [APIController::class, 'fetchMarketDistrict']);
     Route::get('/market-commodity', [APIController::class, 'fetchCommodity']);
     Route::get('/market-mandi', [APIController::class, 'fetchMarket']);
+    Route::get('/featured-scheme', [APIController::class, 'fetchFeaturedScheme']);    
+    Route::get('/fetch-video',[APIController::class, 'fetchVideos']);
 });
 // Route::post('/register', [API/APIController::class, 'register']);

@@ -84,7 +84,6 @@ class FarmerController extends Controller
                 'tehsil_id' => $tehsil_id, 
                 'city_id' => $city_id, 
                 'full_address'=> $full_address, 
-                'farmer_unique_id' => $farmer_unique_id,
                 'pin_code'=> $postal_code, 
                 'avatar' => $filename]);
                 if($district){
@@ -110,7 +109,6 @@ class FarmerController extends Controller
                 'tehsil_id' => $tehsil_id, 
                 'city_id' => $city_id, 
                 'full_address'=> $full_address, 
-                'farmer_unique_id' => $farmer_unique_id,
                 'pin_code'=> $postal_code]);
                 if($district){
                     $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number]);

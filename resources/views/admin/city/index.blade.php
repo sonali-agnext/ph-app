@@ -15,11 +15,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage City</h1>
+    <h1>Manage Village/City</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage City</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active">Manage Village/City</li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -31,14 +31,14 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">List of City <a href="{{route('add-tehsil')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
+                    <h5 class="card-title">List of Village/City <a href="{{route('add-tehsil')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
                     
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Sr No</th>
-                                <th>Tehsil Name</th>
-                                <th>City</th>
+                                <th>Block Name</th>
+                                <th>Village/City</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -60,15 +60,15 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="row">
-                                                <div class="col-md-6"><b>City ID</b></div>
+                                                <div class="col-md-6"><b>Village/City ID</b></div>
                                                 <div class="col-md-6"><p>{{ $city->id}}</p></div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6"><b>Tehsil Name</b></div>
+                                                <div class="col-md-6"><b>Block Name</b></div>
                                                 <div class="col-md-6"><p>{{ $city->tehsil_name}}</p></div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6"><b>City Name</b></div>
+                                                <div class="col-md-6"><b>Village/City Name</b></div>
                                                 <div class="col-md-6"><p>{{ $city->city_name}}</p></div>
                                             </div>
                                             <div class="row">

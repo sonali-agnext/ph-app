@@ -16,8 +16,8 @@
     <h1>Manage Farmer</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Farmer</a></li>
-        <li class="breadcrumb-item active">Manage Farmer</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Farmer</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-farmer')}}">Manage Farmer</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -67,7 +67,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="language" id="language" aria-label="Language">                                       
+                                        <select class="form-select" name="language" id="language" aria-label="Language">      
+                                            <option value="">Select Language</option>                                 
                                             <option value="en">English</option>
                                             <option value="hi">Hindi</option>
                                             <option value="pb">Punjabi</option>
@@ -78,6 +79,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="applicant_type_id" id="applicant_type_id" aria-label="Applicant Type">
+                                            <option value="">Select Applicant Type</option>
                                             @forelse($applicant_types as $applicant_type)                                            
                                             <option value="{{ $applicant_type->id }}">{{$applicant_type->applicant_type_name}}</option>                                            
                                             @empty
@@ -94,7 +96,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="gender" id="gender" aria-label="Gender">                                       
+                                        <select class="form-select" name="gender" id="gender" aria-label="Gender">
+                                            <option value="">Select Gender</option>                                       
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
                                         </select>
@@ -124,6 +127,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="caste_category_id" id="caste_category_id" aria-label="Caste Category">
+                                            <option value="">Select Caste Category</option>
                                             @forelse($caste_categories as $caste_category)                                            
                                             <option value="{{ $caste_category->id }}">{{$caste_category->caste_name}}</option>                                            
                                             @empty
@@ -134,7 +138,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="state" id="state" aria-label="State">                                       
+                                        <select class="form-select" name="state" id="state" aria-label="State"> 
+                                            <option value="">Select State</option>                                      
                                             <option value="Punjab">Punjab</option>
                                         </select>
                                         <label for="state">State<span class="text-danger">*</span></label>
@@ -143,6 +148,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="district_id" id="district_id" aria-label="District">
+                                            <option value="">Select District</option>
                                             @forelse($districts as $district)                                            
                                             <option value="{{ $district->id }}">{{$district->district_name}}</option>                                            
                                             @empty
@@ -154,8 +160,9 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
+                                            <option value="">Select Tehsil</option>
                                             @forelse($tehsils as $tehsil)                                            
-                                            <option value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
+                                                <option value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -165,12 +172,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="city_id" id="city_id" aria-label="City">
+                                            <option value="">Select Village/City</option>
                                             @forelse($cities as $city)                                            
                                             <option value="{{ $city->id }}">{{$city->city_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="city_id">City<span class="text-danger">*</span></label>
+                                        <label for="city_id">Village/City<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -205,6 +213,59 @@
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
+        $('#district_id').on('change', function(){
+            var id=$(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('/ajax-tehsil') }}",
+                data: { 'district_id':id },
+                dataType: "json",
+                success: function(resultData) {                    
+                    if(resultData.data){
+                        var content= resultData.data;
+                        var html ="";
+                        html+='<option value="">Select Tehsil</option>';
+                        if(content.length > 0){
+                            $.each(content, function (key, val) {
+                                console.log(val);
+                                html+='<option value="'+val.id+'">'+val.tehsil_name+'</option>';
+                            });
+                        }
+                        $('#tehsil_id').empty();
+                        $('#tehsil_id').html(html); 
+                        $('#city_id').empty();
+                        $('#city_id').html('<option value="">Select Village/City</option>');
+                    }
+                }
+            });
+        });
+
+        $('#tehsil_id').on('change', function(){
+            var id=$(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('/ajax-village') }}",
+                data: { 'tehsil_id':id },
+                dataType: "json",
+                success: function(resultData) {                    
+                    if(resultData.data){
+                        var content= resultData.data;
+                        var html ="";
+                        if(content.length > 0){
+                            $.each(content, function (key, val) {
+                                console.log(val);
+                                html+='<option value="'+val.id+'">'+val.city_name+'</option>';
+                            });
+                        }else{
+                            html+='<option value="">Select Village/City</option>';
+                        }
+                        $('#city_id').empty();
+                        $('#city_id').html(html); 
+                        // <option value=""></option>
+                    }
+                }
+            });
+        });
     });
 </script>
 @endpush

@@ -16,8 +16,8 @@
     <h1>Manage Farmer</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage Farmer</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-farmer')}}">Manage Farmer</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -68,7 +68,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="language" id="language" aria-label="Language">                                       
+                                        <select class="form-select" required name="language" id="language" aria-label="Language">   
+                                            <option value="">Select Language</option>                                    
                                             <option @if($farmer->language == 'en'){{ 'selected' }} @endif value="en">English</option>
                                             <option @if($farmer->language == 'hi'){{ 'selected' }} @endif value="hi">Hindi</option>
                                             <option @if($farmer->language == 'pb'){{ 'selected' }} @endif value="pb">Punjabi</option>
@@ -78,7 +79,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="applicant_type_id" id="applicant_type_id" aria-label="Applicant Type">
+                                        <select class="form-select" required name="applicant_type_id" id="applicant_type_id" aria-label="Applicant Type">
+                                            <option value="">Select Applicant Type</option>
                                             @forelse($applicant_types as $applicant_type)                                            
                                             <option @if($farmer->applicant_type_id == $applicant_type->id){{ 'selected' }} @endif value="{{ $applicant_type->id }}">{{$applicant_type->applicant_type_name}}</option>                                            
                                             @empty
@@ -95,7 +97,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="gender" id="gender" aria-label="Gender">                                       
+                                        <select class="form-select" required name="gender" id="gender" aria-label="Gender">    
+                                            <option value="">Select Gender</option>                                   
                                             <option @if($farmer->gender == "Male"){{ 'selected' }} @endif value="Male">Male</option>
                                             <option @if($farmer->gender == "Female"){{ 'selected' }} @endif value="Female">Female</option>
                                         </select>
@@ -104,8 +107,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="resident" id="resident" aria-label="Resident">                                       
-                                            <option @if($farmer->applicant_type_id == $applicant_type->id){{ 'selected' }} @endif value="Indian">Indian</option>
+                                        <select class="form-select" required name="resident" id="resident" aria-label="Resident">   
+                                            <option value="">Select Resident</option>                                    
+                                            <option @if($farmer->resident == "Indian"){{ 'selected' }} @endif value="Indian">Indian</option>
                                         </select>
                                         <label for="resident">Resident<span class="text-danger">*</span></label>
                                     </div>
@@ -124,7 +128,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="caste_category_id" id="caste_category_id" aria-label="Caste Category">
+                                        <select class="form-select" required name="caste_category_id" id="caste_category_id" aria-label="Caste Category">
                                             @forelse($caste_categories as $caste_category)                                            
                                             <option @if($farmer->caste_category_id == $caste_category->id){{ 'selected' }} @endif value="{{ $caste_category->id }}">{{$caste_category->caste_name}}</option>                                            
                                             @empty
@@ -135,7 +139,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="state" id="state" aria-label="State">                                       
+                                        <select class="form-select" required name="state" id="state" aria-label="State">
+                                            <option value="">Select State</option>                                       
                                             <option @if($farmer->state == 'Punjab'){{ 'selected' }} @endif value="Punjab">Punjab</option>
                                         </select>
                                         <label for="state">State<span class="text-danger">*</span></label>
@@ -143,9 +148,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="district_id" id="district_id" aria-label="District">
+                                        <select class="form-select" required name="district_id" id="district_id" aria-label="District">
+                                            <option value="">Select District</option>
                                             @forelse($districts as $district)                                            
-                                            <option @if($district->district_id == $district->id){{ 'selected' }} @endif value="{{ $district->id }}">{{$district->district_name}}</option>                                            
+                                            <option @if($farmer->district_id == $district->id){{ 'selected' }} @endif value="{{ $district->id }}">{{$district->district_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -154,9 +160,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
+                                        <select class="form-select" required name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
+                                            <option value="">Select Tehsil</option>
                                             @forelse($tehsils as $tehsil)                                            
-                                            <option @if($tehsil->tehsil_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
+                                            <option @if($farmer->tehsil_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -165,13 +172,14 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="city_id" id="city_id" aria-label="City">
+                                        <select class="form-select" required name="city_id" id="city_id" aria-label="City">
+                                            <option value="">Select Village/City</option>
                                             @forelse($cities as $city)                                            
-                                            <option @if($city->city_id == $city->id){{ 'selected' }} @endif value="{{ $city->id }}">{{$city->city_name}}</option>                                            
+                                            <option @if($farmer->city_id == $city->id){{ 'selected' }} @endif value="{{ $city->id }}">{{$city->city_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="city_id">City<span class="text-danger">*</span></label>
+                                        <label for="city_id">Village/City<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -206,6 +214,61 @@
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
+
+        $('#district_id').on('change', function(){
+            var id=$(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('/ajax-tehsil') }}",
+                data: { 'district_id':id },
+                dataType: "json",
+                success: function(resultData) {                    
+                    if(resultData.data){
+                        var content= resultData.data;
+                        var html ="";
+                        html+='<option value="">Select Tehsil</option>';
+                        if(content.length > 0){
+                            $.each(content, function (key, val) {
+                                console.log(val);
+                                html+='<option value="'+val.id+'">'+val.tehsil_name+'</option>';
+                            });
+                        }
+                        $('#tehsil_id').empty();
+                        $('#tehsil_id').html(html); 
+                        $('#city_id').empty();
+                        $('#city_id').html('<option value="">Select Village/City</option>');
+                        // <option value=""></option>
+                    }
+                }
+            });
+        });
+
+        $('#tehsil_id').on('change', function(){
+            var id=$(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('/ajax-village') }}",
+                data: { 'tehsil_id':id },
+                dataType: "json",
+                success: function(resultData) {                    
+                    if(resultData.data){
+                        var content= resultData.data;
+                        var html ="";
+                        if(content.length > 0){
+                            $.each(content, function (key, val) {
+                                console.log(val);
+                                html+='<option value="'+val.id+'">'+val.city_name+'</option>';
+                            });
+                        }else{
+                            html+='<option value="">Select Village/City</option>';
+                        }
+                        $('#city_id').empty();
+                        $('#city_id').html(html); 
+                        // <option value=""></option>
+                    }
+                }
+            });
+        });
     });
 </script>
 @endpush

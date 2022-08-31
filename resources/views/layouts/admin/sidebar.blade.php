@@ -25,23 +25,23 @@
       </li><!-- End farmers Nav -->
 
       <li class="nav-item">
-        <a @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-tehsil' || $route == 'add-tehsil' || $route == 'edit-tehsil' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#district-tehsil-village-nav" data-bs-toggle="collapse" href="#"  @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-tehsil' || $route == 'add-tehsil' || $route == 'edit-tehsil' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') aria-expanded="true" @endif>
-          <i class="bi bi-journal-text"></i><span>Manage District/ Tehsil/ Village</span><i class="bi bi-chevron-down ms-auto"></i>
+        <a @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-block' || $route == 'add-tehsil' || $route == 'edit-block' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#district-tehsil-village-nav" data-bs-toggle="collapse" href="#"  @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-block' || $route == 'add-tehsil' || $route == 'edit-block' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') aria-expanded="true" @endif>
+          <i class="bi bi-journal-text"></i><span>Manage District/ Block/ Village</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="district-tehsil-village-nav" @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-tehsil' || $route == 'add-tehsil' || $route == 'edit-tehsil' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
+        <ul id="district-tehsil-village-nav" @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-block' || $route == 'add-tehsil' || $route == 'edit-block' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
           <li>
             <a @if($route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') class="active" @endif href="{{route('manage-district')}}">
               <i class="bi bi-circle"></i><span>List Districts</span>
             </a>
           </li>
           <li>
-            <a @if($route == 'manage-tehsil' || $route == 'add-tehsil' || $route == 'edit-tehsil' || $route == 'update-tehsil') class="active" @endif href="{{route('manage-tehsil')}}">
-              <i class="bi bi-circle"></i><span>List Tehsil</span>
+            <a @if($route == 'manage-block' || $route == 'add-tehsil' || $route == 'edit-block' || $route == 'update-tehsil') class="active" @endif href="{{route('manage-block')}}">
+              <i class="bi bi-circle"></i><span>List Block</span>
             </a>
           </li>
           <li>
             <a @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city') class="active" @endif href="{{route('manage-city')}}">
-              <i class="bi bi-circle"></i><span>List Village</span>
+              <i class="bi bi-circle"></i><span>List Village/City</span>
             </a>
           </li>
         </ul>

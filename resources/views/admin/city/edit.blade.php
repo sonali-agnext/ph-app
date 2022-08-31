@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage City</h1>
+    <h1>Manage Village/City</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Manage City</li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-city')}}">Manage Village/City</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit City</h5>
+                        <h5 class="card-title">Edit Village/City</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -54,13 +54,13 @@
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="tehsil_id">Tehsil</label>
+                                        <label for="tehsil_id">Block</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" name="city_name" required class="form-control" id="city_name" placeholder="Enter City" value="{{$city->city_name}}">
-                                        <label for="city_name">Tehsil Name</label>
+                                        <label for="city_name">Village/City Name</label>
                                     </div>
                                 </div>
 

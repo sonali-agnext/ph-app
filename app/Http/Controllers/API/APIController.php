@@ -19,6 +19,7 @@ use App\Models\GovtScheme;
 use App\Models\MarketPrice;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use App\Models\YoutubeVideo;
 
 class APIController extends Controller
 {
@@ -125,7 +126,7 @@ class APIController extends Controller
                     ->json(['message' => 'Logout Successfully'], 200);
             }else{
                 return response()
-                ->json(['message' => 'Something Went Wrong'], 401);
+                ->json(['message' => 'Token Invalid'], 401);
             }
         }catch (\Exception $e) {
             return response()
@@ -464,7 +465,40 @@ class APIController extends Controller
     }
 
     public function fetchMarketRate(Request $request){
-        $marketPrice = MarketPrice::select("*")->get()->groupBy('district');
+        if(!empty($request->commodity) && !empty($request->district) && !empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->get();
+        }elseif(!empty($request->commodity) && !empty($request->district) && empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->get();
+        }elseif(!empty($request->commodity) && empty($request->district) && !empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('market',$request->market)
+                            ->get();
+        }
+        elseif(!empty($request->commodity) && empty($request->district) && empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->get();
+        }elseif(empty($request->commodity) && !empty($request->district) && empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->get();
+        }elseif(empty($request->commodity) && empty($request->district) && !empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('market',$request->market)
+                            ->get();
+        }else{
+            $marketPrice = MarketPrice::select("*")
+                            ->get();
+        }
+        
         return response()
             ->json(['message' => 'Market Prices', 'data' => $marketPrice], 200);
     }
@@ -485,5 +519,17 @@ class APIController extends Controller
         $marketPrice = MarketPrice::select('market')->distinct()->get();
         return response()
             ->json(['message' => 'Market Mandi', 'data' => $marketPrice], 200);
+    }
+
+    public function fetchFeaturedScheme(Request $request){
+        $all = Scheme::where('is_featured','1')->get();
+        return response()
+            ->json(['message' => 'Featured Scheme', 'data' => $all], 200);
+    }
+
+    public function fetchVideos(Request $request){
+        $video = YoutubeVideo::all();
+        return response()
+            ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
     }
 }
