@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         // ->everyMinute();
             ->twiceDaily(1, 14);
         $schedule->command('latest:videos')
-        ->everyMinute();
+        ->twiceDaily(1, 14);
     }
 
     /**

@@ -8,6 +8,6 @@ class YoutubeVideo extends Model
 {
     public $timestamps = true;
     protected $fillable = [
-        'video_id', 'etag', 'channel_id', 'title', 'description', 'thumbnail', 'publish_time'
+        'video_id', 'etag', 'channel_id', 'title', 'description', 'thumbnail', 'views','publish_time'
     ];
 }

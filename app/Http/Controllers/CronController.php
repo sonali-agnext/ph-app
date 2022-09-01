@@ -34,6 +34,8 @@ class CronController extends Controller
     }
 
     public static function latestVideos(){
+        $views = Youtube::getVideoInfo('fUJ9y3VmiZA');
+        dd($views);
         $channels = Youtube::listChannelVideos('UCuVuHrghkZeJHQTjesosDJA', 10, "date");
 
         if(!empty($channels)){
@@ -41,24 +43,100 @@ class CronController extends Controller
                 $etag = $channel->etag;
                 $video_id = $channel->id->videoId;
                 $channel_id = $channel->snippet->channelId;
-                $title = $channel->snippet->title;
-                $description = $channel->snippet->description;
-                $thumbnail = $channel->snippet->thumbnails->default->url;
+                
+                $thumbnail = $channel->snippet->thumbnails->medium->url;
                 $publish_time = $channel->snippet->publishTime;
 
                 $find_video = YoutubeVideo::where('video_id',$video_id)->first();
+                if($channel->snippet->categoryId == 27){
+                    if(empty($find_video)){
+                        
+                        if(date('Y-m-d',strtotime($publish_time)) == date('Y-m-d')){
+                            $views = Youtube::getVideoInfo($video_id);
+                            $title = $views->snippet->title;
+                            $description = $views->snippet->description;
+                            $view_count = $views->statistics->viewCount;
+                            
+                            $create_video = YoutubeVideo::create([
+                                'etag' => $etag,
+                                'video_id' => $video_id,
+                                'channel_id' => $channel_id,
+                                'title' => $title,
+                                'description' => $description,
+                                'thumbnail' => $thumbnail,
+                                'views' => $view_count,
+                                'publish_time' => date('Y-m-d H:i:s',strtotime($publish_time))
+                            ]);
+                        }
+                    }else{
+                            $views = Youtube::getVideoInfo($video_id);
+                            $title = $views->snippet->title;
+                            $description = $views->snippet->description;
+                            $view_count = $views->statistics->viewCount;
+                            
+                            $create_video = YoutubeVideo::where('video_id', $video_id)->update([
+                                'etag' => $etag,
+                                'video_id' => $video_id,
+                                'channel_id' => $channel_id,
+                                'title' => $title,
+                                'description' => $description,
+                                'thumbnail' => $thumbnail,
+                                'views' => $view_count,
+                                'publish_time' => date('Y-m-d H:i:s',strtotime($publish_time))
+                            ]);
+                    }
+                }
+            }
+        }
 
-                if(empty($find_video)){
-                    if(date('Y-m-d',strtotime($publish_time)) == date('Y-m-d')){
-                        $create_video = YoutubeVideo::create([
-                            'etag' => $etag,
-                            'video_id' => $video_id,
-                            'channel_id' => $channel_id,
-                            'title' => $title,
-                            'description' => $description,
-                            'thumbnail' => $thumbnail,
-                            'publish_time' => date('Y-m-d H:i:s',strtotime($publish_time))
-                        ]);
+        $channel2s = Youtube::listChannelVideos('UCnjxYF8TSTdBDf27ULeDR7Q', 10, "date");
+
+        if(!empty($channel2s)){
+            foreach($channel2s as $key2=>$channel){
+                $etag = $channel->etag;
+                $video_id = $channel->id->videoId;
+                $channel_id = $channel->snippet->channelId;
+                $title = $channel->snippet->title;
+                $description = $channel->snippet->description;
+                $thumbnail = $channel->snippet->thumbnails->medium->url;
+                $publish_time = $channel->snippet->publishTime;
+
+                $find_video = YoutubeVideo::where('video_id',$video_id)->first();
+                if($channel->snippet->categoryId == 27){
+                    if(empty($find_video)){
+                        
+                        if(date('Y-m-d',strtotime($publish_time)) == date('Y-m-d')){
+                            $views = Youtube::getVideoInfo($video_id);
+                            $title = $views->snippet->title;
+                            $description = $views->snippet->description;
+                            $view_count = $views->statistics->viewCount;
+                            
+                            $create_video = YoutubeVideo::create([
+                                'etag' => $etag,
+                                'video_id' => $video_id,
+                                'channel_id' => $channel_id,
+                                'title' => $title,
+                                'description' => $description,
+                                'thumbnail' => $thumbnail,
+                                'views' => $view_count,
+                                'publish_time' => date('Y-m-d H:i:s',strtotime($publish_time))
+                            ]);
+                        }
+                    }else{
+                            $views = Youtube::getVideoInfo($video_id);
+                            $title = $views->snippet->title;
+                            $description = $views->snippet->description;
+                            $view_count = $views->statistics->viewCount;
+                            $create_video = YoutubeVideo::where('video_id', $video_id)->update([
+                                'etag' => $etag,
+                                'video_id' => $video_id,
+                                'channel_id' => $channel_id,
+                                'title' => $title,
+                                'description' => $description,
+                                'thumbnail' => $thumbnail,
+                                'views' => $view_count,
+                                'publish_time' => date('Y-m-d H:i:s',strtotime($publish_time))
+                            ]);
                     }
                 }
             }
