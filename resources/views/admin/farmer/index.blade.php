@@ -13,6 +13,9 @@
     .btn-add{
         float: right;
     }
+    #example_filter label{
+        float: right;
+    }
 </style>
 <div class="pagetitle">
     <h1>Manage Farmer</h1>
@@ -33,6 +36,30 @@
                 <div class="card-body">
                     <h5 class="card-title">List of Farmers <a href="{{route('add-farmer')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
                     <!-- <div class="table-responsive"> -->
+                    <div class="row mb-3 float-right">
+                        @php
+                            $districts = App\Models\District::all();
+                            $tehsils = App\Models\Tehsil::all();
+                        @endphp
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2">
+                            <select id="district_id" class="form-select form-select-sm">
+                                <option value="">Search District</option>
+                            @foreach($districts as $district)
+                                <option value="{{$district->district_name}}">{{$district->district_name}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="tehsil_id" class="form-select form-select-sm">
+                                <option value="">Search Block</option>
+                            @foreach($tehsils as $tehsil)
+                                <option value="{{$tehsil->tehsil_name}}">{{$tehsil->tehsil_name}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -40,7 +67,8 @@
                                 <th>Avatar</th>
                                 <th>Applicant Type</th>
                                 <th>Farmer Name</th>
-                                <th>Mobile Number</th>
+                                <th>Tehsil</th>
+                                <th>District</th>
                                 <!-- <th>Father's/Husband's Name</th> -->
                                 
                                 <!-- <th>City</th> -->
@@ -55,7 +83,8 @@
                                 
                                 <td>{{ $farmer->applicant_type_name	}}</td>
                                 <td>{{ $farmer->name}}</td>
-                                <td>{{ $farmer->mobile_number}}</td>
+                                <td>{{ $farmer->tehsil_name}}</td>
+                                <td>{{ $farmer->district_name}}</td>
                                 
                                 <!-- <td>{{ $farmer->father_husband_name}}</td> -->
                                 <!-- <td>{{ $farmer->gender}}</td> -->
@@ -159,7 +188,14 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        $('#example').DataTable();
+        var table = $('#example').DataTable();
+        $('#district_id').on('change', function () {
+            table.columns(5).search( this.value ).draw();
+        } );
+
+        $('#tehsil_id').on('change', function () {
+            table.columns(4).search( this.value ).draw();
+        } );
 
         $('.delete').on('click', function(){
             var id=$(this).attr("data-id");
