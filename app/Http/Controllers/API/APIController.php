@@ -481,6 +481,11 @@ class APIController extends Controller
                             ->where('commodity',$request->commodity)
                             ->where('market',$request->market)
                             ->get();
+        }elseif(empty($request->commodity) && !empty($request->district) && !empty($request->market)){
+            $marketPrice = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->get();
         }
         elseif(!empty($request->commodity) && empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
