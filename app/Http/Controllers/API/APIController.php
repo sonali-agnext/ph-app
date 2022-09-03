@@ -503,22 +503,24 @@ class APIController extends Controller
             ->json(['message' => 'Market Prices', 'data' => $marketPrice], 200);
     }
 
-    public function fetchCommodity(Request $request){
+    public function fetchCommodity(){
         $marketPrice = MarketPrice::select('commodity')->distinct()->get();
-        return response()
-            ->json(['message' => 'Market Commodities', 'data' => $marketPrice], 200);
+        // return response()
+        //     ->json(['message' => 'Market Commodities', 'data' => $marketPrice], 200);
+        return $marketPrice;
     }
 
-    public function fetchMarketDistrict(Request $request){
+    public function fetchMarketDistrict(){
         $marketPrice = MarketPrice::select('district')->distinct()->get();
-        return response()
-            ->json(['message' => 'Market Districts', 'data' => $marketPrice], 200);
+        // return response()
+        //     ->json(['message' => 'Market Districts', 'data' => $marketPrice], 200);
+        return $marketPrice;
     }
 
     public function fetchMarket(Request $request){
         $marketPrice = MarketPrice::select('market')->distinct()->get();
         return response()
-            ->json(['message' => 'Market Mandi', 'data' => $marketPrice], 200);
+            ->json(['message' => 'District/Commodity/Market', 'data' => ['district'=> $this->fetchMarketDistrict(), 'commodity'=> $this->fetchCommodity(),'market'=>$marketPrice]], 200);
     }
 
     public function fetchFeaturedScheme(Request $request){
