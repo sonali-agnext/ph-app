@@ -74,12 +74,12 @@
       </li><!-- End Applicant Type Nav -->
       
       <li class="nav-item">
-        <a @if($route == 'manage-pscheme' || $route == 'add-pscheme' || $route == 'edit-pscheme' || $route == 'update-pscheme' || $route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-sheme-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') aria-expanded="true" @endif>
+        <a @if($route == 'manage-scheme-subcomponent' || $route == 'edit-scheme-subcomponent' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcomponent' || $route == 'manage-scheme-component' || $route == 'edit-scheme-component' || $route == 'update-scheme-component' || $route == 'add-scheme-component' || $route == 'manage-pscheme' || $route == 'add-pscheme' || $route == 'edit-pscheme' || $route == 'update-pscheme' || $route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-sheme-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory' || $route == 'manage-scheme-component' || $route == 'edit-scheme-component' || $route == 'update-scheme-component' || $route == 'add-scheme-component' || $route == 'manage-scheme-subcomponent' || $route == 'edit-scheme-subcomponent' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcomponent') aria-expanded="true" @endif>
           <i class="bi bi-gem"></i><span>Manage Schemes</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="manage-sheme-nav" @if($route == 'manage-pscheme' || $route == 'add-pscheme' || $route == 'edit-pscheme' || $route == 'update-pscheme' || $route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
+        <ul id="manage-sheme-nav" @if($route == 'manage-scheme-subcomponent' || $route == 'edit-scheme-subcomponent' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcomponent' || $route == 'manage-scheme-component' || $route == 'edit-scheme-component' || $route == 'update-scheme-component' || $route == 'add-scheme-component' || $route == 'manage-pscheme' || $route == 'add-pscheme' || $route == 'edit-pscheme' || $route == 'update-pscheme' || $route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
           <li>
-            <a @if($route == 'manage-pscheme-category' || $route == 'add-pscheme-category' || $route == 'edit-pscheme-category' || $route == 'update-pscheme-category') class="active" @endif href="{{route('manage-pscheme-category')}}">
+            <a @if( $route == 'manage-pscheme-category' || $route == 'add-pscheme-category' || $route == 'edit-pscheme-category' || $route == 'update-pscheme-category') class="active" @endif href="{{route('manage-pscheme-category')}}">
               <i class="bi bi-circle"></i><span>List Parent Scheme Category</span>
             </a>
           </li>
@@ -87,15 +87,25 @@
             <a @if($route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category') class="active" @endif href="{{route('manage-scheme-category')}}">
               <i class="bi bi-circle"></i><span>List Scheme Category</span>
             </a>
-          </li>
+          </li>          
           <li>
             <a @if($route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') class="active" @endif href="{{route('manage-scheme-subcategory')}}">
-              <i class="bi bi-circle"></i><span>List Scheme Sub-Category</span>
+              <i class="bi bi-circle"></i><span>List Scheme Component Type</span>
+            </a>
+          </li>
+          <li>
+            <a @if($route == 'manage-scheme-component' || $route == 'edit-scheme-component' || $route == 'update-scheme-component' || $route == 'add-scheme-component') class="active" @endif href="{{route('manage-scheme-component')}}">
+              <i class="bi bi-circle"></i><span>List Scheme Component</span>
+            </a>
+          </li>
+          <li>
+            <a @if($route == 'manage-scheme-subcomponent' || $route == 'edit-scheme-subcomponent' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcomponent') class="active" @endif href="{{route('manage-scheme-subcomponent')}}">
+              <i class="bi bi-circle"></i><span>List Scheme Sub Component</span>
             </a>
           </li>
           <li>
             <a @if($route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme') class="active" @endif href="{{route('manage-scheme')}}">
-              <i class="bi bi-circle"></i><span>List Schemes</span>
+              <i class="bi bi-circle"></i><span>List Scheme Crops/Items</span>
             </a>
           </li>
         </ul>

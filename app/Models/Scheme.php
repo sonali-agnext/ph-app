@@ -9,6 +9,6 @@ class Scheme extends Model
     public $timestamps = true;
     //
     protected $fillable = [
-        'scheme_subcategory_id', 'scheme_name', 'subsidy', 'cost_norms', 'terms', 'detailed_description', 'videos', 'videos_title', 'scheme_image','sector','sector_description','is_featured'
+        'govt_id', 'category_id', 'component_id', 'sub_component_id', 'scheme_subcategory_id', 'scheme_name', 'non_project_based', 'subsidy', 'cost_norms', 'terms', 'detailed_description', 'videos', 'videos_title', 'scheme_image', 'sector', 'sector_description', 'is_featured', 'year', 'year'
     ];
 }

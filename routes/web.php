@@ -65,36 +65,57 @@ Route::get('/add-tehsil','Admin\SettingController@addTehsil')->name('add-tehsil'
 Route::post('/add-tehsil','Admin\SettingController@createTehsil')->name('add-tehsil');
 
 // manage scheme category
-Route::get('/manage-scheme-category','Admin\SettingController@manageSchemeCategory')->name('manage-scheme-category');
-Route::get('/edit-scheme-category','Admin\SettingController@editSchemeCategory')->name('edit-scheme-category');
-Route::post('/update-scheme-category','Admin\SettingController@updateSchemeCategory')->name('update-scheme-category');
-Route::post('/delete-scheme-category','Admin\SettingController@deleteSchemeCategory')->name('delete-scheme-category');
-Route::get('/add-scheme-category','Admin\SettingController@addSchemeCategory')->name('add-scheme-category');
-Route::post('/add-scheme-category','Admin\SettingController@createSchemeCategory')->name('add-scheme-category');
+Route::get('/manage-scheme-category','Admin\SchemeController@manageSchemeCategory')->name('manage-scheme-category');
+Route::get('/edit-scheme-category','Admin\SchemeController@editSchemeCategory')->name('edit-scheme-category');
+Route::post('/update-scheme-category','Admin\SchemeController@updateSchemeCategory')->name('update-scheme-category');
+Route::post('/delete-scheme-category','Admin\SchemeController@deleteSchemeCategory')->name('delete-scheme-category');
+Route::get('/add-scheme-category','Admin\SchemeController@addSchemeCategory')->name('add-scheme-category');
+Route::post('/add-scheme-category','Admin\SchemeController@createSchemeCategory')->name('add-scheme-category');
 
 // manage scheme sub category
-Route::get('/manage-scheme-subcategory','Admin\SettingController@manageSchemeSubCategory')->name('manage-scheme-subcategory');
-Route::get('/edit-scheme-subcategory','Admin\SettingController@editSchemeSubCategory')->name('edit-scheme-subcategory');
-Route::post('/update-scheme-subcategory','Admin\SettingController@updateSchemeSubCategory')->name('update-scheme-subcategory');
-Route::post('/delete-scheme-subcategory','Admin\SettingController@deleteSchemeSubCategory')->name('delete-scheme-subcategory');
-Route::get('/add-scheme-subcategory','Admin\SettingController@addSchemeSubCategory')->name('add-scheme-subcategory');
-Route::post('/add-scheme-subcategory','Admin\SettingController@createSchemeSubCategory')->name('add-scheme-subcategory');
+Route::get('/manage-scheme-subcategory','Admin\SchemeController@manageSchemeSubCategory')->name('manage-scheme-subcategory');
+Route::get('/edit-scheme-subcategory','Admin\SchemeController@editSchemeSubCategory')->name('edit-scheme-subcategory');
+Route::post('/update-scheme-subcategory','Admin\SchemeController@updateSchemeSubCategory')->name('update-scheme-subcategory');
+Route::post('/delete-scheme-subcategory','Admin\SchemeController@deleteSchemeSubCategory')->name('delete-scheme-subcategory');
+Route::get('/add-scheme-subcategory','Admin\SchemeController@addSchemeSubCategory')->name('add-scheme-subcategory');
+Route::post('/add-scheme-subcategory','Admin\SchemeController@createSchemeSubCategory')->name('add-scheme-subcategory');
+
+// manage scheme component
+Route::get('/manage-scheme-component','Admin\SchemeController@manageSchemeComponent')->name('manage-scheme-component');
+Route::get('/edit-scheme-component','Admin\SchemeController@editSchemeComponent')->name('edit-scheme-component');
+Route::post('/update-scheme-component','Admin\SchemeController@updateSchemeComponent')->name('update-scheme-component');
+Route::post('/delete-scheme-component','Admin\SchemeController@deleteSchemeComponent')->name('delete-scheme-component');
+Route::get('/add-scheme-component','Admin\SchemeController@addSchemeComponent')->name('add-scheme-component');
+Route::post('/add-scheme-component','Admin\SchemeController@createSchemeComponent')->name('add-scheme-component');
+
+// manage scheme sub component
+Route::get('/manage-scheme-subcomponent','Admin\SchemeController@manageSchemeSubComponent')->name('manage-scheme-subcomponent');
+Route::get('/edit-scheme-subcomponent','Admin\SchemeController@editSchemeSubComponent')->name('edit-scheme-subcomponent');
+Route::post('/update-scheme-subcomponent','Admin\SchemeController@updateSchemeSubComponent')->name('update-scheme-subcomponent');
+Route::post('/delete-scheme-subcomponent','Admin\SchemeController@deleteSchemeSubComponent')->name('delete-scheme-subcomponent');
+Route::get('/add-scheme-subcomponent','Admin\SchemeController@addSchemeSubComponent')->name('add-scheme-subcomponent');
+Route::post('/add-scheme-subcomponent','Admin\SchemeController@createSchemeSubComponent')->name('add-scheme-subcomponent');
+
 
 // manage scheme
-Route::get('/manage-pscheme-category','Admin\SettingController@managePSchemeCategory')->name('manage-pscheme-category');
-Route::get('/edit-pscheme-category','Admin\SettingController@editPSchemeCategory')->name('edit-pscheme-category');
-Route::post('/update-pscheme-category','Admin\SettingController@updatePSchemeCategory')->name('update-pscheme-category');
-Route::post('/delete-pscheme-category','Admin\SettingController@deletePSchemeCategory')->name('delete-pscheme-category');
-Route::get('/add-pscheme-category','Admin\SettingController@addPSchemeCategory')->name('add-pscheme-category');
-Route::post('/add-pscheme-category','Admin\SettingController@createPSchemeCategory')->name('add-pscheme-category');
+Route::get('/manage-pscheme-category','Admin\SchemeController@managePSchemeCategory')->name('manage-pscheme-category');
+Route::get('/edit-pscheme-category','Admin\SchemeController@editPSchemeCategory')->name('edit-pscheme-category');
+Route::post('/update-pscheme-category','Admin\SchemeController@updatePSchemeCategory')->name('update-pscheme-category');
+Route::post('/delete-pscheme-category','Admin\SchemeController@deletePSchemeCategory')->name('delete-pscheme-category');
+Route::get('/add-pscheme-category','Admin\SchemeController@addPSchemeCategory')->name('add-pscheme-category');
+Route::post('/add-pscheme-category','Admin\SchemeController@createPSchemeCategory')->name('add-pscheme-category');
 
 // manage scheme
-Route::get('/manage-scheme','Admin\SettingController@manageScheme')->name('manage-scheme');
-Route::get('/edit-scheme','Admin\SettingController@editScheme')->name('edit-scheme');
-Route::post('/update-scheme','Admin\SettingController@updateScheme')->name('update-scheme');
-Route::post('/delete-scheme','Admin\SettingController@deleteScheme')->name('delete-scheme');
-Route::get('/add-scheme','Admin\SettingController@addScheme')->name('add-scheme');
-Route::post('/add-scheme','Admin\SettingController@createScheme')->name('add-scheme');
+Route::get('/manage-scheme','Admin\SchemeController@manageScheme')->name('manage-scheme');
+Route::get('/edit-scheme','Admin\SchemeController@editScheme')->name('edit-scheme');
+Route::post('/update-scheme','Admin\SchemeController@updateScheme')->name('update-scheme');
+Route::post('/delete-scheme','Admin\SchemeController@deleteScheme')->name('delete-scheme');
+Route::get('/add-scheme','Admin\SchemeController@addScheme')->name('add-scheme');
+Route::post('/add-scheme','Admin\SchemeController@createScheme')->name('add-scheme');
+Route::get('/fetch-scheme-category', 'Admin\SchemeController@fetchSchemeCategory')->name('fetch-scheme-category');
+Route::get('/fetch-component-type', 'Admin\SchemeController@fetchComponentType')->name('fetch-component-type');
+Route::get('/fetch-components', 'Admin\SchemeController@fetchComponent')->name('fetch-components');
+Route::get('/fetch-sub-components', 'Admin\SchemeController@fetchSubComponent')->name('fetch-sub-components');
 
 //manage farmer
 

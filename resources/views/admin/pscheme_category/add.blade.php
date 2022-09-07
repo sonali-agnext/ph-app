@@ -48,8 +48,8 @@
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" name="category_name" required class="form-control" id="category_name" placeholder="Enter Scheme Category" value="">
-                                        <label for="category_name">Scheme Category Name</label>
+                                        <input type="text" name="category_name" required class="form-control" id="category_name" placeholder="Enter Parent Scheme Category" value="">
+                                        <label for="category_name">Parent Scheme Category Name</label>
                                     </div>
                                 </div>
                                 

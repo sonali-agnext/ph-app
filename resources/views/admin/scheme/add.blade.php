@@ -21,11 +21,11 @@
 }
 </style>
 <div class="pagetitle">
-    <h1>Manage Scheme</h1>
+    <h1>Manage Scheme Crops/Items</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme')}}">Manage Scheme</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme')}}">Manage Scheme Crops/Items</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -53,28 +53,105 @@
                             <!-- Floating Labels Form -->
                             <form class="row g-3" method="POST" enctype="multipart/form-data" action="{{ route('add-scheme') }}">
                                 @csrf
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        @php
+                                        $minYear = date("Y", time()) - 10;
+                                        $curYear = date("Y", time()) + 1;
+
+                                        $yearRange = range($minYear, $curYear);
+                                        $prevYear = date('Y',strtotime('-1 Year'));
+                                        $currYear = date('y');
+                                        $conselValue = $prevYear.'-'.$currYear;
+                                        @endphp
+                                        <select class="form-select" required name="year" id="year" aria-label="Select Financial Year">
+                                            <option value="">Select Financial Year</option>
+                                            @foreach($yearRange as $key => $value)
+                                            @php 
+                                            $pfYear = $value-1;
+                                            $prefix = substr($pfYear,-0);
+                                            $PreYear=substr($value,-2);
+                                            $selValue =  $prefix.'-'. $PreYear;
+                                            @endphp
+                                            <option value="{{ $selValue }}">{{ $selValue }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="sub_component_name">Financial Year</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="scheme_subcategory_id" id="scheme_subcategory_id" aria-label="Sub Category Name">
-                                            @forelse($scheme_subcategory as $dst)                                            
-                                            <option value="{{ $dst->id }}">{{$dst->subcategory_name}}</option>                                            
+                                        <select class="form-select" name="govt_id" required id="govt_id" aria-label="Parent Scheme Name">
+                                            <option value="">Parent Scheme Name</option>
+                                            @forelse($govt_schemes as $dst)                                            
+                                            <option value="{{ $dst->id }}">{{$dst->govt_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="scheme_category_id">Scheme Sub category Name</label>
+                                        <label for="govt_id">Parent Scheme Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="scheme_category_id" required id="scheme_category_id" aria-label="Scheme Category Name">
+                                            <option value="">Scheme Category Name</option>                                            
+                                        </select>
+                                        <label for="scheme_category_id">Scheme Category Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="scheme_subcategory_id" required id="scheme_subcategory_id" aria-label="Component Type">
+                                            <option value="">Component Type</option>
+                                        </select>
+                                        <label for="scheme_subcategory_id">Component Type</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="component_id" id="component_id" aria-label="Component Name">
+                                            <option value="">Component Name</option>
+                                        </select>
+                                        <label for="component_id">Component Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="sub_component_id" id="sub_component_id" aria-label="Sub Component Name">
+                                            <option value="">Sub Component Name</option>
+                                        </select>
+                                        <label for="sub_component_id">Sub Component Name</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" name="scheme_name" required class="form-control" id="scheme_name" placeholder="Enter Scheme Name" value="">
-                                        <label for="scheme_name">Scheme Name</label>
+                                        <label for="scheme_name">Crop/Item Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" name="status" id="status" aria-label="Scheme Status">
+                                            <option value="1">True</option>
+                                            <option value="0">False</option>                                            
+                                        </select>
+                                        <label for="status">Scheme Status</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" name="non_project_based" id="non_project_based" aria-label="Scheme Based">
+                                            <option value="Non-Project Based">Non-Project Based</option>
+                                            <option value="Project Based">Project Based</option>
+                                        </select>
+                                        <label for="non_project_based">Scheme Based</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" name="subsidy" required class="form-control" id="subsidy" placeholder="Enter Subsidy" value="">
-                                        <label for="subsidy">Subsidy Range</label>
+                                        <label for="subsidy">Subsidy Range(in %)</label>
                                     </div>
                                 </div>
                                 <hr />
@@ -82,30 +159,33 @@
                                     <div class="col-md-12 mb-2">
                                         <p>Subsidy Sector</p>
                                     </div>
-                                    <div class="col-md-10 sector-field mb-1" id="sector-field-1">
+                                    <div class="col-md-12 sector-field mb-1" id="sector-field-1">
                                         <div class="row" >
-                                                <div class="col-md-6">
+                                        <input type="hidden" name="sector[]" required class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Public Sector">
+                                        <input type="hidden" name="sector[]" required class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Private Sector">    
+                                                <div class="col-md-6 mb-1">
                                                     <div class="form-floating">
-                                                        <input type="text" name="sector[]" required class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="">
-                                                        <label for="sector">Subsidy Sector Title</label>
+                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Public Sector Description" value="">
+                                                        <label for="sector_description">Public Sector Description</label>
                                                     </div>
                                                 </div>
+                                                 
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" required class="form-control" id="sector_description" placeholder="Enter Sector Description" value="">
-                                                        <label for="sector_description">Sector Description</label>
+                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Private Sector Description" value="">
+                                                        <label for="sector_description">Private Sector Description</label>
                                                     </div>
-                                                </div>                                                
+                                                </div>                                               
                                             </div>
                                     </div>
-                                    <div class="col-md-2 mt-30 append-buttons">
+                                    <!-- <div class="col-md-2 mt-30 append-buttons">
                                         <div class="clearfix">
                                         <button type="button" id="add-sector-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
                                         </button>
                                         <button type="button" id="remove-sector-button" class="btn btn-secondary float-left text-uppercase ml-1" disabled="disabled"><i class="bi bi-dash"></i>
                                         </button>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <hr />
@@ -118,7 +198,7 @@
                                         <div class="row" >
                                             <div class="col-md-12">
                                                 <div class="form-floating">
-                                                    <input type="text" name="terms[]" required class="form-control" id="terms" placeholder="Enter Terms" value="">
+                                                    <input type="text" name="terms[]" class="form-control" id="terms" placeholder="Enter Terms" value="">
                                                     <label for="terms">Title</label>
                                                 </div>
                                             </div>                                              
@@ -164,13 +244,13 @@
                                         <div class="row" >
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="url" name="video[]" required class="form-control" id="video" placeholder="Enter Cost Norms" value="">
+                                                        <input type="url" name="video[]" class="form-control" id="video" placeholder="Enter Cost Norms" value="">
                                                         <label for="video">Video URL</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="text" name="title[]" required class="form-control" id="title" placeholder="Enter Title" value="">
+                                                        <input type="text" name="title[]" class="form-control" id="title" placeholder="Enter Title" value="">
                                                         <label for="title">Title</label>
                                                     </div>
                                                 </div>                                                
@@ -204,7 +284,86 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        $('#example').DataTable();
+        $('#example').DataTable(); 
+        $('#govt_id').on('change', function(){
+            var id = $(this).val();
+            $.ajax({
+                    type: 'GET',
+                    url: "{{route('fetch-scheme-category')}}",
+                    data: { 'id': id },
+                    dataType: "json",
+                    success: function(resultData) {
+                        var html = '';
+                        html+='<option value="">Scheme Category Name</option>';
+                        if(resultData.message == 'success'){
+                            var content = resultData.data;
+                            console.log(content.id);
+                            html+='<option value="'+content.id+'">'+content.category_name+'</option>';
+                        }
+                        $('#scheme_category_id').empty();
+                        $('#scheme_category_id').html(html);
+                    }
+                }); 
+        });   
+        $('#scheme_category_id').on('change', function(){
+            var id = $(this).val();
+            $.ajax({
+                    type: 'GET',
+                    url: "{{route('fetch-component-type')}}",
+                    data: { 'id': id },
+                    dataType: "json",
+                    success: function(resultData) {
+                        var html = '';
+                        html+='<option value="">Component Type</option>';
+                        if(resultData.message == 'success'){
+                            var content = resultData.data;
+                            html+='<option value="'+content.id+'">'+content.subcategory_name+'</option>';
+                        }
+                        $('#scheme_subcategory_id').empty();
+                        $('#scheme_subcategory_id').html(html);
+                    }
+                }); 
+        });   
+        $('#scheme_subcategory_id').on('change', function(){
+            var id = $(this).val();
+            $.ajax({
+                    type: 'GET',
+                    url: "{{route('fetch-components')}}",
+                    data: { 'id': id },
+                    dataType: "json",
+                    success: function(resultData) {
+                        var html = '';
+                        html+='<option value="">Component Name</option>';
+                        if(resultData.message == 'success'){
+                            var content = resultData.data;
+                            html+='<option value="'+content.id+'">'+content.component_name+'</option>';
+                        }
+                        $('#component_id').empty();
+                        $('#component_id').html(html);
+                    }
+                }); 
+        });
+
+        $('#component_id').on('change', function(){
+            var id = $(this).val();
+            $.ajax({
+                    type: 'GET',
+                    url: "{{route('fetch-sub-components')}}",
+                    data: { 'id': id },
+                    dataType: "json",
+                    success: function(resultData) {
+                        var html = '';
+                        html+='<option value="">Sub Component Name</option>';
+                        if(resultData.message == 'success'){
+                            var content = resultData.data;
+                            html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
+                        }
+                        $('#sub_component_id').empty();
+                        $('#sub_component_id').html(html);
+                    }
+                }); 
+        });
+               
     });
 
     $(document).ready(function() {
@@ -275,71 +434,71 @@
         });
 
         // sector
-        var buttonSectorAdd = $("#add-sector-button");
-        var buttonSectorRemove = $("#remove-sector-button");
-        var classNameSector = ".sector-field";
-        var countSector = 0;
-        var fieldSector = "";
-        var maxFieldsSector=5;
+        // var buttonSectorAdd = $("#add-sector-button");
+        // var buttonSectorRemove = $("#remove-sector-button");
+        // var classNameSector = ".sector-field";
+        // var countSector = 0;
+        // var fieldSector = "";
+        // var maxFieldsSector=5;
 
-        function totalSectorFields() {
-            return $(classNameSector).length;
-        }
+        // function totalSectorFields() {
+        //     return $(classNameSector).length;
+        // }
 
-        function addNewSectorField() {
-            countSector = totalFields() + 1;
-            fieldSector = $("#sector-field-1").clone();
-            fieldSector.attr("id", "sector-field-" + countSector);
-            fieldSector.children("label").text("Field " + countSector);
-            fieldSector.find("input").val("");
-            $(classNameSector + ":last").after($(fieldSector));
-        }
+        // function addNewSectorField() {
+        //     countSector = totalFields() + 1;
+        //     fieldSector = $("#sector-field-1").clone();
+        //     fieldSector.attr("id", "sector-field-" + countSector);
+        //     fieldSector.children("label").text("Field " + countSector);
+        //     fieldSector.find("input").val("");
+        //     $(classNameSector + ":last").after($(fieldSector));
+        // }
 
-        function removeLastSectorField() {
-            if (totalSectorFields() > 1) {
-            $(classNameSector + ":last").remove();
-            }
-        }
+        // function removeLastSectorField() {
+        //     if (totalSectorFields() > 1) {
+        //     $(classNameSector + ":last").remove();
+        //     }
+        // }
 
-        function enableButtonSectorRemove() {
-            if (totalSectorFields() === 2) {
-                buttonSectorRemove.removeAttr("disabled");
-                buttonSectorRemove.addClass("shadow-sm");
-            }
-        }
+        // function enableButtonSectorRemove() {
+        //     if (totalSectorFields() === 2) {
+        //         buttonSectorRemove.removeAttr("disabled");
+        //         buttonSectorRemove.addClass("shadow-sm");
+        //     }
+        // }
 
-        function disableButtonSectorRemove() {
-            if (totalSectorFields() === 1) {
-                buttonSectorRemove.attr("disabled", "disabled");
-                buttonSectorRemove.removeClass("shadow-sm");
-            }
-        }
+        // function disableButtonSectorRemove() {
+        //     if (totalSectorFields() === 1) {
+        //         buttonSectorRemove.attr("disabled", "disabled");
+        //         buttonSectorRemove.removeClass("shadow-sm");
+        //     }
+        // }
 
-        function disableButtonSectorAdd() {
-            if (totalSectorFields() === maxFieldsSector) {
-                buttonSectorAdd.attr("disabled", "disabled");
-                buttonSectorAdd.removeClass("shadow-sm");
-            }
-        }
+        // function disableButtonSectorAdd() {
+        //     if (totalSectorFields() === maxFieldsSector) {
+        //         buttonSectorAdd.attr("disabled", "disabled");
+        //         buttonSectorAdd.removeClass("shadow-sm");
+        //     }
+        // }
 
-        function enableButtonSectorAdd() {
-            if (totalSectorFields() === (maxFieldsSector - 1)) {
-                buttonSectorAdd.removeAttr("disabled");
-                buttonSectorAdd.addClass("shadow-sm");
-            }
-        }
+        // function enableButtonSectorAdd() {
+        //     if (totalSectorFields() === (maxFieldsSector - 1)) {
+        //         buttonSectorAdd.removeAttr("disabled");
+        //         buttonSectorAdd.addClass("shadow-sm");
+        //     }
+        // }
 
-        buttonSectorAdd.click(function() {
-            addNewSectorField();
-            enableButtonSectorRemove();
-            disableButtonSectorAdd();
-        });
+        // buttonSectorAdd.click(function() {
+        //     addNewSectorField();
+        //     enableButtonSectorRemove();
+        //     disableButtonSectorAdd();
+        // });
 
-        buttonSectorRemove.click(function() {
-            removeLastSectorField();
-            disableButtonSectorRemove();
-            enableButtonSectorAdd();
-        });
+        // buttonSectorRemove.click(function() {
+        //     removeLastSectorField();
+        //     disableButtonSectorRemove();
+        //     enableButtonSectorAdd();
+        // });
 
         //terms
         var buttonAddTerms = $("#add-terms-button");
