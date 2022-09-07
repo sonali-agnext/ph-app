@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Scheme Sub Category</h1>
+    <h1>Manage Scheme Component Type</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-subcategory')}}">Manage Scheme Sub Category</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-subcategory')}}">Manage Scheme Component Type</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Add Scheme Sub Category</h5>
+                        <h5 class="card-title">Add Scheme Component Type</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -48,7 +48,7 @@
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="scheme_category_id" id="scheme_category_id" aria-label="Sub Category Name">
+                                        <select class="form-select" name="scheme_category_id" id="scheme_category_id" aria-label="Component Type Name">
                                             @forelse($scheme_category as $dst)                                            
                                             <option value="{{ $dst->id }}">{{$dst->category_name}}</option>                                            
                                             @empty
@@ -59,8 +59,8 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Scheme Sub Category" value="">
-                                        <label for="subcategory_name">Scheme Sub Category Name</label>
+                                        <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Scheme Component Type" value="">
+                                        <label for="subcategory_name">Scheme Component Type Name</label>
                                     </div>
                                 </div>
                                 

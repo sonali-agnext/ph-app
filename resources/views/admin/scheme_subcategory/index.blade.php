@@ -15,11 +15,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Scheme Sub Category</h1>
+    <h1>Manage Scheme Component Type</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active">Manage Scheme Sub Category</li>
+        <li class="breadcrumb-item active">Manage Scheme Component Type</li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -31,14 +31,14 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">List of Scheme Sub Category <a href="{{route('add-scheme-subcategory')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
+                    <h5 class="card-title">List of Scheme Component Type <a href="{{route('add-scheme-subcategory')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
                     
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Sr No</th>
                                 <th>Scheme Category Name</th>
-                                <th>Scheme Sub Category</th>
+                                <th>Scheme Component Type</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -55,12 +55,12 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="viewModalLabel">View Scheme Sub Category</h5>
+                                            <h5 class="modal-title" id="viewModalLabel">View Scheme Component Type</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row">
-                                                <div class="col-md-6"><b>Scheme Sub Category ID</b></div>
+                                                <div class="col-md-6"><b>Scheme Component Type ID</b></div>
                                                 <div class="col-md-6"><p>{{ $scheme_category->id}}</p></div>
                                             </div>
                                             <div class="row">
@@ -68,7 +68,7 @@
                                                 <div class="col-md-6"><p>{{ $scheme_category->category_name}}</p></div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6"><b>Scheme Sub Category Name</b></div>
+                                                <div class="col-md-6"><b>Scheme Component Type Name</b></div>
                                                 <div class="col-md-6"><p>{{ $scheme_category->subcategory_name}}</p></div>
                                             </div>
                                             <div class="row">
@@ -122,7 +122,7 @@
                         dataType: "json",
                         success: function(resultData) { 
                             if(resultData.message == 'success'){
-                                swal("Scheme Sub Category Deleted Successfully!!", {
+                                swal("Scheme Component Type Deleted Successfully!!", {
                                     icon: "success",
                                 });
                                 location.reload();

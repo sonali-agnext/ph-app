@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Scheme Sub Category</h1>
+    <h1>Manage Scheme Component Type</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-subcategory')}}">Manage Scheme Sub Category</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-subcategory')}}">Manage Scheme Component Type</a></li>
     </ol>
     <!-- <img src="{{asset('storage/app/public/image/180X180.png')}}" /> -->
     </nav>
@@ -30,7 +30,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit Scheme Sub Category</h5>
+                        <h5 class="card-title">Edit Scheme Component Type</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Tehsil" value="{{$scheme_sub_category->subcategory_name}}">
-                                        <label for="subcategory_name">Scheme Sub Category Name</label>
+                                        <label for="subcategory_name">Scheme Component Type Name</label>
                                     </div>
                                 </div>
 

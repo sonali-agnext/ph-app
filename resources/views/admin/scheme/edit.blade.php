@@ -53,7 +53,7 @@
                         </div>
                         @endif
                             <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST" action="{{ route('update-scheme',['id' => $scheme->id]) }}">
+                            <form class="row g-3" method="POST"  enctype="multipart/form-data"  action="{{ route('update-scheme',['id' => $scheme->id]) }}">
                                 @csrf
                                 <div class="col-md-6">
                                     <div class="form-floating">
