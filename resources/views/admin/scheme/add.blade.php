@@ -192,7 +192,7 @@
 
                                 <div class="row" style="align-items: center;">
                                     <div class="col-md-12 mb-2">
-                                        <p>Terms</p>
+                                        <p>Required Documents</p>
                                     </div>
                                     <div class="col-md-10 terms-field mb-1" id="terms-field-1">
                                         <div class="row" >

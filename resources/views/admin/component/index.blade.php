@@ -117,7 +117,7 @@
                 if (willDelete) {
                     var saveData = $.ajax({
                         type: 'POST',
-                        url: "{{route('delete-scheme-subcategory')}}",
+                        url: "{{route('delete-scheme-component')}}",
                         data: {'id':id},
                         dataType: "json",
                         success: function(resultData) { 

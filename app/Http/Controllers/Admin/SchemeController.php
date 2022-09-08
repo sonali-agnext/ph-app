@@ -361,6 +361,7 @@ class SchemeController extends Controller
             $filename = time().$request->scheme_image->getClientOriginalName();
             $request->scheme_image->storeAs('scheme-images',$filename,'public');
             $scheme = Scheme::where('id',$id)->update([
+                'units' => $request->units,
                 'year' => $request->year,
                 'govt_id' => $request->govt_id,
                 'category_id'=>$request->scheme_category_id,
@@ -385,6 +386,7 @@ class SchemeController extends Controller
             }
         }else{
             $scheme = Scheme::where('id',$id)->update([
+                'units' => $request->units,
                 'year' => $request->year,
                 'govt_id' => $request->govt_id,
                 'category_id'=>$request->scheme_category_id,
@@ -442,6 +444,7 @@ class SchemeController extends Controller
                 $filename = time().$request->scheme_image->getClientOriginalName();
                 $request->scheme_image->storeAs('scheme-images',$filename,'public');
                 $scheme = Scheme::create([
+                    'units' => $request->units,
                     'year' => $request->year,
                     'govt_id' => $request->govt_id,
                     'category_id'=>$request->scheme_category_id,

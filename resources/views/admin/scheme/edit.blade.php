@@ -169,7 +169,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" name="subsidy" required class="form-control" id="subsidy" placeholder="Enter Subsidy" value="{{ $scheme->subsidy}}">
+                                        <input type="text" name="subsidy" required class="form-control" id="subsidy" placeholder="Enter Subsidy For ex: 40, 40-100,0" value="{{ $scheme->subsidy}}">
                                         <label for="subsidy">Subsidy Range</label>
                                     </div>
                                 </div>
@@ -221,7 +221,7 @@
 
                                 <div class="row" style="align-items: center;">
                                     <div class="col-md-12 mb-2">
-                                        <p>Terms</p>
+                                        <p>Required Documents</p>
                                     </div>
                                 @php $terms = !empty($scheme->terms)?json_decode($scheme->terms):[]; $term_len=count($terms); @endphp
                                 @forelse($terms as $tkey => $term)
@@ -258,13 +258,35 @@
                                 </div>
                                 <hr />
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" name="cost_norms" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="{{$scheme->cost_norms}}">
                                         <label for="cost_norms">Cost Norms</label>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="units" id="units" aria-label="Units">
+                                            <option value="">--Select Unit Type--</option>
+                                            <option @if($scheme->units == "Quintals") selected @endif value="Quintals">Quintals</option>
+                                            <option @if($scheme->units == "Kg") selected @endif value="Kg">Kg</option>
+                                            <option @if($scheme->units == "Ltr") selected @endif value="Ltr">Ltr</option>
+                                            <option @if($scheme->units == "gms") selected @endif value="gms">gms</option>
+                                            <option @if($scheme->units == "Ha.") selected @endif value="Ha.">Ha.</option>
+                                            <option @if($scheme->units == "No.s") selected @endif value="No.s">No.s</option>
+                                            <option @if($scheme->units == "Project") selected @endif value="Project">Project</option>
+                                            <option @if($scheme->units == "Sq. Mtr") selected @endif value="Sq. Mtr">Sq. Mtr</option>
+                                            <option @if($scheme->units == "One Unit") selected @endif value="One Unit">One Unit</option>
+                                            <option @if($scheme->units == "Set") selected @endif value="Set">Set</option>
+                                            <option @if($scheme->units == "Colony") selected @endif value="Colony">Colony</option>
+                                            <option @if($scheme->units == "Hive") selected @endif value="Hive">Hive</option>
+                                            <option @if($scheme->units == "MT") selected @endif value="MT">MT(Metric Ton)</option>
+                                            <option @if($scheme->units == "Day") selected @endif value="Day"> Day</option>
 
+                                        </select>
+                                        <label for="units">Units</label>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
                                         <textarea name="detailed_description" class="form-control" id="detailed_description" placeholder="Enter Detailed Description">{{$scheme->detailed_description}}</textarea>

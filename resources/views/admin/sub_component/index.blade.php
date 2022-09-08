@@ -127,12 +127,12 @@
                 if (willDelete) {
                     var saveData = $.ajax({
                         type: 'POST',
-                        url: "{{route('delete-scheme-subcategory')}}",
+                        url: "{{route('delete-scheme-subcomponent')}}",
                         data: {'id':id},
                         dataType: "json",
                         success: function(resultData) { 
                             if(resultData.message == 'success'){
-                                swal("Scheme Component Deleted Successfully!!", {
+                                swal("Scheme Sub Component Deleted Successfully!!", {
                                     icon: "success",
                                 });
                                 location.reload();
