@@ -215,10 +215,34 @@
                                 </div>
                                 <hr />
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" name="cost_norms" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="">
                                         <label for="cost_norms">Cost Norms</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="units" id="units" aria-label="Units">
+                                            <option value="">--Select Unit Type--</option>
+                                            <option value="Quintals">Quintals</option>
+                                            <option value="Kg">Kg</option>
+                                            <option value="Ltr">Ltr</option>
+                                            <option value="gms">gms</option>
+                                            <option value="Ha.">Ha.</option>
+                                            <option value="No.s">No.s</option>
+                                            <option value="Project">Project</option>
+                                            <option value="Sq. Mtr">Sq. Mtr</option>
+                                            <option value="One Unit">One Unit</option>
+                                            <option value="Set">Set</option>
+                                            <option value="Colony">Colony</option>
+                                            <option value="Hive">Hive</option>
+                                            <option value="MT">MT(Metric Ton)</option>
+                                            <option value="Day"> Day</option>
+
+                                        </select>
+                                        <label for="units">Units</label>
                                     </div>
                                 </div>
 
