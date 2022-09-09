@@ -17,7 +17,7 @@
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-category')}}">Manage Scheme Category</li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme-category')}}">Manage Scheme Category</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->

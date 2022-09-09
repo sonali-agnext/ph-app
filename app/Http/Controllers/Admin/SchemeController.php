@@ -75,13 +75,13 @@ class SchemeController extends Controller
 
     public function createPSchemeCategory(Request $request){
         $validator = Validator::make($request->all(), [
-            'category_name' => 'required|unique:govt_schemes'
+            'govt_name' => 'required|unique:govt_schemes'
         ]);
  
         if ($validator->fails()) {
-            return back()->with('error','Scheme Category name should be unique and required!');
+            return back()->with('error','Parent Scheme Category name should be unique and required!');
         }else{
-            $district = GovtScheme::create(['govt_name'=> $request->category_name]);
+            $district = GovtScheme::create(['govt_name'=> $request->govt_name]);
             if($district){
                 return back()->with('success','Parent Scheme Category created successfully!');
             }else{
@@ -476,7 +476,7 @@ class SchemeController extends Controller
 
     public function fetchSchemeCategory(Request $request){
         if(!empty($request->id)){
-            $scheme = SchemeCategory::where('govt_scheme_id',$request->id)->first();
+            $scheme = SchemeCategory::where('govt_scheme_id',$request->id)->all();
             return response()
             ->json(['message' => 'success', 'data' => $scheme]);
         }else{
@@ -487,7 +487,7 @@ class SchemeController extends Controller
 
     public function fetchComponentType(Request $request){
         if(!empty($request->id)){
-            $scheme = SchemeSubCategory::where('scheme_category_id',$request->id)->first();
+            $scheme = SchemeSubCategory::where('scheme_category_id',$request->id)->all();
             return response()
             ->json(['message' => 'success', 'data' => $scheme]);
         }else{
@@ -498,7 +498,7 @@ class SchemeController extends Controller
 
     public function fetchComponent(Request $request){
         if(!empty($request->id)){
-            $scheme = Component::where('scheme_sub_category_id',$request->id)->first();
+            $scheme = Component::where('scheme_sub_category_id',$request->id)->all();
             return response()
             ->json(['message' => 'success', 'data' => $scheme]);
         }else{
