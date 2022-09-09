@@ -161,21 +161,19 @@
                                     </div>
                                     <div class="col-md-12 sector-field mb-1" id="sector-field-1">
                                         <div class="row" >
-                                        <input type="hidden" name="sector[]" required class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Public Sector">
-                                        <input type="hidden" name="sector[]" required class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Private Sector">    
-                                                <div class="col-md-6 mb-1">
+                                        <div class="col-md-6 mb-1">
                                                     <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Public Sector Description" value="">
-                                                        <label for="sector_description">Public Sector Description</label>
+                                                        <input type="text" name="public_sector" class="form-control" placeholder="Enter Public Sector Description" value="">
+                                                        <label for="public_sector">Public Sector Description</label>
                                                     </div>
                                                 </div>
                                                  
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Private Sector Description" value="">
-                                                        <label for="sector_description">Private Sector Description</label>
+                                                        <input type="text" name="private_sector" class="form-control" placeholder="Enter Private Sector Description" value="">
+                                                        <label for="private_sector">Private Sector Description</label>
                                                     </div>
-                                                </div>                                               
+                                                </div>                                              
                                             </div>
                                     </div>
                                     <!-- <div class="col-md-2 mt-30 append-buttons">

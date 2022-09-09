@@ -178,34 +178,23 @@
                                     <div class="col-md-12 mb-2">
                                         <p>Subsidy Sector</p>
                                     </div>
-                                    @php $des=json_decode($scheme->sector_description); @endphp
+                                    
                                     <div class="col-md-12 sector-field mb-1" id="sector-field-1">
                                         <div class="row" >
-                                        <input type="hidden" name="sector[]"  class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Public Sector">
-                                        <input type="hidden" name="sector[]"  class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Private Sector">    
-                                                @forelse($des as $key => $value)
+                                        
                                                 <div class="col-md-6 mb-1">
                                                     <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" @if($key == 0) placeholder="Enter Public Sector Description" @else placeholder="Enter Private Sector Description" @endif  value="{{$value}}">
-                                                        <label for="sector_description">@if($key == 0) Public @else Private @endif Sector Description</label>
-                                                    </div>
-                                                </div>
-                                                @empty
-                                                <div class="col-md-6 mb-1">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Public Sector Description" value="">
-                                                        <label for="sector_description">Public Sector Description</label>
+                                                        <input type="text" name="public_sector" class="form-control" placeholder="Enter Public Sector Description" value="{{!empty($scheme->public_sector)?$scheme->public_sector:''}}">
+                                                        <label for="public_sector">Public Sector Description</label>
                                                     </div>
                                                 </div>
                                                  
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Private Sector Description" value="">
-                                                        <label for="sector_description">Private Sector Description</label>
+                                                        <input type="text" name="private_sector" class="form-control" placeholder="Enter Private Sector Description" value="{{!empty($scheme->private_sector)?$scheme->private_sector:''}}">
+                                                        <label for="private_sector">Private Sector Description</label>
                                                     </div>
                                                 </div> 
-                                                @endforelse                                              
-                                            </div>
                                     </div>
                                     <!-- <div class="col-md-2 mt-30 append-buttons">
                                         <div class="clearfix">

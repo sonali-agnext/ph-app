@@ -105,6 +105,9 @@ Route::post('/delete-pscheme-category','Admin\SchemeController@deletePSchemeCate
 Route::get('/add-pscheme-category','Admin\SchemeController@addPSchemeCategory')->name('add-pscheme-category');
 Route::post('/add-pscheme-category','Admin\SchemeController@createPSchemeCategory')->name('add-pscheme-category');
 
+// manage subsidy
+Route::get('/manage-subsidy-state','Admin\SubsidyController@manageStateSubsidy')->name('manage-subsidy-state');
+
 // manage scheme
 Route::get('/manage-scheme','Admin\SchemeController@manageScheme')->name('manage-scheme');
 Route::get('/edit-scheme','Admin\SchemeController@editScheme')->name('edit-scheme');

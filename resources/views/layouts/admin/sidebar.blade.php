@@ -109,7 +109,23 @@
             </a>
           </li>
         </ul>
-      </li><!-- End Schemes Nav -->
+      </li>
+
+      <li class="nav-item">
+        <a @if($route == 'manage-subsidy-state') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-subsidy-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-subsidy-state') aria-expanded="true" @endif>
+          <i class="bi bi-gem"></i><span>Manage Subsidy</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="manage-subsidy-nav" @if($route == 'manage-subsidy-state') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
+          
+          <li>
+            <a @if($route == 'manage-subsidy-state') class="active" @endif href="{{route('manage-subsidy-state')}}">
+              <i class="bi bi-circle"></i><span>List Subsidy target for state</span>
+            </a>
+          </li>
+
+        </ul>
+      </li>
+      <!-- End Schemes Nav -->
 
     </ul>
 

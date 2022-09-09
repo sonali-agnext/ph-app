@@ -21,11 +21,11 @@
 }
 </style>
 <div class="pagetitle">
-    <h1>Manage Scheme Crops/Items</h1>
+    <h1>Manage Subsidy Targets for State</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-scheme')}}">Manage Scheme Crops/Items</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-subsidy-state')}}">Manage Subsidy Targets for State</a></li>
     </ol>
     <!-- <img src="{{asset('storage/app/public/image/180X180.png')}}" /> -->
     </nav>
@@ -38,7 +38,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit Scheme</h5>
+                        <h5 class="card-title">Manage Subsidy Targets for State</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -52,8 +52,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">x</button>
                         </div>
                         @endif
-                            <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST"  enctype="multipart/form-data"  action="{{ route('update-scheme',['id' => $scheme->id]) }}">
+                            <!-- Floating Labels Form action="{{ ('update-subsidy-state') }}"-->
+                            <form class="row g-3" method="POST"  enctype="multipart/form-data"  >
                                 @csrf
                                 <div class="col-md-6">
                                     <div class="form-floating">
@@ -75,295 +75,34 @@
                                             $PreYear=substr($value,-2);
                                             $selValue =  $prefix.'-'. $PreYear;
                                             @endphp
-                                            <option @if($scheme->year == $selValue) selected @endif value="{{ $selValue }}">{{ $selValue }}</option>
+                                            <option value="{{ $selValue }}">{{ $selValue }}</option>
                                             @endforeach
                                         </select>
                                         <label for="sub_component_name">Financial Year</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="govt_id" required id="govt_id" aria-label="Parent Scheme Name">
-                                            <option value="">Parent Scheme Name</option>
-                                            @forelse($govt_schemes as $dst)                                            
-                                            <option @if($scheme->govt_id == $dst->id) selected @endif value="{{ $dst->id }}">{{$dst->govt_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="govt_id">Parent Scheme Name</label>
-                                    </div>
+                                @forelse($components as $dst) 
+                                <div class="col-md-12">
+                                    @inject('component', 'App\Models\Component')
+                                                                               
+                                    {{ $component->fetchsubcomponent($dst->id) }}                                         
+                                    
+                                    
+                                        
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="scheme_category_id" required id="scheme_category_id" aria-label="Scheme Category Name">
-                                            <option value="">Scheme Category Name</option>                                            
-                                            @forelse($scheme_category as $dst)                                            
-                                            <option @if($scheme->category_id == $dst->id) selected @endif value="{{ $dst->id }}">{{$dst->category_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="scheme_category_id">Scheme Category Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="scheme_subcategory_id" required id="scheme_subcategory_id" aria-label="Component Type">
-                                            <option value="">Component Type</option>
-                                            @forelse($scheme_subcategory as $dst)                                            
-                                            <option @if($scheme->scheme_subcategory_id == $dst->id) selected @endif value="{{ $dst->id }}">{{$dst->subcategory_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="scheme_subcategory_id">Component Type</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="component_id" id="component_id" aria-label="Component Name">
-                                            <option value="">Component Name</option>
-                                            @forelse($components as $dst)                                            
-                                            <option @if($scheme->component_id == $dst->id) selected @endif value="{{ $dst->id }}">{{$dst->component_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="component_id">Component Name</label>
-                                    </div>
-                                </div>
+                                @empty
+                                @endforelse
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="sub_component_id" id="sub_component_id" aria-label="Sub Component Name">
                                             <option value="">Sub Component Name</option>
                                             @forelse($subcomponents as $dst)                                            
-                                            <option @if($scheme->sub_component_id == $dst->id) selected @endif value="{{ $dst->id }}">{{$dst->sub_component_name}}</option>                                            
+                                            <option value="{{ $dst->id }}">{{$dst->sub_component_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
                                         <label for="sub_component_id">Sub Component Name</label>
                                     </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <input type="text" name="scheme_name" required class="form-control" id="scheme_name" placeholder="Enter Scheme Name" value="{{ $scheme->scheme_name}}">
-                                        <label for="scheme_name">Crop/Item Name</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select" name="status" id="status" aria-label="Scheme Status">
-                                            <option @if($scheme->status) selected @endif value="1">True</option>
-                                            <option @if($scheme->status == 0) selected @endif value="0">False</option>                                            
-                                        </select>
-                                        <label for="status">Scheme Status</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select" name="non_project_based" id="non_project_based" aria-label="Scheme Based">
-                                            <option @if($scheme->non_project_based == "Non-Project Based") selected @endif value="Non-Project Based">Non-Project Based</option>
-                                            <option @if($scheme->non_project_based == "Project Based") selected @endif value="Project Based">Project Based</option>
-                                        </select>
-                                        <label for="non_project_based">Scheme Based</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <input type="text" name="subsidy" required class="form-control" id="subsidy" placeholder="Enter Subsidy For ex: 40, 40-100,0" value="{{ $scheme->subsidy}}">
-                                        <label for="subsidy">Subsidy Range</label>
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="row" style="align-items: center;">
-                                    <div class="col-md-12 mb-2">
-                                        <p>Subsidy Sector</p>
-                                    </div>
-                                    @php $des=json_decode($scheme->sector_description); @endphp
-                                    <div class="col-md-12 sector-field mb-1" id="sector-field-1">
-                                        <div class="row" >
-                                        <input type="hidden" name="sector[]"  class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Public Sector">
-                                        <input type="hidden" name="sector[]"  class="form-control" id="sector" placeholder="Enter Subsidy Sector" value="Private Sector">    
-                                                @forelse($des as $key => $value)
-                                                <div class="col-md-6 mb-1">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" @if($key == 0) placeholder="Enter Public Sector Description" @else placeholder="Enter Private Sector Description" @endif  value="{{$value}}">
-                                                        <label for="sector_description">@if($key == 0) Public @else Private @endif Sector Description</label>
-                                                    </div>
-                                                </div>
-                                                @empty
-                                                <div class="col-md-6 mb-1">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Public Sector Description" value="">
-                                                        <label for="sector_description">Public Sector Description</label>
-                                                    </div>
-                                                </div>
-                                                 
-                                                <div class="col-md-6">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="sector_description[]" class="form-control" placeholder="Enter Private Sector Description" value="">
-                                                        <label for="sector_description">Private Sector Description</label>
-                                                    </div>
-                                                </div> 
-                                                @endforelse                                              
-                                            </div>
-                                    </div>
-                                    <!-- <div class="col-md-2 mt-30 append-buttons">
-                                        <div class="clearfix">
-                                        <button type="button" id="add-sector-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
-                                        </button>
-                                        <button type="button" id="remove-sector-button" class="btn btn-secondary float-left text-uppercase ml-1 {{ !empty($sector_len) ? 'shadow-sm' :''}}" @if(empty($sector_len)) disabled="disabled" @endif><i class="bi bi-dash"></i>
-                                        </button>
-                                        </div>
-                                    </div> -->
-                                </div>
-
-                                <hr />
-
-                                <div class="row" style="align-items: center;">
-                                    <div class="col-md-12 mb-2">
-                                        <p>Required Documents</p>
-                                    </div>
-                                @php $terms = !empty($scheme->terms)?json_decode($scheme->terms):[]; $term_len=count($terms); @endphp
-                                @forelse($terms as $tkey => $term)
-                                    <div class="col-md-10 terms-field mb-1" id="terms-field-{{ ($tkey+1) }}">
-                                        <div class="row" >
-                                            <div class="col-md-12">
-                                                <div class="form-floating">
-                                                    <input type="text" name="terms[]"  class="form-control" id="terms" placeholder="Enter Terms" value="{{$term}}">
-                                                    <label for="terms">Title</label>
-                                                </div>
-                                            </div>                                              
-                                        </div>
-                                    </div>
-                                @empty
-                                    <div class="col-md-10 terms-field mb-1" id="terms-field-1">
-                                        <div class="row" >
-                                            <div class="col-md-12">
-                                                <div class="form-floating">
-                                                    <input type="text" name="terms[]"  class="form-control" id="terms" placeholder="Enter Terms" value="">
-                                                    <label for="terms">Title</label>
-                                                </div>
-                                            </div>                                              
-                                        </div>
-                                    </div>
-                                @endforelse
-                                    <div class="col-md-2 mt-30 append-buttons">
-                                        <div class="clearfix">
-                                        <button type="button" id="add-terms-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
-                                        </button>
-                                        <button type="button" id="remove-terms-button" class="btn btn-secondary float-left text-uppercase ml-1 {{ !empty($term_len) ? 'shadow-sm' :''}}" @if(empty($term_len)) disabled="disabled" @endif><i class="bi bi-dash"></i>
-                                        </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr />
-
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" name="cost_norms" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="{{$scheme->cost_norms}}">
-                                        <label for="cost_norms">Cost Norms</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="units" id="units" aria-label="Units">
-                                            <option value="">--Select Unit Type--</option>
-                                            <option @if($scheme->units == "Quintals") selected @endif value="Quintals">Quintals</option>
-                                            <option @if($scheme->units == "Kg") selected @endif value="Kg">Kg</option>
-                                            <option @if($scheme->units == "Ltr") selected @endif value="Ltr">Ltr</option>
-                                            <option @if($scheme->units == "gms") selected @endif value="gms">gms</option>
-                                            <option @if($scheme->units == "Ha.") selected @endif value="Ha.">Ha.</option>
-                                            <option @if($scheme->units == "No.s") selected @endif value="No.s">No.s</option>
-                                            <option @if($scheme->units == "Project") selected @endif value="Project">Project</option>
-                                            <option @if($scheme->units == "Sq. Mtr") selected @endif value="Sq. Mtr">Sq. Mtr</option>
-                                            <option @if($scheme->units == "One Unit") selected @endif value="One Unit">One Unit</option>
-                                            <option @if($scheme->units == "Set") selected @endif value="Set">Set</option>
-                                            <option @if($scheme->units == "Colony") selected @endif value="Colony">Colony</option>
-                                            <option @if($scheme->units == "Hive") selected @endif value="Hive">Hive</option>
-                                            <option @if($scheme->units == "MT") selected @endif value="MT">MT(Metric Ton)</option>
-                                            <option @if($scheme->units == "Day") selected @endif value="Day"> Day</option>
-
-                                        </select>
-                                        <label for="units">Units</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <textarea name="detailed_description" class="form-control" id="detailed_description" placeholder="Enter Detailed Description">{{$scheme->detailed_description}}</textarea>
-                                        <label for="detailed_description">Detailed Description</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <input type="file" name="scheme_image" @if(!empty($scheme->scheme_image)) @else  @endif class="form-control" id="scheme_image" value="" >
-                                        <label for="scheme_image">Scheme Image</label>
-                                    </div>
-                                    <div>
-                                        @if(!empty($scheme->scheme_image))
-                                        <img src="{{asset('storage/scheme-images/'.$scheme->scheme_image)}}" width="100" />
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="row" style="align-items: center;">
-                                    <div class="col-md-12 pt-3 mb-2">
-                                        <p>Video</p>
-                                    </div>
-                                    @php $videos = !empty($scheme->videos)?json_decode($scheme->videos):[]; $video_len=count($videos); @endphp
-                                    @php $titles = !empty($scheme->videos_title)?json_decode($scheme->videos_title):[]; $title_len=count($titles); @endphp
-                                    @forelse($videos as $vkey => $video)
-                                    <div class="col-md-10 video-field mb-1" id="video-field-{{($vkey+1)}}">
-                                        <div class="row" >
-                                            <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="url" name="video[]"  class="form-control" id="video" placeholder="Enter Cost Norms" value="{{$video}}">
-                                                    <label for="video">Video URL</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="text" name="title[]"  class="form-control" id="title" placeholder="Enter Title" value="{{ $titles[$vkey]}}">
-                                                    <label for="title">Title</label>
-                                                </div>
-                                            </div>                                                
-                                        </div>
-                                    </div>
-                                    @empty
-                                    <div class="col-md-10 video-field mb-1" id="video-field-1">
-                                        <div class="row" >
-                                                <div class="col-md-6">
-                                                    <div class="form-floating">
-                                                        <input type="url" name="video[]"  class="form-control" id="video" placeholder="Enter Cost Norms" value="">
-                                                        <label for="video">Video URL</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="title[]"  class="form-control" id="title" placeholder="Enter Title" value="">
-                                                        <label for="title">Title</label>
-                                                    </div>
-                                                </div>                                                
-                                            </div>
-                                    </div>
-                                    @endforelse
-                                    <div class="col-md-2 mt-30 append-buttons">
-                                        <div class="clearfix">
-                                        <button type="button" id="add-button" class="btn btn-secondary float-left text-uppercase shadow-sm"><i class="bi bi-plus"></i>
-                                        </button>
-                                        <button type="button" id="remove-button" class="btn btn-secondary float-left text-uppercase ml-1 {{ !empty($video_len) ? 'shadow-sm' :''}}" @if(empty($video_len)) disabled="disabled" @endif><i class="bi bi-dash"></i>
-                                        </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mt-1">
-                                        <div class="form-check form-switch"> 
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @if($scheme->is_featured) checked="" @endif value="1"> 
-                                            <label class="form-check-label" for="flexSwitchCheckChecked">Featured Scheme</label></div>
-                                        </div>
-                                    </div> 
                                 </div>
                                 
                                 <div class="text-center">
