@@ -334,6 +334,7 @@
 <script>
     $(document).ready(function () {
         $('#example').DataTable(); 
+        var year =$('#year').val();
         $('#govt_id').on('change', function(){
             var id = $(this).val();
             $.ajax({
@@ -345,7 +346,7 @@
                         var html = '';
                         html+='<option value="">Scheme Category Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data;
+                            var content = resultData.data[0];
                             console.log(content.id);
                             html+='<option value="'+content.id+'">'+content.category_name+'</option>';
                         }
@@ -365,7 +366,7 @@
                         var html = '';
                         html+='<option value="">Component Type</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data;
+                            var content = resultData.data[0];
                             html+='<option value="'+content.id+'">'+content.subcategory_name+'</option>';
                         }
                         $('#scheme_subcategory_id').empty();
@@ -384,7 +385,7 @@
                         var html = '';
                         html+='<option value="">Component Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data;
+                            var content = resultData.data[0];
                             html+='<option value="'+content.id+'">'+content.component_name+'</option>';
                         }
                         $('#component_id').empty();
@@ -398,13 +399,34 @@
             $.ajax({
                     type: 'GET',
                     url: "{{route('fetch-sub-components')}}",
-                    data: { 'id': id },
+                    data: { 'id': id, 'year': year },
                     dataType: "json",
                     success: function(resultData) {
                         var html = '';
                         html+='<option value="">Sub Component Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data;
+                            var content = resultData.data[0];
+                            html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
+                        }
+                        $('#sub_component_id').empty();
+                        $('#sub_component_id').html(html);
+                    }
+                }); 
+        });
+
+        $('#year').on('change', function(){
+            var id = $('#component_id').val();
+            year = $(this).val();
+            $.ajax({
+                    type: 'GET',
+                    url: "{{route('fetch-sub-components')}}",
+                    data: { 'id': id, 'year': year },
+                    dataType: "json",
+                    success: function(resultData) {
+                        var html = '';
+                        html+='<option value="">Sub Component Name</option>';
+                        if(resultData.message == 'success'){
+                            var content = resultData.data[0];
                             html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
                         }
                         $('#sub_component_id').empty();

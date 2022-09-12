@@ -18,6 +18,7 @@ use App\Models\AdminProfile;
 use App\Models\GovtScheme;
 use App\Models\Component;
 use App\Models\SubComponent;
+use App\Models\TargetState;
 use Illuminate\Support\Facades\Validator;
 
 class SchemeController extends Controller
@@ -383,6 +384,12 @@ class SchemeController extends Controller
                 'is_featured' => ($request->is_featured),
             ]);
             if($scheme){
+
+                $targets= TargetState::where('crop_id', $scheme->id)->where('component_type_id', $scheme->scheme_subcategory_id)->where('sub_component_id', $scheme->sub_component_id)->first();
+
+                if(empty($targets)){
+                    $target = TargetState::create(['crop_id' => $scheme->id, 'component_type_id' => $scheme->scheme_subcategory_id,'component_id'=>$scheme->component_id, 'sub_component_id'=> $scheme->sub_component_id, 'physical_target' => "0",'financial_target' => "0", 'remarks'=>""]);
+                }
                 return back()->with('success','Schemes updated successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');
@@ -410,6 +417,11 @@ class SchemeController extends Controller
                 'is_featured' => ($request->is_featured),
             ]);
             if($scheme){
+                $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
+
+                if(empty($targets)){
+                    $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0", 'remarks'=>""]);
+                }
                 return back()->with('success','Schemes updated successfully!');
             }else{
                 return back()->with('error','Something Went Wrong!');
@@ -472,6 +484,7 @@ class SchemeController extends Controller
                     'is_featured' => ($request->is_featured),
                 ]);
                 if($scheme){
+                    $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0", 'remarks'=>""]);
                     return back()->with('success','Schemes created successfully!');
                 }else{
                     return back()->with('error','Something Went Wrong!');
@@ -485,9 +498,14 @@ class SchemeController extends Controller
 
     public function fetchSchemeCategory(Request $request){
         if(!empty($request->id)){
-            $scheme = SchemeCategory::where('govt_scheme_id',$request->id)->all();
-            return response()
+            $scheme = SchemeCategory::where('govt_scheme_id',$request->id)->get();
+            if(!empty($scheme)){
+                return response()
             ->json(['message' => 'success', 'data' => $scheme]);
+            }else{
+                return response()
+            ->json(['message' => 'error']);
+            }
         }else{
             return response()
             ->json(['message' => 'error']);
@@ -496,9 +514,14 @@ class SchemeController extends Controller
 
     public function fetchComponentType(Request $request){
         if(!empty($request->id)){
-            $scheme = SchemeSubCategory::where('scheme_category_id',$request->id)->all();
-            return response()
+            $scheme = SchemeSubCategory::where('scheme_category_id',$request->id)->get();
+            if(!empty($scheme)){
+                return response()
             ->json(['message' => 'success', 'data' => $scheme]);
+            }else{
+                return response()
+            ->json(['message' => 'error']);
+            }
         }else{
             return response()
             ->json(['message' => 'error']);
@@ -507,9 +530,14 @@ class SchemeController extends Controller
 
     public function fetchComponent(Request $request){
         if(!empty($request->id)){
-            $scheme = Component::where('scheme_sub_category_id',$request->id)->all();
-            return response()
+            $scheme = Component::where('scheme_sub_category_id',$request->id)->get();
+            if(!empty($scheme)){
+                return response()
             ->json(['message' => 'success', 'data' => $scheme]);
+            }else{
+                return response()
+            ->json(['message' => 'error']);
+            }
         }else{
             return response()
             ->json(['message' => 'error']);
@@ -518,9 +546,15 @@ class SchemeController extends Controller
     
     public function fetchSubComponent(Request $request){
         if(!empty($request->id)){
-            $scheme = SubComponent::where('component_id',$request->id)->first();
-            return response()
+            $scheme = SubComponent::where('component_id',$request->id)->where('year',$request->year)->where('status','1')->get();
+            if(!empty($scheme)){
+                return response()
             ->json(['message' => 'success', 'data' => $scheme]);
+            }else{
+                return response()
+            ->json(['message' => 'error']);
+            }
+            
         }else{
             return response()
             ->json(['message' => 'error']);
