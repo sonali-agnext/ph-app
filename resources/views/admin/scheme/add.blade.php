@@ -337,6 +337,7 @@
         var year =$('#year').val();
         $('#govt_id').on('change', function(){
             var id = $(this).val();
+            
             $.ajax({
                     type: 'GET',
                     url: "{{route('fetch-scheme-category')}}",
@@ -351,12 +352,16 @@
                             html+='<option value="'+content.id+'">'+content.category_name+'</option>';
                         }
                         $('#scheme_category_id').empty();
+                        $('#scheme_subcategory_id').empty();
+                        $('#sub_component_id').empty();
+                        $('#component_id').empty();
                         $('#scheme_category_id').html(html);
                     }
                 }); 
         });   
         $('#scheme_category_id').on('change', function(){
             var id = $(this).val();
+            
             $.ajax({
                     type: 'GET',
                     url: "{{route('fetch-component-type')}}",

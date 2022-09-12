@@ -386,6 +386,7 @@
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
+        var year =$('#year').val();
         $('#govt_id').on('change', function(){
             var id = $(this).val();
             $.ajax({
@@ -402,12 +403,16 @@
                             html+='<option value="'+content.id+'">'+content.category_name+'</option>';
                         }
                         $('#scheme_category_id').empty();
+                        $('#scheme_subcategory_id').empty();
+                        $('#sub_component_id').empty();
+                        $('#component_id').empty();
                         $('#scheme_category_id').html(html);
                     }
                 }); 
         });   
         $('#scheme_category_id').on('change', function(){
             var id = $(this).val();
+            
             $.ajax({
                     type: 'GET',
                     url: "{{route('fetch-component-type')}}",
@@ -421,6 +426,8 @@
                             html+='<option value="'+content.id+'">'+content.subcategory_name+'</option>';
                         }
                         $('#scheme_subcategory_id').empty();
+                        $('#sub_component_id').empty();
+                        $('#component_id').empty();
                         $('#scheme_subcategory_id').html(html);
                     }
                 }); 
@@ -450,7 +457,27 @@
             $.ajax({
                     type: 'GET',
                     url: "{{route('fetch-sub-components')}}",
-                    data: { 'id': id },
+                    data: { 'id': id, 'year': year },
+                    dataType: "json",
+                    success: function(resultData) {
+                        var html = '';
+                        html+='<option value="">Sub Component Name</option>';
+                        if(resultData.message == 'success'){
+                            var content = resultData.data[0];
+                            html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
+                        }
+                        $('#sub_component_id').empty();
+                        $('#sub_component_id').html(html);
+                    }
+                }); 
+        });
+        $('#year').on('change', function(){
+            var id = $('#component_id').val();
+            year = $(this).val();
+            $.ajax({
+                    type: 'GET',
+                    url: "{{route('fetch-sub-components')}}",
+                    data: { 'id': id, 'year': year },
                     dataType: "json",
                     success: function(resultData) {
                         var html = '';
