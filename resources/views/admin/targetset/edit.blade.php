@@ -19,6 +19,21 @@
 .class-link:hover{
  color:#ffbb00; 
 }
+fieldset{
+    border-width: 2px;
+    border-style: groove;
+    border-color: rgb(192, 192, 192);
+    border-image: initial;
+}
+legend{
+    float: unset;
+    width: unset;
+    padding: 10px !important;
+}
+.bg-legend{
+    background: #4db73b2b;
+    border-radius: 4px;
+}
 </style>
 <div class="pagetitle">
     <h1>Manage Subsidy Targets for State</h1>
@@ -82,28 +97,156 @@
                                     </div>
                                 </div>
                                 @forelse($components as $dst) 
-                                <div class="col-md-12">
-                                    @inject('component', 'App\Models\Component')
-                                                                               
-                                    {{ $component->fetchsubcomponent($dst->id) }}                                         
-                                    
-                                    
-                                        
+                                <div class="col-md-12 table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Component/ Sub Component/ Crop/Item</th>
+                                                <th>Unit</th>
+                                                <th>Cost Norms (Rs.)</th>
+                                                <th>Physical Target</th>
+                                                <th>Financial Target(Rs.)</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <table class="table-bordered" style="width:100%">
+                                                        @inject('component', 'App\Models\Component')
+                                                        @forelse($scheme_subcategory as $cat)  
+                                                            <tr>
+                                                                <th class="card-title">{{ $cat->subcategory_name }}</th>
+                                                                @php $components = $component->fetchcomponent($cat->id); @endphp                                         
+                                                                @forelse($components as $dst) 
+                                                            </tr>
+                                                            <tr>
+                                                                <td>   
+                                                                    <table class="table-bordered" style="width:100%">
+                                                                        <tr>
+                                                                            <th>{{ $dst->component_name }}</th>
+                                                                        </tr>
+                                                            
+                                                                        @php $sub_components = $component->fetchsubcomponent($dst->id); @endphp                                         
+                                                                        @forelse($sub_components as $sub_dst) 
+                                                                        <tr>
+                                                                            <td>
+                                                                            <table class="table-bordered" style="width:100%">
+                                                                                <tr>
+                                                                                    <th colspan="6" class="card-title bg-legend">{{ $sub_dst->sub_component_name }}</th>
+                                                                                </tr>
+                                                                                @php $schemes = $sub_dst->fetchcrops($dst->id, $sub_dst->id); @endphp
+                                                                                @forelse($schemes as $scheme) 
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                        {{ $scheme->scheme_name. ' '. $scheme->public_sector }}
+                                                                                        </td>
+                                                                                        <td colspan="5"></td>
+                                                                                    </tr>
+                                                                                    @if(!empty($scheme->public_sector) && !empty($scheme->private_sector))
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                        Public Sector
+                                                                                        </td>
+                                                                                        <td>
+                                                                                        {{$scheme->units}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                        {{$scheme->cost_norms}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" maxlength="9" name="physical_target" value="0.00"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                        <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" name="remarks"/>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                        Private Sector
+                                                                                        </td>
+                                                                                        <td>{{$scheme->units}}</td>
+                                                                                        <td>
+                                                                                        {{$scheme->cost_norms}}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" maxlength="9" name="physical_target" value="0.00"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" name="remarks"/>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    @else
+                                                                                        @if(!empty($scheme->private_sector))
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                            Public Sector
+                                                                                            </td>
+                                                                                            <td>{{$scheme->units}}</td>
+                                                                                            <td>
+                                                                                            {{$scheme->cost_norms}}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input type="text" maxlength="9" name="physical_target" value="0.00"/>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input type="text" name="remarks"/>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        @endif
+                                                                                        @if(!empty($scheme->private_sector))
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                            Private Sector
+                                                                                            </td>
+                                                                                            <td>{{$scheme->units}}</td>
+                                                                                            <td>
+                                                                                            {{$scheme->cost_norms}}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input type="text" maxlength="9" name="physical_target" value="0.00"/>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <input type="text" name="remarks"/>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        @endif
+                                                                                    @endif
+                                                                                @empty
+                                                                                @endforelse
+                                                                            </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @empty
+                                                                        @endforelse
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            @empty
+                                                            @endforelse                                  
+                                                            
+                                                        @empty
+                                                        @endforelse
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                                 @empty
                                 @endforelse
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="sub_component_id" id="sub_component_id" aria-label="Sub Component Name">
-                                            <option value="">Sub Component Name</option>
-                                            @forelse($subcomponents as $dst)                                            
-                                            <option value="{{ $dst->id }}">{{$dst->sub_component_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="sub_component_id">Sub Component Name</label>
-                                    </div>
-                                </div>
                                 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>

@@ -370,14 +370,17 @@ class SchemeController extends Controller
                 'scheme_subcategory_id' => $request->scheme_subcategory_id,
                 'scheme_name' => $request->scheme_name,
                 'subsidy' => $request->subsidy,
-                'public_sector' => json_encode($request->public_sector),
-                'private_sector' => json_encode($request->private_sector),
+                'public_sector' => ($request->public_sector),
+                'private_sector' => ($request->private_sector),
+                'public_range' => ($request->public_range),
+                'private_range' => ($request->private_range),
                 'terms' => json_encode($request->terms),
                 'cost_norms' => $request->cost_norms,
                 'detailed_description' => $request->detailed_description,
                 'scheme_image' => $filename,
                 'videos' => json_encode($request->video),
                 'videos_title' => json_encode($request->title),
+                'is_featured' => ($request->is_featured),
             ]);
             if($scheme){
                 return back()->with('success','Schemes updated successfully!');
@@ -395,13 +398,16 @@ class SchemeController extends Controller
                 'scheme_subcategory_id' => $request->scheme_subcategory_id,
                 'scheme_name' => $request->scheme_name,
                 'subsidy' => $request->subsidy,
-                'public_sector' => json_encode($request->public_sector),
-                'private_sector' => json_encode($request->private_sector),
+                'public_sector' => ($request->public_sector),
+                'private_sector' => ($request->private_sector),
+                'public_range' => ($request->public_range),
+                'private_range' => ($request->private_range),
                 'terms' => json_encode($request->terms),
                 'cost_norms' => $request->cost_norms,
                 'detailed_description' => $request->detailed_description,
                 'videos' => json_encode($request->video),
                 'videos_title' => json_encode($request->title),
+                'is_featured' => ($request->is_featured),
             ]);
             if($scheme){
                 return back()->with('success','Schemes updated successfully!');
@@ -453,14 +459,17 @@ class SchemeController extends Controller
                     'scheme_subcategory_id' => $request->scheme_subcategory_id,
                     'scheme_name' => $request->scheme_name,
                     'subsidy' => $request->subsidy,
-                    'public_sector' => json_encode($request->public_sector),
-                    'private_sector' => json_encode($request->private_sector),
+                    'public_sector' => ($request->public_sector),
+                    'private_sector' => ($request->private_sector),
+                    'public_range' => ($request->public_range),
+                    'private_range' => ($request->private_range),
                     'terms' => json_encode($request->terms),
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
                     'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
+                    'is_featured' => ($request->is_featured),
                 ]);
                 if($scheme){
                     return back()->with('success','Schemes created successfully!');

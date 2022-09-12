@@ -161,20 +161,33 @@
                                     </div>
                                     <div class="col-md-12 sector-field mb-1" id="sector-field-1">
                                         <div class="row" >
-                                        <div class="col-md-6 mb-1">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="public_sector" class="form-control" placeholder="Enter Public Sector Description" value="">
-                                                        <label for="public_sector">Public Sector Description</label>
-                                                    </div>
+                                            <div class="col-md-6 mb-1">
+                                                <div class="form-floating">
+                                                    <input type="text" pattern="[0-9]+" title="Numbers Only" maxlength="3" name="public_range" class="form-control" placeholder="Enter Public Sector Range" value="">
+                                                    <label for="public_range">Public Sector Range</label>
                                                 </div>
-                                                 
-                                                <div class="col-md-6">
-                                                    <div class="form-floating">
-                                                        <input type="text" name="private_sector" class="form-control" placeholder="Enter Private Sector Description" value="">
-                                                        <label for="private_sector">Private Sector Description</label>
-                                                    </div>
-                                                </div>                                              
                                             </div>
+                                                 
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" pattern="[0-9]+" title="Numbers Only" maxlength="3" name="private_range" class="form-control" placeholder="Enter Private Sector Range" value="">
+                                                    <label for="private_range">Private Sector Range</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-1">
+                                                <div class="form-floating">
+                                                    <input type="text" name="public_sector" class="form-control" placeholder="Enter Public Sector Description" value="">
+                                                    <label for="public_sector">Public Sector Description</label>
+                                                </div>
+                                            </div>
+                                                 
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" name="private_sector" class="form-control" placeholder="Enter Private Sector Description" value="">
+                                                    <label for="private_sector">Private Sector Description</label>
+                                                </div>
+                                            </div>                                              
+                                        </div>
                                     </div>
                                     <!-- <div class="col-md-2 mt-30 append-buttons">
                                         <div class="clearfix">
@@ -297,7 +310,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mt-1">
                                         <div class="form-check form-switch"> 
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" value="1"> 
+                                            <input class="form-check-input" name="is_featured" type="checkbox" id="flexSwitchCheckChecked" value="1"> 
                                             <label class="form-check-label" for="flexSwitchCheckChecked">Featured Scheme</label></div>
                                         </div>
                                     </div> 

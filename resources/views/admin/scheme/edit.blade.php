@@ -181,7 +181,19 @@
                                     
                                     <div class="col-md-12 sector-field mb-1" id="sector-field-1">
                                         <div class="row" >
-                                        
+                                            <div class="col-md-6 mb-1">
+                                                <div class="form-floating">
+                                                    <input type="text" pattern="[0-9]+" title="Numbers Only" maxlength="3" name="public_range" class="form-control" placeholder="Enter Public Sector Range" value="{{!empty($scheme->public_range)?$scheme->public_range:0}}">
+                                                    <label for="public_range">Public Sector Range</label>
+                                                </div>
+                                            </div>
+                                                 
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" pattern="[0-9]+" title="Numbers Only" maxlength="3" name="private_range" class="form-control" placeholder="Enter Private Sector Range" value="{{!empty($scheme->private_range)?$scheme->private_range:0}}">
+                                                    <label for="private_range">Private Sector Range</label>
+                                                </div>
+                                            </div>
                                                 <div class="col-md-6 mb-1">
                                                     <div class="form-floating">
                                                         <input type="text" name="public_sector" class="form-control" placeholder="Enter Public Sector Description" value="{{!empty($scheme->public_sector)?$scheme->public_sector:''}}">
@@ -349,7 +361,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mt-1">
                                         <div class="form-check form-switch"> 
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @if($scheme->is_featured) checked="" @endif value="1"> 
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name="is_featured" @if($scheme->is_featured == "1") checked="" @endif value="1"> 
                                             <label class="form-check-label" for="flexSwitchCheckChecked">Featured Scheme</label></div>
                                         </div>
                                     </div> 
