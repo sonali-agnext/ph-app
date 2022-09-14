@@ -31,8 +31,30 @@ legend{
     padding: 10px !important;
 }
 .bg-legend{
-    background: #4db73b2b;
+    background: #4db73b2b !important;
     border-radius: 4px;
+}
+.w-20{
+    width: 20%;
+}
+.w-10{
+    width: 10%;
+}
+.w-15{
+    width: 15%;
+}
+.w-40{
+    width: 40%;
+}
+.w-50{
+    width: 50%;
+}
+.w-80{
+    width: 80%;
+}
+th.card-title{
+    background: #ff8c0036;
+    padding-left: 5px;
 }
 </style>
 <div class="pagetitle">
@@ -48,7 +70,6 @@ legend{
 
 <section class="section dashboard">
     <div class="row">
-
         <!-- Left side columns -->
         <div class="col-lg-12">  
              <div class="card">
@@ -68,7 +89,8 @@ legend{
                         </div>
                         @endif
                             <!-- Floating Labels Form action="{{ ('update-subsidy-state') }}"-->
-                            <form class="row g-3" method="POST"  enctype="multipart/form-data"  >
+                            
+                            <form class="row g-3" method="POST"  enctype="multipart/form-data"  action="{{route('manage-subsidy-state')}}">
                                 @csrf
                                 <div class="col-md-6">
                                     <div class="form-floating">
@@ -90,23 +112,24 @@ legend{
                                             $PreYear=substr($value,-2);
                                             $selValue =  $prefix.'-'. $PreYear;
                                             @endphp
-                                            <option value="{{ $selValue }}">{{ $selValue }}</option>
+                                            <option @if($year == $selValue) selected @endif value="{{ $selValue }}">{{ $selValue }}</option>
                                             @endforeach
                                         </select>
                                         <label for="sub_component_name">Financial Year</label>
                                     </div>
                                 </div>
+                                @if(!empty($year))
                                 @forelse($components as $dst) 
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Component/ Sub Component/ Crop/Item</th>
-                                                <th>Unit</th>
-                                                <th>Cost Norms (Rs.)</th>
-                                                <th>Physical Target</th>
-                                                <th>Financial Target(Rs.)</th>
-                                                <th>Remarks</th>
+                                                <th class="w-20">Component/ Sub Component/ Crop/Item</th>
+                                                <th class="w-10">Unit</th>
+                                                <th class="w-15">Cost Norms (Rs.)</th>
+                                                <th class="w-20">Physical Target</th>
+                                                <th class="w-20">Financial Target(Rs.)</th>
+                                                <th class="w-15">Remarks</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -114,128 +137,352 @@ legend{
                                                 <td colspan="6">
                                                     <table class="table-bordered" style="width:100%">
                                                         @inject('component', 'App\Models\Component')
-                                                        @forelse($scheme_subcategory as $cat)  
+                                                        @inject('type', 'App\Models\SchemeSubCategory')
+                                                        @forelse($scheme_subcategory as $key => $cat)  
                                                             <tr>
-                                                                <th class="card-title">{{ $cat->subcategory_name }}</th>
-                                                                @php $components = $component->fetchcomponent($cat->id); @endphp                                         
-                                                                @forelse($components as $dst) 
+                                                                @php $id=str_replace('category_id_','',$key);  @endphp
+                                                                <th class="card-title">{{ $type->fetchSubSchemeCategory($id)->subcategory_name }}</th>                                                                
                                                             </tr>
+                                                            <!-- start component -->
+                                                            @forelse($cat as $comp) 
                                                             <tr>
                                                                 <td>   
                                                                     <table class="table-bordered" style="width:100%">
+                                                                        @if($comp->component_id && $comp->sub_component_id)
                                                                         <tr>
-                                                                            <th>{{ $dst->component_name }}</th>
+                                                                            <th>{{ $type->fetchComponentName($comp->component_id)->component_name}}</th>
                                                                         </tr>
-                                                            
-                                                                        @php $sub_components = $component->fetchsubcomponent($dst->id); @endphp                                         
-                                                                        @forelse($sub_components as $sub_dst) 
                                                                         <tr>
                                                                             <td>
-                                                                            <table class="table-bordered" style="width:100%">
-                                                                                <tr>
-                                                                                    <th colspan="6" class="card-title bg-legend">{{ $sub_dst->sub_component_name }}</th>
-                                                                                </tr>
-                                                                                @php $schemes = $sub_dst->fetchcrops($dst->id, $sub_dst->id); @endphp
-                                                                                @forelse($schemes as $scheme) 
+                                                                                <table class="table-bordered" style="width:100%">
                                                                                     <tr>
-                                                                                        <td>
-                                                                                        {{ $scheme->scheme_name. ' '. $scheme->public_sector }}
-                                                                                        </td>
-                                                                                        <td colspan="5"></td>
+                                                                                        <th colspan="6" class="card-title bg-legend">{{ $type->fetchSubComponentName($comp->sub_component_id)->sub_component_name}}</th>
                                                                                     </tr>
-                                                                                    @if(!empty($scheme->public_sector) && !empty($scheme->private_sector))
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                        Public Sector
-                                                                                        </td>
-                                                                                        <td>
-                                                                                        {{$scheme->units}}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                        {{$scheme->cost_norms}}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" maxlength="9" name="physical_target" value="0.00"/>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                        <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" name="remarks"/>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                        Private Sector
-                                                                                        </td>
-                                                                                        <td>{{$scheme->units}}</td>
-                                                                                        <td>
-                                                                                        {{$scheme->cost_norms}}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" maxlength="9" name="physical_target" value="0.00"/>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" name="remarks"/>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    @else
-                                                                                        @if(!empty($scheme->private_sector))
+                                                                                    
                                                                                         <tr>
-                                                                                            <td>
+                                                                                            <td class="w-20 text-primary">
+                                                                                            {{ $comp->scheme_name }}
+                                                                                            </td>
+                                                                                            <td colspan="5"></td>
+                                                                                        </tr>
+                                                                                        @php $targetsset= $comp->fetchtargetstate($comp->scheme_subcategory_id, $comp->component_id, $comp->sub_component_id, $comp->scheme_id); @endphp
+                                                                                        @if(!empty($comp->public_range) && !empty($comp->private_range))
+                                                                                        <tr>
+                                                                                            <td class="w-20">
                                                                                             Public Sector
                                                                                             </td>
-                                                                                            <td>{{$scheme->units}}</td>
-                                                                                            <td>
-                                                                                            {{$scheme->cost_norms}}
+                                                                                            <td class="w-10">
+                                                                                            {{ $comp->units }}
                                                                                             </td>
-                                                                                            <td>
-                                                                                                <input type="text" maxlength="9" name="physical_target" value="0.00"/>
+                                                                                            <td class="w-15">
+                                                                                            {{ $comp->cost_norms }}
+                                                                                            </td>                                                                                     
+                                                                                            
+                                                                                            <td class="w-20">
+                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-50" name="physical_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
                                                                                             </td>
-                                                                                            <td>
-                                                                                                <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
+                                                                                            <td class="w-20">
+                                                                                            {{ number_format((float)$comp->cost_norms*(float)$targetsset->physical_target, 2) }}
                                                                                             </td>
-                                                                                            <td>
-                                                                                                <input type="text" name="remarks"/>
+                                                                                            <td class="w-25">
+                                                                                                <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
                                                                                             </td>
                                                                                         </tr>
-                                                                                        @endif
-                                                                                        @if(!empty($scheme->private_sector))
                                                                                         <tr>
-                                                                                            <td>
+                                                                                            <td class="w-20">
                                                                                             Private Sector
                                                                                             </td>
-                                                                                            <td>{{$scheme->units}}</td>
-                                                                                            <td>
-                                                                                            {{$scheme->cost_norms}}
+                                                                                            <td class="w-10">{{$comp->units}}</td>
+                                                                                            <td class="w-15">
+                                                                                            {{$comp->cost_norms}}
                                                                                             </td>
-                                                                                            <td>
-                                                                                                <input type="text" maxlength="9" name="physical_target" value="0.00"/>
+                                                                                            
+                                                                                            <td class="w-20">
+                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-50" name="private_physical_target[]" value="{{empty($targetsset->private_physical_target) ? '0.00' : $targetsset->private_physical_target}}"/>
                                                                                             </td>
-                                                                                            <td>
-                                                                                                <input type="text" disabled="disabled" maxlength="9" name="financial_target"/>
+                                                                                            <td class="w-20">
+                                                                                            {{number_format((float)$comp->cost_norms*(float)$targetsset->private_physical_target, 2)}}
                                                                                             </td>
-                                                                                            <td>
-                                                                                                <input type="text" name="remarks"/>
+                                                                                            <td class="w-15">
+                                                                                                <input type="text" class="w-80" name="private_remarks[]" value="{{ empty($targetsset->private_remarks)?'0.00': $targetsset->private_remarks }}"/>
                                                                                             </td>
                                                                                         </tr>
+                                                                                        @else
+                                                                                            @if(!empty($comp->public_sector))
+                                                                                            <tr>
+                                                                                                <td class="w-20">
+                                                                                                Public Sector
+                                                                                                </td>
+                                                                                                <td class="w-10">
+                                                                                                {{$comp->units}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                {{$comp->cost_norms}}
+                                                                                                </td>
+                                                                                                
+                                                                                                <td class="w-20">
+                                                                                                    <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                    <input type="text" maxlength="9" class="w-50" name="physical_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                </td>
+                                                                                                <td class="w-20">
+                                                                                                {{number_format((float)$comp->cost_norms*(float)$targetsset->physical_target, 2)}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                    <input type="text" class="w-80" name="remarks[]"/>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            @endif
+                                                                                            @if(!empty($comp->private_sector))
+                                                                                            <tr>
+                                                                                                <td class="w-20">
+                                                                                                Private Sector
+                                                                                                </td>
+                                                                                                <td class="w-10">{{$comp->units}}</td>
+                                                                                                <td class="w-15">
+                                                                                                {{$comp->cost_norms}}
+                                                                                                </td>
+                                                                                                
+                                                                                                <td class="w-20">
+                                                                                                    <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                    <input type="text" maxlength="9" class="w-50" name="private_physical_target[]" value="{{$targetsset->private_physical_target}}"/>
+                                                                                                </td>
+                                                                                                <td class="w-20">
+                                                                                                {{number_format((float)$comp->cost_norms*(float)$targetsset->private_physical_target, 2)}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                    <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            @endif
                                                                                         @endif
-                                                                                    @endif
-                                                                                @empty
-                                                                                @endforelse
-                                                                            </table>
+                                                                                </table>
                                                                             </td>
                                                                         </tr>
-                                                                        @empty
-                                                                        @endforelse
+                                                                        
+                                                                        @elseif ($comp->component_id && !$comp->sub_component_id)
+                                                                        <tr>
+                                                                            <th>{{ $type->fetchComponentName($comp->component_id)->component_name}}</th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table class="table-bordered" style="width:100%">                                                                                  
+                                                                                    
+                                                                                        <tr>
+                                                                                            <td class="w-20 text-primary">
+                                                                                            {{ $comp->scheme_name }}
+                                                                                            </td>
+                                                                                            <td colspan="5"></td>
+                                                                                        </tr>
+                                                                                        @php $targetsset= $comp->fetchtargetstate($comp->scheme_subcategory_id, $comp->component_id, $comp->sub_component_id, $comp->scheme_id); @endphp
+                                                                                        @if(!empty($comp->public_range) && !empty($comp->private_range))
+                                                                                        <tr>
+                                                                                            <td class="w-20">
+                                                                                            Public Sector
+                                                                                            </td>
+                                                                                            <td class="w-10">
+                                                                                            {{ $comp->units }}
+                                                                                            </td>
+                                                                                            <td class="w-15">
+                                                                                            {{ $comp->cost_norms }}
+                                                                                            </td>                                                                                     
+                                                                                            
+                                                                                            <td class="w-20">
+                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-50" name="physical_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            </td>
+                                                                                            <td class="w-20">
+                                                                                            {{ number_format((float)$comp->cost_norms*(float)$targetsset->physical_target, 2) }}
+                                                                                            </td>
+                                                                                            <td class="w-25">
+                                                                                                <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="w-20">
+                                                                                            Private Sector
+                                                                                            </td>
+                                                                                            <td class="w-10">{{$comp->units}}</td>
+                                                                                            <td class="w-15">
+                                                                                            {{$comp->cost_norms}}
+                                                                                            </td>
+                                                                                            
+                                                                                            <td class="w-20">
+                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-50" name="private_physical_target[]" value="{{empty($targetsset->private_physical_target) ? '0.00' : $targetsset->private_physical_target}}"/>
+                                                                                            </td>
+                                                                                            <td class="w-20">
+                                                                                            {{number_format((float)$comp->cost_norms*(float)$targetsset->private_physical_target, 2)}}
+                                                                                            </td>
+                                                                                            <td class="w-15">
+                                                                                                <input type="text" class="w-80" name="private_remarks[]" value="{{ empty($targetsset->private_remarks)?'0.00': $targetsset->private_remarks }}"/>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        @else
+                                                                                            @if(!empty($comp->public_sector))
+                                                                                            <tr>
+                                                                                                <td class="w-20">
+                                                                                                Public Sector
+                                                                                                </td>
+                                                                                                <td class="w-10">
+                                                                                                {{$comp->units}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                {{$comp->cost_norms}}
+                                                                                                </td>
+                                                                                                
+                                                                                                <td class="w-20">
+                                                                                                    <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                    <input type="text" maxlength="9" class="w-50" name="physical_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                </td>
+                                                                                                <td class="w-20">
+                                                                                                {{number_format((float)$comp->cost_norms*(float)$targetsset->physical_target, 2)}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                    <input type="text" class="w-80" name="remarks[]"/>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            @endif
+                                                                                            @if(!empty($comp->private_sector))
+                                                                                            <tr>
+                                                                                                <td class="w-20">
+                                                                                                Private Sector
+                                                                                                </td>
+                                                                                                <td class="w-10">{{$comp->units}}</td>
+                                                                                                <td class="w-15">
+                                                                                                {{$comp->cost_norms}}
+                                                                                                </td>
+                                                                                                
+                                                                                                <td class="w-20">
+                                                                                                    <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                    <input type="text" maxlength="9" class="w-50" name="private_physical_target[]" value="{{$targetsset->private_physical_target}}"/>
+                                                                                                </td>
+                                                                                                <td class="w-20">
+                                                                                                {{number_format((float)$comp->cost_norms*(float)$targetsset->private_physical_target, 2)}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                    <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            @endif
+                                                                                        @endif
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @elseif (!$comp->component_id && !$comp->sub_component_id)
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table class="table-bordered" style="width:100%">                                                                                  
+                                                                                    
+                                                                                        <tr>
+                                                                                            <td class="w-20 text-primary">
+                                                                                            {{ $comp->scheme_name }}
+                                                                                            </td>
+                                                                                            <td colspan="5"></td>
+                                                                                        </tr>
+                                                                                        @php $targetsset= $comp->fetchtargetstate($comp->scheme_subcategory_id, $comp->component_id,$comp->sub_component_id, $comp->scheme_id); @endphp
+                                                                                        @if(!empty($comp->public_range) && !empty($comp->private_range))
+                                                                                        <tr>
+                                                                                            <td class="w-20">
+                                                                                            Public Sector
+                                                                                            </td>
+                                                                                            <td class="w-10">
+                                                                                            {{ $comp->units }}
+                                                                                            </td>
+                                                                                            <td class="w-15">
+                                                                                            {{ $comp->cost_norms }}
+                                                                                            </td>                                                                                     
+                                                                                            
+                                                                                            <td class="w-20">
+                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-50" name="physical_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            </td>
+                                                                                            <td class="w-20">
+                                                                                            {{ number_format((float)$comp->cost_norms*(float)$targetsset->physical_target, 2) }}
+                                                                                            </td>
+                                                                                            <td class="w-25">
+                                                                                                <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="w-20">
+                                                                                            Private Sector
+                                                                                            </td>
+                                                                                            <td class="w-10">{{$comp->units}}</td>
+                                                                                            <td class="w-15">
+                                                                                            {{$comp->cost_norms}}
+                                                                                            </td>
+                                                                                            
+                                                                                            <td class="w-20">
+                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-50" name="private_physical_target[]" value="{{empty($targetsset->private_physical_target) ? '0.00' : $targetsset->private_physical_target}}"/>
+                                                                                            </td>
+                                                                                            <td class="w-20">
+                                                                                            {{number_format((float)$comp->cost_norms*(float)$targetsset->private_physical_target, 2)}}
+                                                                                            </td>
+                                                                                            <td class="w-15">
+                                                                                                <input type="text" class="w-80" name="private_remarks[]" value="{{ empty($targetsset->private_remarks)?'0.00': $targetsset->private_remarks }}"/>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        @else
+                                                                                            @if(!empty($comp->public_sector))
+                                                                                            <tr>
+                                                                                                <td class="w-20">
+                                                                                                Public Sector
+                                                                                                </td>
+                                                                                                <td class="w-10">
+                                                                                                {{$comp->units}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                {{$comp->cost_norms}}
+                                                                                                </td>
+                                                                                                
+                                                                                                <td class="w-20">
+                                                                                                    <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                    <input type="text" maxlength="9" class="w-50" name="physical_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                </td>
+                                                                                                <td class="w-20">
+                                                                                                {{number_format((float)$comp->cost_norms*(float)$targetsset->physical_target, 2)}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                    <input type="text" class="w-80" name="remarks[]"/>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            @endif
+                                                                                            @if(!empty($comp->private_sector))
+                                                                                            <tr>
+                                                                                                <td class="w-20">
+                                                                                                Private Sector
+                                                                                                </td>
+                                                                                                <td class="w-10">{{$comp->units}}</td>
+                                                                                                <td class="w-15">
+                                                                                                {{$comp->cost_norms}}
+                                                                                                </td>
+                                                                                                
+                                                                                                <td class="w-20">
+                                                                                                    <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                    <input type="text" maxlength="9" class="w-50" name="private_physical_target[]" value="{{$targetsset->private_physical_target}}"/>
+                                                                                                </td>
+                                                                                                <td class="w-20">
+                                                                                                {{number_format((float)$comp->cost_norms*(float)$targetsset->private_physical_target, 2)}}
+                                                                                                </td>
+                                                                                                <td class="w-15">
+                                                                                                    <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            @endif
+                                                                                        @endif
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @endif
                                                                     </table>
                                                                 </td>
                                                             </tr>
                                                             @empty
-                                                            @endforelse                                  
+                                                             <!-- not start component -->
+                                                            @endforelse                              
                                                             
                                                         @empty
                                                         @endforelse
@@ -247,13 +494,14 @@ legend{
                                 </div>
                                 @empty
                                 @endforelse
-                                
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <!-- <button type="reset" class="btn btn-secondary">Reset</button> -->
                                 </div>
                             </form><!-- End floating Labels Form -->
-                                       
+                            @else
+                            <p>Please select financial year</p>
+                            @endif    
                 </div>
             </div>     
         </div><!-- End Left side columns -->
@@ -267,287 +515,13 @@ legend{
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
-        $('#govt_id').on('change', function(){
+        $('#year').on('change', function(){
             var id = $(this).val();
-            $.ajax({
-                    type: 'GET',
-                    url: "{{route('fetch-scheme-category')}}",
-                    data: { 'id': id },
-                    dataType: "json",
-                    success: function(resultData) {
-                        var html = '';
-                        html+='<option value="">Scheme Category Name</option>';
-                        if(resultData.message == 'success'){
-                            var content = resultData.data;
-                            console.log(content.id);
-                            html+='<option value="'+content.id+'">'+content.category_name+'</option>';
-                        }
-                        $('#scheme_category_id').empty();
-                        $('#scheme_category_id').html(html);
-                    }
-                }); 
+            var url = '/manage-subsidy-state?year='+id;
+            window.location = url;             
         });   
-        $('#scheme_category_id').on('change', function(){
-            var id = $(this).val();
-            $.ajax({
-                    type: 'GET',
-                    url: "{{route('fetch-component-type')}}",
-                    data: { 'id': id },
-                    dataType: "json",
-                    success: function(resultData) {
-                        var html = '';
-                        html+='<option value="">Component Type</option>';
-                        if(resultData.message == 'success'){
-                            var content = resultData.data;
-                            html+='<option value="'+content.id+'">'+content.subcategory_name+'</option>';
-                        }
-                        $('#scheme_subcategory_id').empty();
-                        $('#scheme_subcategory_id').html(html);
-                    }
-                }); 
-        });   
-        $('#scheme_subcategory_id').on('change', function(){
-            var id = $(this).val();
-            $.ajax({
-                    type: 'GET',
-                    url: "{{route('fetch-components')}}",
-                    data: { 'id': id },
-                    dataType: "json",
-                    success: function(resultData) {
-                        var html = '';
-                        html+='<option value="">Component Name</option>';
-                        if(resultData.message == 'success'){
-                            var content = resultData.data;
-                            html+='<option value="'+content.id+'">'+content.component_name+'</option>';
-                        }
-                        $('#component_id').empty();
-                        $('#component_id').html(html);
-                    }
-                }); 
-        });
-
-        $('#component_id').on('change', function(){
-            var id = $(this).val();
-            $.ajax({
-                    type: 'GET',
-                    url: "{{route('fetch-sub-components')}}",
-                    data: { 'id': id },
-                    dataType: "json",
-                    success: function(resultData) {
-                        var html = '';
-                        html+='<option value="">Sub Component Name</option>';
-                        if(resultData.message == 'success'){
-                            var content = resultData.data;
-                            html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
-                        }
-                        $('#sub_component_id').empty();
-                        $('#sub_component_id').html(html);
-                    }
-                }); 
-        });
+        
     });
 
-    $(document).ready(function() {
-        var buttonAdd = $("#add-button");
-        var buttonRemove = $("#remove-button");
-        var className = ".video-field";
-        var count = 0;
-        var field = "";
-        var maxFields=5;
-
-        function totalFields() {
-            return $(className).length;
-        }
-
-        function addNewField() {
-            count = totalFields() + 1;
-            field = $("#video-field-1").clone();
-            field.attr("id", "video-field-" + count);
-            field.children("label").text("Field " + count);
-            field.find("input").val("");
-            $(className + ":last").after($(field));
-        }
-
-        function removeLastField() {
-            if (totalFields() > 1) {
-            $(className + ":last").remove();
-            }
-        }
-
-        function enableButtonRemove() {
-            if (totalFields() === 2) {
-            buttonRemove.removeAttr("disabled");
-            buttonRemove.addClass("shadow-sm");
-            }
-        }
-
-        function disableButtonRemove() {
-            if (totalFields() === 1) {
-            buttonRemove.attr("disabled", "disabled");
-            buttonRemove.removeClass("shadow-sm");
-            }
-        }
-
-        function disableButtonAdd() {
-            if (totalFields() === maxFields) {
-            buttonAdd.attr("disabled", "disabled");
-            buttonAdd.removeClass("shadow-sm");
-            }
-        }
-
-        function enableButtonAdd() {
-            if (totalFields() === (maxFields - 1)) {
-            buttonAdd.removeAttr("disabled");
-            buttonAdd.addClass("shadow-sm");
-            }
-        }
-
-        buttonAdd.click(function() {
-            addNewField();
-            enableButtonRemove();
-            disableButtonAdd();
-        });
-
-        buttonRemove.click(function() {
-            removeLastField();
-            disableButtonRemove();
-            enableButtonAdd();
-        });
-
-        // sector
-        var buttonSectorAdd = $("#add-sector-button");
-        var buttonSectorRemove = $("#remove-sector-button");
-        var classNameSector = ".sector-field";
-        var countSector = 0;
-        var fieldSector = "";
-        var maxFieldsSector=5;
-
-        function totalSectorFields() {
-            return $(classNameSector).length;
-        }
-
-        function addNewSectorField() {
-            countSector = totalSectorFields() + 1;
-            fieldSector = $("#sector-field-1").clone();
-            fieldSector.attr("id", "sector-field-" + countSector);
-            fieldSector.children("label").text("Field " + countSector);
-            fieldSector.find("input").val("");
-            $(classNameSector + ":last").after($(fieldSector));
-        }
-
-        function removeLastSectorField() {
-            if (totalSectorFields() > 1) {
-            $(classNameSector + ":last").remove();
-            }
-        }
-
-        function enableButtonSectorRemove() {
-            if (totalSectorFields() === 2) {
-                buttonSectorRemove.removeAttr("disabled");
-                buttonSectorRemove.addClass("shadow-sm");
-            }
-        }
-
-        function disableButtonSectorRemove() {
-            if (totalSectorFields() === 1) {
-                buttonSectorRemove.attr("disabled", "disabled");
-                buttonSectorRemove.removeClass("shadow-sm");
-            }
-        }
-
-        function disableButtonSectorAdd() {
-            if (totalSectorFields() === maxFieldsSector) {
-                buttonSectorAdd.attr("disabled", "disabled");
-                buttonSectorAdd.removeClass("shadow-sm");
-            }
-        }
-
-        function enableButtonSectorAdd() {
-            if (totalSectorFields() === (maxFieldsSector - 1)) {
-                buttonSectorAdd.removeAttr("disabled");
-                buttonSectorAdd.addClass("shadow-sm");
-            }
-        }
-
-        buttonSectorAdd.click(function() {
-            addNewSectorField();
-            enableButtonSectorRemove();
-            disableButtonSectorAdd();
-        });
-
-        buttonSectorRemove.click(function() {
-            removeLastSectorField();
-            disableButtonSectorRemove();
-            enableButtonSectorAdd();
-        });
-
-        //terms
-        var buttonAddTerms = $("#add-terms-button");
-        var buttonRemoveTerms = $("#remove-terms-button");
-        var classNameTerms = ".terms-field";
-        var countTerms = 0;
-        var fieldTerms = "";
-        var maxFieldsTerms=5;
-
-        function totalTermsFields() {
-            return $(classNameTerms).length;
-        }
-
-        function addNewTermsField() {
-            countTerms = totalTermsFields() + 1;
-            fieldTerms = $("#terms-field-1").clone();
-            fieldTerms.attr("id", "terms-field-" + countTerms);
-            fieldTerms.children("label").text("Field " + countTerms);
-            fieldTerms.find("input").val("");
-            $(classNameTerms + ":last").after($(fieldTerms));
-        }
-
-        function removeLastTermsField() {
-            if (totalTermsFields() > 1) {
-            $(classNameTerms + ":last").remove();
-            }
-        }
-
-        function enableButtonTermsRemove() {
-            if (totalTermsFields() === 2) {
-                buttonRemoveTerms.removeAttr("disabled");
-                buttonRemoveTerms.addClass("shadow-sm");
-            }
-        }
-
-        function disableButtonTermsRemove() {
-            if (totalTermsFields() === 1) {
-                buttonRemoveTerms.attr("disabled", "disabled");
-                buttonRemoveTerms.removeClass("shadow-sm");
-            }
-        }
-
-        function disableButtonTermsAdd() {
-            if (totalTermsFields() === maxFieldsTerms) {
-                buttonAddTerms.attr("disabled", "disabled");
-                buttonAddTerms.removeClass("shadow-sm");
-            }
-        }
-
-        function enableButtonTermsAdd() {
-            if (totalTermsFields() === (maxFieldsTerms - 1)) {
-                buttonAddTerms.removeAttr("disabled");
-                buttonAddTerms.addClass("shadow-sm");
-            }
-        }
-
-        buttonAddTerms.click(function() {
-            addNewTermsField();
-            enableButtonTermsRemove();
-            disableButtonTermsAdd();
-        });
-
-        buttonRemoveTerms.click(function() {
-            removeLastTermsField();
-            disableButtonTermsRemove();
-            enableButtonTermsAdd();
-        });
-
-    });
 </script>
 @endpush

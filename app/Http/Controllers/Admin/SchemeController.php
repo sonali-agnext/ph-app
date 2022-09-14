@@ -373,22 +373,22 @@ class SchemeController extends Controller
                 'subsidy' => $request->subsidy,
                 'public_sector' => ($request->public_sector),
                 'private_sector' => ($request->private_sector),
-                'public_range' => ($request->public_range),
-                'private_range' => ($request->private_range),
+                'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+                'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
                 'terms' => json_encode($request->terms),
                 'cost_norms' => $request->cost_norms,
                 'detailed_description' => $request->detailed_description,
                 'scheme_image' => $filename,
                 'videos' => json_encode($request->video),
                 'videos_title' => json_encode($request->title),
-                'is_featured' => ($request->is_featured),
+                'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
             ]);
             if($scheme){
 
                 $targets= TargetState::where('crop_id', $scheme->id)->where('component_type_id', $scheme->scheme_subcategory_id)->where('sub_component_id', $scheme->sub_component_id)->first();
 
                 if(empty($targets)){
-                    $target = TargetState::create(['crop_id' => $scheme->id, 'component_type_id' => $scheme->scheme_subcategory_id,'component_id'=>$scheme->component_id, 'sub_component_id'=> $scheme->sub_component_id, 'physical_target' => "0",'financial_target' => "0", 'remarks'=>""]);
+                    $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"", 'year' =>$request->year]);
                 }
                 return back()->with('success','Schemes updated successfully!');
             }else{
@@ -407,20 +407,22 @@ class SchemeController extends Controller
                 'subsidy' => $request->subsidy,
                 'public_sector' => ($request->public_sector),
                 'private_sector' => ($request->private_sector),
-                'public_range' => ($request->public_range),
-                'private_range' => ($request->private_range),
+                'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+                'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
                 'terms' => json_encode($request->terms),
                 'cost_norms' => $request->cost_norms,
                 'detailed_description' => $request->detailed_description,
                 'videos' => json_encode($request->video),
                 'videos_title' => json_encode($request->title),
-                'is_featured' => ($request->is_featured),
+                'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
             ]);
             if($scheme){
                 $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
 
                 if(empty($targets)){
-                    $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0", 'remarks'=>""]);
+                    $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
+                }else{
+                    $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
                 }
                 return back()->with('success','Schemes updated successfully!');
             }else{
@@ -473,18 +475,18 @@ class SchemeController extends Controller
                     'subsidy' => $request->subsidy,
                     'public_sector' => ($request->public_sector),
                     'private_sector' => ($request->private_sector),
-                    'public_range' => ($request->public_range),
-                    'private_range' => ($request->private_range),
+                    'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+                    'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
                     'terms' => json_encode($request->terms),
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
                     'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
-                    'is_featured' => ($request->is_featured),
+                    'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
                 ]);
                 if($scheme){
-                    $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0", 'remarks'=>""]);
+                    $target = TargetState::create(['crop_id' => $scheme->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
                     return back()->with('success','Schemes created successfully!');
                 }else{
                     return back()->with('error','Something Went Wrong!');

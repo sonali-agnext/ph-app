@@ -14,6 +14,9 @@ class TargetState extends Model
         'crop_id',
         'physical_target',
         'financial_target',
-        'remarks'
+        'private_physical_target',
+        'remarks',
+        'private_remarks',
+        'year'
     ];
 }

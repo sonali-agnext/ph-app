@@ -170,7 +170,7 @@
                             </div>
                             @empty
                             <tr>
-                                <td colspan="7">No Record Found</td>
+                                <td colspan="3">No Record Found</td>
                             </tr>
                             @endforelse                    
                         </tbody>

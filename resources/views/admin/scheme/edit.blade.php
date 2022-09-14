@@ -167,12 +167,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12">
+                                <!-- <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" name="subsidy" required class="form-control" id="subsidy" placeholder="Enter Subsidy For ex: 40, 40-100,0" value="{{ $scheme->subsidy}}">
                                         <label for="subsidy">Subsidy Range</label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <hr />
                                 <div class="row" style="align-items: center;">
                                     <div class="col-md-12 mb-2">
@@ -259,7 +259,7 @@
                                 </div>
                                 <hr />
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-floating">
                                         <input type="text" name="cost_norms" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="{{$scheme->cost_norms}}">
                                         <label for="cost_norms">Cost Norms</label>
@@ -398,9 +398,11 @@
                         var html = '';
                         html+='<option value="">Scheme Category Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data[0];
+                            var content = resultData.data;
                             console.log(content.id);
-                            html+='<option value="'+content.id+'">'+content.category_name+'</option>';
+                            $.each(content, function(key,val) {
+                                html+='<option value="'+val.id+'">'+val.category_name+'</option>';      
+                            });
                         }
                         $('#scheme_category_id').empty();
                         $('#scheme_subcategory_id').empty();
@@ -422,8 +424,10 @@
                         var html = '';
                         html+='<option value="">Component Type</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data[0];
-                            html+='<option value="'+content.id+'">'+content.subcategory_name+'</option>';
+                            var content = resultData.data;
+                            $.each(content, function(key,val) {
+                                html+='<option value="'+val.id+'">'+val.subcategory_name+'</option>';      
+                            });
                         }
                         $('#scheme_subcategory_id').empty();
                         $('#sub_component_id').empty();
@@ -443,8 +447,10 @@
                         var html = '';
                         html+='<option value="">Component Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data[0];
-                            html+='<option value="'+content.id+'">'+content.component_name+'</option>';
+                            var content = resultData.data;
+                            $.each(content, function(key,val) {
+                                html+='<option value="'+val.id+'">'+val.component_name+'</option>';      
+                            }); 
                         }
                         $('#component_id').empty();
                         $('#component_id').html(html);
@@ -463,8 +469,10 @@
                         var html = '';
                         html+='<option value="">Sub Component Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data[0];
-                            html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
+                            var content = resultData.data;
+                            $.each(content, function(key,val) {
+                                html+='<option value="'+val.id+'">'+val.sub_component_name+'</option>';      
+                            });
                         }
                         $('#sub_component_id').empty();
                         $('#sub_component_id').html(html);
@@ -483,8 +491,10 @@
                         var html = '';
                         html+='<option value="">Sub Component Name</option>';
                         if(resultData.message == 'success'){
-                            var content = resultData.data[0];
-                            html+='<option value="'+content.id+'">'+content.sub_component_name+'</option>';
+                            var content = resultData.data;
+                            $.each(content, function(key,val) {
+                                html+='<option value="'+val.id+'">'+val.sub_component_name+'</option>';      
+                            });
                         }
                         $('#sub_component_id').empty();
                         $('#sub_component_id').html(html);

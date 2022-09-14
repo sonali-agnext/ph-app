@@ -107,6 +107,7 @@ Route::post('/add-pscheme-category','Admin\SchemeController@createPSchemeCategor
 
 // manage subsidy
 Route::get('/manage-subsidy-state','Admin\SubsidyController@manageStateSubsidy')->name('manage-subsidy-state');
+Route::post('/manage-subsidy-state','Admin\SubsidyController@updateStateSubsidy')->name('manage-subsidy-state');
 
 // manage scheme
 Route::get('/manage-scheme','Admin\SchemeController@manageScheme')->name('manage-scheme');
@@ -119,6 +120,13 @@ Route::get('/fetch-scheme-category', 'Admin\SchemeController@fetchSchemeCategory
 Route::get('/fetch-component-type', 'Admin\SchemeController@fetchComponentType')->name('fetch-component-type');
 Route::get('/fetch-components', 'Admin\SchemeController@fetchComponent')->name('fetch-components');
 Route::get('/fetch-sub-components', 'Admin\SchemeController@fetchSubComponent')->name('fetch-sub-components');
+
+//manage officers
+
+Route::get('/manage-state-officer','Admin\OfficerController@manageState')->name('manage-state-officer');
+Route::get('/manage-district-officer','Admin\OfficerController@manageState')->name('manage-district-officer');
+Route::get('/manage-tehsil-officer','Admin\OfficerController@manageState')->name('manage-tehsil-officer');
+
 
 //manage farmer
 
