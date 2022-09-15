@@ -12,17 +12,17 @@
 
       <li class="nav-item">
         @php $route = \Request::route()->getName(); @endphp
-        <a @if($route == 'manage-state-officer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#farmers-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-state-officer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') aria-expanded="true" @endif>
+        <a @if($route == 'manage-district-officer' || $route == 'add-district-officer' || $route == 'edit-district-officer' || $route == 'update-district-officer' || $route == 'manage-tehsil-officer' || $route == 'add-tehsil-officer' || $route == 'edit-tehsil-officer' || $route == 'update-tehsil-officer' || $route == 'manage-state-officer' || $route == 'add-state-officer' || $route == 'edit-state-officer' || $route == 'update-state-officer') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#officer-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-district-officer' || $route == 'add-district-officer' || $route == 'edit-district-officer' || $route == 'update-district-officer' || $route == 'manage-tehsil-officer' || $route == 'add-tehsil-officer' || $route == 'edit-tehsil-officer' || $route == 'update-tehsil-officer' || $route == 'manage-state-officer' || $route == 'add-state-officer' || $route == 'edit-state-officer' || $route == 'update-state-officer') aria-expanded="true" @endif>
           <i class="bi bi-menu-button-wide"></i><span>Manage Officers</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="farmers-nav" @if($route == 'manage-farmer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') class="nav-content collapse show" @else class="nav-content collapse" @endif data-bs-parent="#sidebar-nav">
+        <ul id="officer-nav" @if($route == 'manage-district-officer' || $route == 'add-district-officer' || $route == 'edit-district-officer' || $route == 'update-district-officer' || $route == 'manage-tehsil-officer' || $route == 'add-tehsil-officer' || $route == 'edit-tehsil-officer' || $route == 'update-tehsil-officer' || $route == 'manage-state-officer' || $route == 'add-state-officer' || $route == 'edit-state-officer' || $route == 'update-state-officer') class="nav-content collapse show" @else class="nav-content collapse" @endif data-bs-parent="#sidebar-nav">
           <li>
-            <a @if($route == 'manage-state-officer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') class="active" @endif href="{{route('manage-state-officer')}}">
+            <a @if($route == 'manage-state-officer' || $route == 'add-state-officer' || $route == 'edit-state-officer' || $route == 'update-state-officer') class="active" @endif href="{{route('manage-state-officer')}}">
               <i class="bi bi-circle"></i><span>Manage State Officers</span>
             </a>
           </li>
           <li>
-            <a @if($route == 'manage-district-officer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') class="active" @endif href="{{route('manage-district-officer')}}">
+            <a @if($route == 'manage-district-officer' || $route == 'add-district-officer' || $route == 'edit-district-officer' || $route == 'update-district-officer') class="active" @endif href="{{route('manage-district-officer')}}">
               <i class="bi bi-circle"></i><span>Manage District Officers</span>
             </a>
           </li>
