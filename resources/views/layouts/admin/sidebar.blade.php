@@ -27,7 +27,7 @@
             </a>
           </li>
           <li>
-            <a @if($route == 'manage-tehsil-officer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') class="active" @endif href="{{route('manage-tehsil-officer')}}">
+            <a @if($route == 'manage-tehsil-officer' || $route == 'add-tehsil-officer' || $route == 'edit-tehsil-officer' || $route == 'update-tehsil-officer') class="active" @endif href="{{route('manage-tehsil-officer')}}">
               <i class="bi bi-circle"></i><span>Manage Tehsil Officers</span>
             </a>
           </li>

@@ -19,6 +19,8 @@ use App\Models\GovtScheme;
 use App\Models\Component;
 use App\Models\SubComponent;
 use App\Models\TargetState;
+use App\Models\Officer;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class OfficerController extends Controller
@@ -33,35 +35,441 @@ class OfficerController extends Controller
         $this->middleware('auth');
     }        
 
-    //parent scheme category
+    //manage state
     public static function manageState(Request $request){
-        $states = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name')
-        ->join('cities','farmers.city_id','=','cities.id')
-        ->join('districts','farmers.district_id','=','districts.id')
-        ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
-        ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
-        ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        ->join('users','users.id','=','officers.user_id')
+        ->join('cities','officers.city_id','=','cities.id')
+        ->join('districts','officers.district_id','=','districts.id')
+        ->join('tehsils','officers.tehsil_id','=','tehsils.id')
+        ->where('users.role_id',3)
         ->get();
 
         return view('admin.state_officer.index',['states' => $states]);
     }
 
-    public static function updateStateSubsidy(Request $request){
-        // $targets = TargetState::where('id',)->update();
-        $all_targets = $request->target_id;
-        $all_private_targets = $request->private_target_id;
-        $all_remarks = $request->remarks;
-        $all_private_remarks = $request->private_remarks;
-        $all_physical_target = $request->physical_target;
-        $all_private_physical_target=$request->private_physical_target;
-        
-        foreach($all_targets as $key=> $target){
-            $targets = TargetState::where('id',$target)->update(['physical_target'=> $all_physical_target[$key], 'remarks' => $all_remarks[$key]]);
-            $privatetargets = TargetState::where('id',$all_private_targets[$key])->update(['private_physical_target'=> $all_private_physical_target[$key],'private_remarks' => $all_private_remarks[$key]]);
-        }
+    public function editState(Request $request){
+        $id = $request->id;
+        $state = Officer::select('officers.*', 'users.id as user_id','users.name','users.email')
+        ->join('users','users.id','=','officers.user_id')
+        ->where('officers.id', $id)->first();
+        $cities = City::all();
+        $districts = District::all();
+        $tehsils = Tehsil::all();
+        return view('admin.state_officer.edit',['state' => $state, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils]);
+    }
 
-        return redirect()->route('manage-subsidy-state')->with('success','Schemes updated successfully!');
+    public function updateState(Request $request){
+        $id = $request->id;
+        $user_id = $request->user_id;
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users,email,'.$user_id
+        ]);
+        $mobile_number = $request->phone_number;
+        $name = $request->name;
+        $email = $request->email;
         
+        $state = $request->state;
+        $district_id = $request->district_id;
+        $tehsil_id = $request->tehsil_id;
+        $city_id = $request->city_id;
+        $full_address = $request->address;
+        $postal_code = $request->pincode;
+        $farmer_unique_id = '';
+        $farmer = Officer::find($id);
+        if ($validator->fails()) {
+            return back()->with('error','Email should be unique and required!');
+        }else{
+        if($request->hasFile('avatar')){            
+            $filename = time().$request->avatar->getClientOriginalName();
+            $request->avatar->storeAs('images',$filename,'public');
+            $district = Officer::where('id',$id)->update([
+                'phone_number' => $mobile_number,                
+                'state'=> $state, 
+                'district_id' => $district_id, 
+                'tehsil_id' => $tehsil_id, 
+                'city_id' => $city_id, 
+                'address'=> $full_address, 
+                'pincode'=> $postal_code, 
+                'avatar' => $filename
+            ]);
+                if($district){
+                    $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email]);
+                    return back()->with('success','Officer updated successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                } 
+        }else{
+            $district = Officer::where('id',$id)->update([
+                'phone_number' => $mobile_number,                
+                'state'=> $state, 
+                'district_id' => $district_id, 
+                'tehsil_id' => $tehsil_id, 
+                'city_id' => $city_id, 
+                'address'=> $full_address, 
+                'pincode'=> $postal_code, 
+            ]);
+                if($district){
+                    $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email]);
+                    return back()->with('success','Officer updated successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                } 
+        }
+    }       
+    }
+
+    //manage district
+    public static function manageDistrict(Request $request){
+        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        ->join('users','users.id','=','officers.user_id')
+        ->join('cities','officers.city_id','=','cities.id')
+        ->join('districts','officers.district_id','=','districts.id')
+        ->join('tehsils','officers.tehsil_id','=','tehsils.id')
+        ->where('users.role_id',4)
+        ->get();
+
+        return view('admin.district_officer.index',['states' => $states]);
+    }
+
+    public function editDistrict(Request $request){
+        $id = $request->id;
+        $state = Officer::select('officers.*', 'users.id as user_id','users.name','users.email','users.status', 'users.password')
+        ->join('users','users.id','=','officers.user_id')
+        ->where('officers.id', $id)->first();
+        $cities = City::all();
+        $districts = District::all();
+        $tehsils = Tehsil::all();
+        return view('admin.district_officer.edit',['state' => $state, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils]);
+    }
+
+    public function updateDistrict(Request $request){
+        $id = $request->id;
+        $user_id = $request->user_id;
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users,email,'.$user_id
+        ]);
+        $mobile_number = $request->phone_number;
+        $name = $request->name;
+        $email = $request->email;
+        
+        $state = $request->state;
+        $district_id = $request->district_id;
+        $tehsil_id = $request->tehsil_id;
+        $city_id = $request->city_id;
+        $full_address = $request->address;
+        $postal_code = $request->pincode;
+        $farmer_unique_id = '';
+        $farmer = Officer::find($id);
+        if ($validator->fails()) {
+            return back()->with('error','Email should be unique and required!');
+        }else{
+        if($request->hasFile('avatar')){            
+            $filename = time().$request->avatar->getClientOriginalName();
+            $request->avatar->storeAs('images',$filename,'public');
+            $district = Officer::where('id',$id)->update([
+                'phone_number' => $mobile_number,                
+                'state'=> $state, 
+                'district_id' => $district_id, 
+                'tehsil_id' => $tehsil_id, 
+                'city_id' => $city_id, 
+                'address'=> $full_address, 
+                'pincode'=> $postal_code, 
+                'avatar' => $filename
+            ]);
+                if($district){
+                    if(!empty($request->password)){
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status, 'password'=>Hash::make($request->password)]);
+                    }else{
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
+                    }
+                    
+                    return back()->with('success','Officer updated successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                } 
+        }else{
+            $district = Officer::where('id',$id)->update([
+                'phone_number' => $mobile_number,                
+                'state'=> $state, 
+                'district_id' => $district_id, 
+                'tehsil_id' => $tehsil_id, 
+                'city_id' => $city_id, 
+                'address'=> $full_address, 
+                'pincode'=> $postal_code, 
+            ]);
+                if($district){
+                    if(!empty($request->password)){
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status, 'password'=>Hash::make($request->password)]);
+                    }else{
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
+                    }
+                    return back()->with('success','Officer updated successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                } 
+        }
+    }       
+    }
+
+    public function deleteDistrict(Request $request){
+        $id = $request->id;
+        $user_id = Officer::find($id);
+        $district = User::where('id',$user_id->user_id)->firstorfail()->delete();
+        $district = Officer::where('id',$id)->firstorfail()->delete();
+        if($district){
+            return response()
+            ->json(['message' => 'success']);
+        }else{
+            return response()
+            ->json(['message' => 'error']);
+        }        
+    }
+
+    public function createDistrict(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users'
+        ]);
+        
+        if ($validator->fails()) {
+            return back()->with('error','Email should be unique and required!');
+        }else{
+            $mobile_number = $request->phone_number;
+            
+            $userFound = User::where('email', $request->email)->first();
+            $name = $request->name;
+            $email = $request->email;
+            if(empty($userFound)){
+                $user = new User;
+                $user->name = $name;
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->status = $request->status;
+                $user->role_id = 4;
+                $filename = '';
+                if($request->hasFile('avatar')){            
+                    $filename = time().$request->avatar->getClientOriginalName();
+                    $request->avatar->storeAs('images',$filename,'public');
+                }
+                if($user->save()){            
+                                       
+                    $id = $user->id;                    
+                    $state = $request->state;
+                    $district_id = $request->district_id;
+                    $tehsil_id = $request->tehsil_id;
+                    $city_id = $request->city_id;
+                    $full_address = $request->address;
+                    $postal_code = $request->pincode;
+                    
+                    if($filename){
+                        $farmer = Officer::create([
+                            'user_id'=>$id,                            
+                            'phone_number' => $mobile_number,                             
+                            'state'=> $state, 
+                            'district_id' => $district_id, 
+                            'tehsil_id' => $tehsil_id, 
+                            'city_id' => $city_id, 
+                            'address'=> $full_address,                             
+                            'pincode'=> $postal_code, 
+                            'avatar' => $filename]);
+                    
+                        if($farmer){
+                            return back()->with('success','District Officer created successfully!');
+                        }else{
+                            return back()->with('error','Something Went Wrong!');
+                        }           
+                    }else{
+                        return back()->with('error','Something Went Wrong!');
+                    }
+                    
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                }
+            }else{
+                return back()->with('error','Something Went Wrong!');
+            } 
+        }   
+    }
+    public function addDistrict(Request $request){
+        $cities = City::all();
+        $districts = District::all();
+        $tehsils = Tehsil::all();
+        return view('admin.district_officer.add',['cities' => $cities, 'districts' => $districts,'tehsils' => $tehsils]);
+    }
+
+    //manage tehsil
+    public static function manageTehsil(Request $request){
+        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        ->join('users','users.id','=','officers.user_id')
+        ->join('cities','officers.city_id','=','cities.id')
+        ->join('districts','officers.district_id','=','districts.id')
+        ->join('tehsils','officers.tehsil_id','=','tehsils.id')
+        ->where('users.role_id',5)
+        ->get();
+
+        return view('admin.tehsil_officer.index',['states' => $states]);
+    }
+
+    public function editTehsil(Request $request){
+        $id = $request->id;
+        $state = Officer::select('officers.*', 'users.id as user_id','users.name','users.email','users.status', 'users.password')
+        ->join('users','users.id','=','officers.user_id')
+        ->where('officers.id', $id)->first();
+        $cities = City::all();
+        $districts = District::all();
+        $tehsils = Tehsil::all();
+        return view('admin.tehsil_officer.edit',['state' => $state, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils]);
+    }
+
+    public function updateTehsil(Request $request){
+        $id = $request->id;
+        $user_id = $request->user_id;
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users,email,'.$user_id
+        ]);
+        $mobile_number = $request->phone_number;
+        $name = $request->name;
+        $email = $request->email;
+        
+        $state = $request->state;
+        $district_id = $request->district_id;
+        $tehsil_id = $request->tehsil_id;
+        $city_id = $request->city_id;
+        $full_address = $request->address;
+        $postal_code = $request->pincode;
+        $farmer_unique_id = '';
+        $farmer = Officer::find($id);
+        if ($validator->fails()) {
+            return back()->with('error','Email should be unique and required!');
+        }else{
+        if($request->hasFile('avatar')){            
+            $filename = time().$request->avatar->getClientOriginalName();
+            $request->avatar->storeAs('images',$filename,'public');
+            $district = Officer::where('id',$id)->update([
+                'phone_number' => $mobile_number,                
+                'state'=> $state, 
+                'district_id' => $district_id, 
+                'tehsil_id' => $tehsil_id, 
+                'city_id' => $city_id, 
+                'address'=> $full_address, 
+                'pincode'=> $postal_code, 
+                'avatar' => $filename
+            ]);
+                if($district){
+                    if(!empty($request->password)){
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status, 'password'=>Hash::make($request->password)]);
+                    }else{
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
+                    }
+                    
+                    return back()->with('success','Officer updated successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                } 
+        }else{
+            $district = Officer::where('id',$id)->update([
+                'phone_number' => $mobile_number,                
+                'state'=> $state, 
+                'district_id' => $district_id, 
+                'tehsil_id' => $tehsil_id, 
+                'city_id' => $city_id, 
+                'address'=> $full_address, 
+                'pincode'=> $postal_code, 
+            ]);
+                if($district){
+                    if(!empty($request->password)){
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status, 'password'=>Hash::make($request->password)]);
+                    }else{
+                        $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
+                    }
+                    return back()->with('success','Officer updated successfully!');
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                } 
+        }
+    }       
+    }
+
+    public function deleteTehsil(Request $request){
+        $id = $request->id;
+        $user_id = Officer::find($id);
+        $district = User::where('id',$user_id->user_id)->firstorfail()->delete();
+        $district = Officer::where('id',$id)->firstorfail()->delete();
+        if($district){
+            return response()
+            ->json(['message' => 'success']);
+        }else{
+            return response()
+            ->json(['message' => 'error']);
+        }        
+    }
+
+    public function createTehsil(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|unique:users'
+        ]);
+        
+        if ($validator->fails()) {
+            return back()->with('error','Email should be unique and required!');
+        }else{
+            $mobile_number = $request->phone_number;
+            
+            $userFound = User::where('email', $request->email)->first();
+            $name = $request->name;
+            $email = $request->email;
+            if(empty($userFound)){
+                $user = new User;
+                $user->name = $name;
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->status = $request->status;
+                $user->role_id = 5;
+                if($user->save()){            
+                                       
+                    $id = $user->id;                    
+                    $state = $request->state;
+                    $district_id = $request->district_id;
+                    $tehsil_id = $request->tehsil_id;
+                    $city_id = $request->city_id;
+                    $full_address = $request->address;
+                    $postal_code = $request->pincode;
+                    
+                    if($request->hasFile('avatar')){            
+                        $filename = time().$request->avatar->getClientOriginalName();
+                        $request->avatar->storeAs('images',$filename,'public');
+                        $farmer = Officer::create([
+                            'user_id'=>$id,                            
+                            'phone_number' => $mobile_number,                             
+                            'state'=> $state, 
+                            'district_id' => $district_id, 
+                            'tehsil_id' => $tehsil_id, 
+                            'city_id' => $city_id, 
+                            'address'=> $full_address,                             
+                            'pincode'=> $postal_code, 
+                            'avatar' => $filename]);
+                    
+                        if($farmer){
+                            return back()->with('success','Tehsil Officer created successfully!');
+                        }else{
+                            return back()->with('error','Something Went Wrong!');
+                        }           
+                    }else{
+                        return back()->with('error','Something Went Wrong!');
+                    }
+                    
+                }else{
+                    return back()->with('error','Something Went Wrong!');
+                }
+            }else{
+                return back()->with('error','Something Went Wrong!');
+            } 
+        }   
+    }
+    public function addTehsil(Request $request){
+        $cities = City::all();
+        $districts = District::all();
+        $tehsils = Tehsil::all();
+        return view('admin.tehsil_officer.add',['cities' => $cities, 'districts' => $districts,'tehsils' => $tehsils]);
     }
 
 }

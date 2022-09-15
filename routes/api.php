@@ -38,4 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/featured-scheme', [APIController::class, 'fetchFeaturedScheme']);    
     Route::get('/fetch-video',[APIController::class, 'fetchVideos']);
 });
+Route::get('/fetchallschemes',[APIController::class, 'fetchAllSchemes']);
 // Route::post('/register', [API/APIController::class, 'register']);

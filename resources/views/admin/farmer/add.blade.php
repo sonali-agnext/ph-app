@@ -193,6 +193,15 @@
                                         <label for="pin_code">Pin Code<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="status" id="status" aria-label="Status">
+                                            <option value="1">True</option>
+                                            <option value="0">False</option>
+                                        </select>
+                                        <label for="status">Status<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
                                 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>

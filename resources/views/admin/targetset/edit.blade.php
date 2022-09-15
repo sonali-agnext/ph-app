@@ -119,7 +119,6 @@ th.card-title{
                                     </div>
                                 </div>
                                 @if(!empty($year))
-                                @forelse($components as $dst) 
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
@@ -492,8 +491,6 @@ th.card-title{
                                         </tbody>
                                     </table>
                                 </div>
-                                @empty
-                                @endforelse
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <!-- <button type="reset" class="btn btn-secondary">Reset</button> -->

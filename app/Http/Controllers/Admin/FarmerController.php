@@ -18,8 +18,9 @@ class FarmerController extends Controller
 {
     //Farmers
     public function manageFarmers(Request $request){
-        $farmers = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name')
+        $farmers = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
         ->join('cities','farmers.city_id','=','cities.id')
+        ->join('users','farmers.user_id','=','users.id')
         ->join('districts','farmers.district_id','=','districts.id')
         ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
         ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
@@ -85,9 +86,11 @@ class FarmerController extends Controller
                 'city_id' => $city_id, 
                 'full_address'=> $full_address, 
                 'pin_code'=> $postal_code, 
-                'avatar' => $filename]);
+                'avatar' => $filename,
+                'status' => $request->status
+            ]);
                 if($district){
-                    $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number]);
+                    $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number, 'status' => $request->status]);
                     return back()->with('success','Farmer updated successfully!');
                 }else{
                     return back()->with('error','Something Went Wrong!');
@@ -109,9 +112,11 @@ class FarmerController extends Controller
                 'tehsil_id' => $tehsil_id, 
                 'city_id' => $city_id, 
                 'full_address'=> $full_address, 
-                'pin_code'=> $postal_code]);
+                'pin_code'=> $postal_code,
+                'status' => $request->status
+            ]);
                 if($district){
-                    $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number]);
+                    $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number, 'status' => $request->status]);
                     return back()->with('success','Farmer updated successfully!');
                 }else{
                     return back()->with('error','Something Went Wrong!');
@@ -151,6 +156,7 @@ class FarmerController extends Controller
                 $user->name = $mobile_number;
                 $user->email = $mobile_number.'@gmail.com';
                 $user->password = Hash::make('phApp@abc');
+                $user->status = $request->status;
                 $user->role_id = 2;
                 if($user->save()){              
                     $language = $request->language;                    

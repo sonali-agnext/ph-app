@@ -17,6 +17,7 @@ use App\Models\SchemeCategory;
 use App\Models\SchemeSubCategory;
 use App\Models\GovtScheme;
 use App\Models\MarketPrice;
+use App\Models\Component;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\YoutubeVideo;
@@ -41,8 +42,13 @@ class APIController extends Controller
                 return response()
                     ->json(['message' => ''], 200);
             }else{
-                return response()
+                if($userFound->status){
+                    return response()
                     ->json(['message' => 'Mobile Number Already Exists!'], 401);
+                }else{
+                    return response()
+                    ->json(['message' => 'Your account is inactive. Please contact to administrator!'], 401);
+                }
             }
         }catch (\Exception $e) {
             return response()
@@ -63,6 +69,7 @@ class APIController extends Controller
                 $user->name = $mobile_number;
                 $user->email = $mobile_number.'@gmail.com';
                 $user->password = Hash::make('phApp@abc');
+                $user->status = 1;
                 $user->role_id = $role_id;
                 if($user->save()){
                     $farmer = new Farmer;
@@ -103,9 +110,14 @@ class APIController extends Controller
             $mobile_number = $request->mobile_number;
             $userFound = User::where('name', $mobile_number)->first();
             if($userFound){
-                $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
-                return response()
-                ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
+                if(!$userFound->status){
+                    return response()
+                    ->json(['message' => 'Mobile Number not exists!'], 401);
+                }else{
+                    $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
+                    return response()
+                    ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
+                }
             }else{
                 return response()
                 ->json(['message' => 'Mobile Number not exists!'], 401);
@@ -198,7 +210,7 @@ class APIController extends Controller
                 return response()
                 ->json(['message' => 'Provide User ID'], 401);
             }
-            $user = Farmer::where('user_id', $id)->first();
+            $user = Farmer::select('farmers.*','districts.district_name')->join('districts','farmers.district_id','=','districts.id')->where('user_id', $id)->first();
             if($user){
                     return response()
                 ->json(['message' => 'User Information','media_url'=>'storage/images/' ,'data'=> $user], 200);
@@ -336,7 +348,7 @@ class APIController extends Controller
                 }            
             
                 if(!empty($farmer_profile)){
-                    $user = Farmer::where('user_id', $id)->first();
+                    $user = Farmer::select('farmers.*','districts.district_name')->join('districts','farmers.district_id','=','districts.id')->where('user_id', $id)->first();
                     if(empty($user->farmer_unique_id)){ 
                         $unique_id= $farmer_unique_id.str_pad($user->id, 6, '0', STR_PAD_LEFT);
                         $farmer_unique_id = strtoupper($unique_id);
@@ -538,5 +550,50 @@ class APIController extends Controller
         $video = YoutubeVideo::all();
         return response()
             ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
+    }
+
+    public function fetchAllSchemes(Request $request){
+        // $scheme_subcategories = SchemeSubCategory::selectRaw(
+        //     "schemes.*,
+        //     scheme_sub_categories.*,
+        //     schemes.id as scheme_id"
+        // )
+        //     ->join('schemes', 'schemes.scheme_subcategory_id', '=', 'scheme_sub_categories.id')
+           
+        //     ->orderBy('scheme_sub_categories.id')
+        //     ->orderBy('schemes.id')
+        //     // select('schemes.*', 'schemes.id as scheme_id', 'scheme_sub_categories.*')
+        //     // ->join('schemes', 'scheme_sub_categories.id', '=', 'schemes.scheme_subcategory_id')
+        //     // ->where('schemes.status',"1")
+        //     ->get();
+
+        $govt_schemes = GovtScheme::selectRaw(
+                "schemes.*,
+                govt_schemes.*,
+                schemes.id as scheme_id"
+            )
+                ->join('schemes', 'schemes.govt_id', '=', 'govt_schemes.id')
+                ->join('scheme_categories', 'schemes.category_id', '=', 'scheme_categories.id')
+                ->join('scheme_sub_categories', 'schemes.scheme_subcategory_id', '=', 'scheme_sub_categories.id')
+                ->join('components', 'schemes.component_id', '=', 'components.id')
+                ->join('sub_components', 'schemes.sub_component_id', '=', 'sub_components.id')
+                ->where('schemes.status',"1")
+                ->orderBy('govt_schemes.id')
+                ->orderBy('scheme_categories.id')
+                ->orderBy('scheme_sub_categories.id')
+                ->orderBy('components.id')
+                ->orderBy('sub_components.id')
+                ->orderBy('schemes.id')
+                ->get();
+        
+        $component = new Component();
+        $type = new SchemeSubCategory();                                                                                     
+            echo '<pre>';
+        $all_schemes=[];
+        foreach($govt_schemes as $gkey=>$govt_scheme){
+            $all_schemes[$gkey]['govt_scheme_cat_id'] = $govt_scheme->id;
+            $all_schemes[$gkey]['govt_scheme_cat_name'] = $govt_scheme->govt_name;
+            print_r($govt_scheme);
+        }
     }
 }

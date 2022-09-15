@@ -124,10 +124,20 @@ Route::get('/fetch-sub-components', 'Admin\SchemeController@fetchSubComponent')-
 //manage officers
 
 Route::get('/manage-state-officer','Admin\OfficerController@manageState')->name('manage-state-officer');
-Route::get('/manage-district-officer','Admin\OfficerController@manageState')->name('manage-district-officer');
-Route::get('/manage-tehsil-officer','Admin\OfficerController@manageState')->name('manage-tehsil-officer');
-
-
+Route::get('/edit-state-officer','Admin\OfficerController@editState')->name('edit-state-officer');
+Route::post('/update-state-officer','Admin\OfficerController@updateState')->name('update-state-officer');
+Route::get('/add-district-officer','Admin\OfficerController@addDistrict')->name('add-district-officer');
+Route::post('/add-district-officer','Admin\OfficerController@createDistrict')->name('add-district-officer');
+Route::get('/manage-district-officer','Admin\OfficerController@manageDistrict')->name('manage-district-officer');
+Route::get('/edit-district-officer','Admin\OfficerController@editDistrict')->name('edit-district-officer');
+Route::post('/update-district-officer','Admin\OfficerController@updateDistrict')->name('update-district-officer');
+Route::post('/delete-district-officer','Admin\SchemeController@deleteDistrict')->name('delete-district-officer');
+Route::get('/add-tehsil-officer','Admin\OfficerController@addTehsil')->name('add-tehsil-officer');
+Route::post('/add-tehsil-officer','Admin\OfficerController@createTehsil')->name('add-tehsil-officer');
+Route::get('/manage-tehsil-officer','Admin\OfficerController@manageTehsil')->name('manage-tehsil-officer');
+Route::get('/edit-tehsil-officer','Admin\OfficerController@editTehsil')->name('edit-tehsil-officer');
+Route::post('/update-tehsil-officer','Admin\OfficerController@updateTehsil')->name('update-tehsil-officer');
+Route::post('/delete-tehsil-officer','Admin\SchemeController@deleteTehsil')->name('delete-tehsil-officer');
 //manage farmer
 
 Route::get('/manage-farmer','Admin\FarmerController@manageFarmers')->name('manage-farmer');

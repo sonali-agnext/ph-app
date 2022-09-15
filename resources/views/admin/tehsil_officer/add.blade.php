@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Farmer</h1>
+    <h1>Manage Tehsil Officer</h1>
     <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{url('/')}}">Farmer</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-farmer')}}">Manage Farmer</a></li>
+        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-tehsil-officer')}}">Manage Tehsil Officer</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Add Farmer</h5>
+                        <h5 class="card-title">Edit Tehsil Officer</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -44,10 +44,10 @@
                         </div>
                         @endif
                             <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST" enctype="multipart/form-data" action="{{ route('add-farmer') }}">
+                            <form class="row g-3" method="POST" enctype="multipart/form-data" action="{{ route('add-tehsil-officer') }}">
                                 @csrf
                                 <div class="col-md-12">
-                                    <div class="form-floating">
+                                    <div class="form-floating mb-3">
                                         <input type="file" name="avatar" accept="image/gif, image/jpeg, image/png, image/jpg" required class="form-control" id="avatar" placeholder="Enter Avatar" value="">
                                         <label for="avatar">Avatar<span class="text-danger">*</span></label>
                                     </div>
@@ -55,91 +55,27 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" name="mobile_number" required class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="">
+                                        <input type="text" name="phone_number" required class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="">
                                         <label for="mobile_number">Mobile Number<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" name="name" required class="form-control" id="name" placeholder="Enter Name" value="">
-                                        <label for="name">Farmer Name<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="language" id="language" aria-label="Language">      
-                                            <option value="">Select Language</option>                                 
-                                            <option value="en">English</option>
-                                            <option value="hi">Hindi</option>
-                                            <option value="pb">Punjabi</option>
-                                        </select>
-                                        <label for="language">Language<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="applicant_type_id" id="applicant_type_id" aria-label="Applicant Type">
-                                            <option value="">Select Applicant Type</option>
-                                            @forelse($applicant_types as $applicant_type)                                            
-                                            <option value="{{ $applicant_type->id }}">{{$applicant_type->applicant_type_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="applicant_type_id">Applicant Type<span class="text-danger">*</span></label>
+                                        <label for="name">Tehsil Officer Name<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" name="father_husband_name" required class="form-control" id="father_husband_name" placeholder="Enter Father's/ Husband's Name" value="">
-                                        <label for="father_husband_name">Father's/ Husband's Name<span class="text-danger">*</span></label>
+                                        <input type="email" name="email" required class="form-control" id="email" placeholder="Enter Email" value="">
+                                        <label for="email">Email<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="gender" id="gender" aria-label="Gender">
-                                            <option value="">Select Gender</option>                                       
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                        <label for="gender">Gender<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="resident" id="resident" aria-label="Resident">                                       
-                                            <option value="Indian">Indian</option>
-                                        </select>
-                                        <label for="resident">Resident<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" name="aadhar_number" maxlength="12" required class="form-control" id="aadhar_number" placeholder="Enter Father's/ Husband's Name" value="">
-                                        <label for="aadhar_number">Aadhar Number<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" name="pan_number" maxlength="10" required class="form-control" id="pan_number" placeholder="Enter Father's/ Husband's Name" value="">
-                                        <label for="pan_number">PAN Number<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="caste_category_id" id="caste_category_id" aria-label="Caste Category">
-                                            <option value="">Select Caste Category</option>
-                                            @forelse($caste_categories as $caste_category)                                            
-                                            <option value="{{ $caste_category->id }}">{{$caste_category->caste_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="caste_category_id">Caste Category<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" name="state" id="state" aria-label="State"> 
-                                            <option value="">Select State</option>                                      
+                                        <select class="form-select" required name="state" id="state" aria-label="State">
+                                            <option value="">Select State</option>                                       
                                             <option value="Punjab">Punjab</option>
                                         </select>
                                         <label for="state">State<span class="text-danger">*</span></label>
@@ -147,7 +83,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="district_id" id="district_id" aria-label="District">
+                                        <select class="form-select" required name="district_id" id="district_id" aria-label="District">
                                             <option value="">Select District</option>
                                             @forelse($districts as $district)                                            
                                             <option value="{{ $district->id }}">{{$district->district_name}}</option>                                            
@@ -159,10 +95,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
+                                        <select class="form-select" required name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
                                             <option value="">Select Tehsil</option>
                                             @forelse($tehsils as $tehsil)                                            
-                                                <option value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
+                                            <option value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -171,7 +107,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" name="city_id" id="city_id" aria-label="City">
+                                        <select class="form-select" required name="city_id" id="city_id" aria-label="City">
                                             <option value="">Select Village/City</option>
                                             @forelse($cities as $city)                                            
                                             <option value="{{ $city->id }}">{{$city->city_name}}</option>                                            
@@ -183,14 +119,31 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input type="text" name="full_address" required class="form-control" id="full_address" placeholder="Enter Full Address" value="">
-                                        <label for="full_address">Full Address<span class="text-danger">*</span></label>
+                                        <input type="text" name="address" required class="form-control" id="address" placeholder="Enter Full Address" value="">
+                                        <label for="address">Full Address<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input type="text" name="pin_code" maxlength="6" required class="form-control" id="pin_code" placeholder="Enter Pin Code" value="">
-                                        <label for="pin_code">Pin Code<span class="text-danger">*</span></label>
+                                        <input type="text" name="pincode" maxlength="6" required class="form-control" id="pincode" placeholder="Enter Pin Code" value="">
+                                        <label for="pincode">Pin Code<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="password" name="password" required class="form-control" id="password" placeholder="Enter Password" value="">
+                                        <label for="password">Password<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="status" id="status" aria-label="Status">
+                                            <option value="1">True</option>
+                                            <option value="0">False</option>
+                                        </select>
+                                        <label for="status">Status<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 
@@ -213,6 +166,7 @@
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
+
         $('#district_id').on('change', function(){
             var id=$(this).val();
             $.ajax({
@@ -235,6 +189,7 @@
                         $('#tehsil_id').html(html); 
                         $('#city_id').empty();
                         $('#city_id').html('<option value="">Select Village/City</option>');
+                        // <option value=""></option>
                     }
                 }
             });
