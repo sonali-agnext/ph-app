@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Tehsil Officer</h1>
+    <h1>Manage Block Officer</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-tehsil-officer')}}">Manage Tehsil Officer</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-tehsil-officer')}}">Manage Block Officer</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit Tehsil Officer</h5>
+                        <h5 class="card-title">Edit Block Officer</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -63,7 +63,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <input type="text" name="name" required class="form-control" id="name" placeholder="Enter Name" value="{{ $state->name }}">
-                                        <label for="name">Tehsil Officer Name<span class="text-danger">*</span></label>
+                                        <label for="name">Block Officer Name<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -97,13 +97,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" required name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
-                                            <option value="">Select Tehsil</option>
+                                            <option value="">Select Block</option>
                                             @forelse($tehsils as $tehsil)                                            
                                             <option @if($state->tehsil_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="tehsil_id">Tehsil<span class="text-danger">*</span></label>
+                                        <label for="tehsil_id">Block<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -151,13 +151,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="assign_tehsil_id" required id="assign_tehsil_id" aria-label="Assign Tehsil">
-                                            <option value="">Assign Tehsil</option>
+                                            <option value="">Assign Block</option>
                                             @forelse($tehsils as $tehsil)                                            
                                             <option @if($state->tehsil_officer_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="assign_tehsil_id">Assign Tehsil<span class="text-danger">*</span></label>
+                                        <label for="assign_tehsil_id">Assign Block<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 
@@ -192,7 +192,7 @@
                     if(resultData.data){
                         var content= resultData.data;
                         var html ="";
-                        html+='<option value="">Select Tehsil</option>';
+                        html+='<option value="">Select Block</option>';
                         if(content.length > 0){
                             $.each(content, function (key, val) {
                                 console.log(val);

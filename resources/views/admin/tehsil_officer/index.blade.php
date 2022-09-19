@@ -18,11 +18,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Tehsil Officer</h1>
+    <h1>Manage Block Officer</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active">Manage Tehsil Officer</li>
+        <li class="breadcrumb-item active">Manage Block Officer</li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -34,7 +34,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">  
-                <h5 class="card-title">List of Tehsil Officers <a href="{{route('add-tehsil-officer')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>                  
+                <h5 class="card-title">List of Block Officers <a href="{{route('add-tehsil-officer')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>                  
                     <!-- <div class="table-responsive"> -->
                     <div class="row mb-3 float-right">
                         @php
@@ -47,7 +47,7 @@
                             <tr>
                                 <th>Sr No</th>
                                 <th>Avatar</th>
-                                <th>Assigned Tehsil</th>
+                                <th>Assigned Block</th>
                                 <th>Officer Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>

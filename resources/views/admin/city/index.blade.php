@@ -122,7 +122,7 @@
                         dataType: "json",
                         success: function(resultData) { 
                             if(resultData.message == 'success'){
-                                swal("Tehsil Deleted Successfully!!", {
+                                swal("Block Deleted Successfully!!", {
                                     icon: "success",
                                 });
                                 location.reload();

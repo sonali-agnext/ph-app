@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Tehsil" value="{{$scheme_sub_category->subcategory_name}}">
+                                        <input type="text" name="subcategory_name" required class="form-control" id="subcategory_name" placeholder="Enter Component Type" value="{{$scheme_sub_category->subcategory_name}}">
                                         <label for="subcategory_name">Scheme Component Type Name</label>
                                     </div>
                                 </div>

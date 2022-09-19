@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <input type="text" name="tehsil_name" required class="form-control" id="tehsil_name" placeholder="Enter Tehsil" value="{{$tehsil->tehsil_name}}">
+                                        <input type="text" name="tehsil_name" required class="form-control" id="tehsil_name" placeholder="Enter Block" value="{{$tehsil->tehsil_name}}">
                                         <label for="tehsil_name">Block Name</label>
                                     </div>
                                 </div>

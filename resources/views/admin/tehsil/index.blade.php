@@ -55,7 +55,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="viewModalLabel">View Tehsil</h5>
+                                            <h5 class="modal-title" id="viewModalLabel">View Block</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                                         </div>
                                         <div class="modal-body">
@@ -122,7 +122,7 @@
                         dataType: "json",
                         success: function(resultData) { 
                             if(resultData.message == 'success'){
-                                swal("Tehsil Deleted Successfully!!", {
+                                swal("Block Deleted Successfully!!", {
                                     icon: "success",
                                 });
                                 location.reload();

@@ -97,13 +97,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" required name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
-                                            <option value="">Select Tehsil</option>
+                                            <option value="">Select Block</option>
                                             @forelse($tehsils as $tehsil)                                            
                                             <option @if($state->tehsil_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
-                                        <label for="tehsil_id">Tehsil<span class="text-danger">*</span></label>
+                                        <label for="tehsil_id">Block<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -162,7 +162,7 @@
                     if(resultData.data){
                         var content= resultData.data;
                         var html ="";
-                        html+='<option value="">Select Tehsil</option>';
+                        html+='<option value="">Select Block</option>';
                         if(content.length > 0){
                             $.each(content, function (key, val) {
                                 console.log(val);

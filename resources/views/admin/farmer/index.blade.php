@@ -67,7 +67,7 @@
                                 <th>Avatar</th>
                                 <th>Applicant Type</th>
                                 <th>Farmer Name</th>
-                                <th>Tehsil</th>
+                                <th>Block</th>
                                 <th>District</th>
                                 <!-- <th>Father's/Husband's Name</th> -->
                                 
@@ -143,6 +143,10 @@
                                             <div class="row">
                                                 <div class="col-md-6"><b>City</b></div>
                                                 <div class="col-md-6"><p>{{ $farmer->city_name}}</p></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6"><b>Block</b></div>
+                                                <div class="col-md-6"><p>{{ $farmer->tehsil_name}}</p></div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6"><b>District</b></div>
