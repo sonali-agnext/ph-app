@@ -39,14 +39,16 @@
                     <div class="row mb-3 float-right">
                         @php
                             $districts = App\Models\District::all();
-                            $tehsils = App\Models\Tehsil::all();
+                            $tehsils = App\Models\Tehsil::all();                            
                         @endphp
+                        @inject('district', 'App\Models\District')
                     </div>
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Sr No</th>
                                 <th>Avatar</th>
+                                <th>Assigned District</th>
                                 <th>Officer Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
@@ -58,7 +60,7 @@
                             <tr>
                                 <td>{{ ($key+1) }}</td>
                                 <td><img src="{{ asset('storage/images/'.$state->avatar)}}" width="50" height="50"/></td>
-                                
+                                <td>{{ $district->getDistrictName($state->district_officer_id)}}</td>
                                 <td>{{ $state->name }}</td>
                                 <td>{{ $state->email}}</td>
                                 <td>{{ $state->phone_number}}</td>
@@ -110,6 +112,10 @@
                                                 <div class="col-md-6"><p>{{ $state->pincode}}</p></div>
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-6"><b>Assigned to District</b></div>
+                                                <div class="col-md-6"><p>{{ $district->getDistrictName($state->district_officer_id)}}</p></div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-6"><b>Created</b></div>
                                                 <div class="col-md-6"><p>{{ $state->created_at}}</p></div>
                                             </div>
@@ -117,6 +123,7 @@
                                                 <div class="col-md-6"><b>Updated</b></div>
                                                 <div class="col-md-6"><p>{{ $state->updated_at}}</p></div>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>

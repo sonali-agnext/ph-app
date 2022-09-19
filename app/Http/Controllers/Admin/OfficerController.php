@@ -20,6 +20,7 @@ use App\Models\Component;
 use App\Models\SubComponent;
 use App\Models\TargetState;
 use App\Models\Officer;
+use App\Models\AssignToOfficer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -121,11 +122,12 @@ class OfficerController extends Controller
 
     //manage district
     public static function manageDistrict(Request $request){
-        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        $states = Officer::select('officers.*','users.id as user_id','assign_to_officers.district_id as district_officer_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
         ->join('users','users.id','=','officers.user_id')
         ->join('cities','officers.city_id','=','cities.id')
         ->join('districts','officers.district_id','=','districts.id')
         ->join('tehsils','officers.tehsil_id','=','tehsils.id')
+        ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('users.role_id',4)
         ->get();
 
@@ -134,8 +136,9 @@ class OfficerController extends Controller
 
     public function editDistrict(Request $request){
         $id = $request->id;
-        $state = Officer::select('officers.*', 'users.id as user_id','users.name','users.email','users.status', 'users.password')
+        $state = Officer::select('officers.*','assign_to_officers.district_id as district_officer_id', 'users.id as user_id','users.name','users.email','users.status', 'users.password')
         ->join('users','users.id','=','officers.user_id')
+        ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('officers.id', $id)->first();
         $cities = City::all();
         $districts = District::all();
@@ -183,6 +186,12 @@ class OfficerController extends Controller
                     }else{
                         $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
                     }
+                    $findAssign = AssignToOfficer::where('officer_id',$id);
+                    if(empty($findAssign)){
+                        $assign=AssignToOfficer::create(['officer_id'=> $farmer->id,'district_id'=>$request->assign_district_id]);
+                    }else{
+                        $assign=AssignToOfficer::where('officer_id', $farmer->id)->update(['district_id'=>$request->assign_district_id]);
+                    }
                     
                     return back()->with('success','Officer updated successfully!');
                 }else{
@@ -203,6 +212,12 @@ class OfficerController extends Controller
                         $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status, 'password'=>Hash::make($request->password)]);
                     }else{
                         $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
+                    }
+                    $findAssign = AssignToOfficer::where('officer_id',$id);
+                    if(empty($findAssign)){
+                        $assign=AssignToOfficer::create(['officer_id'=> $farmer->id,'district_id'=>$request->assign_district_id]);
+                    }else{
+                        $assign=AssignToOfficer::where('officer_id', $farmer->id)->update(['district_id'=>$request->assign_district_id]);
                     }
                     return back()->with('success','Officer updated successfully!');
                 }else{
@@ -260,6 +275,7 @@ class OfficerController extends Controller
                     $city_id = $request->city_id;
                     $full_address = $request->address;
                     $postal_code = $request->pincode;
+                    $assign_district_id = $request->assign_district_id;
                     
                     if($filename){
                         $farmer = Officer::create([
@@ -274,6 +290,7 @@ class OfficerController extends Controller
                             'avatar' => $filename]);
                     
                         if($farmer){
+                            $assign=AssignToOfficer::create(['officer_id'=> $farmer->id,'district_id'=>$assign_district_id]);
                             return back()->with('success','District Officer created successfully!');
                         }else{
                             return back()->with('error','Something Went Wrong!');
@@ -299,11 +316,12 @@ class OfficerController extends Controller
 
     //manage tehsil
     public static function manageTehsil(Request $request){
-        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        $states = Officer::select('officers.*','users.id as user_id','users.name','assign_to_officers.tehsil_id as tehsil_officer_id','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
         ->join('users','users.id','=','officers.user_id')
         ->join('cities','officers.city_id','=','cities.id')
         ->join('districts','officers.district_id','=','districts.id')
         ->join('tehsils','officers.tehsil_id','=','tehsils.id')
+        ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('users.role_id',5)
         ->get();
 
@@ -312,8 +330,9 @@ class OfficerController extends Controller
 
     public function editTehsil(Request $request){
         $id = $request->id;
-        $state = Officer::select('officers.*', 'users.id as user_id','users.name','users.email','users.status', 'users.password')
+        $state = Officer::select('officers.*', 'assign_to_officers.tehsil_id as tehsil_officer_id', 'users.id as user_id','users.name','users.email','users.status', 'users.password')
         ->join('users','users.id','=','officers.user_id')
+        ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('officers.id', $id)->first();
         $cities = City::all();
         $districts = District::all();
@@ -361,7 +380,12 @@ class OfficerController extends Controller
                     }else{
                         $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
                     }
-                    
+                    $findAssign = AssignToOfficer::where('officer_id',$id);
+                    if(empty($findAssign)){
+                        $assign=AssignToOfficer::create(['officer_id'=> $farmer->id,'tehsil_id'=>$request->assign_tehsil_id]);
+                    }else{
+                        $assign=AssignToOfficer::where('officer_id', $farmer->id)->update(['tehsil_id'=>$request->assign_district_id]);
+                    }
                     return back()->with('success','Officer updated successfully!');
                 }else{
                     return back()->with('error','Something Went Wrong!');
@@ -381,6 +405,13 @@ class OfficerController extends Controller
                         $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status, 'password'=>Hash::make($request->password)]);
                     }else{
                         $user=User::where('id',$farmer->user_id)->update(['name'=>$name, 'email' => $email, 'status'=> $request->status]);
+                    }
+                    $findAssign = AssignToOfficer::where('officer_id',$farmer->id);
+
+                    if(empty($findAssign)){
+                        $assign=AssignToOfficer::create(['officer_id'=> $farmer->id,'tehsil_id'=>$request->assign_tehsil_id]);
+                    }else{
+                        $assign=AssignToOfficer::where('officer_id', $farmer->id)->update(['tehsil_id'=>$request->assign_tehsil_id]);
                     }
                     return back()->with('success','Officer updated successfully!');
                 }else{
@@ -449,6 +480,7 @@ class OfficerController extends Controller
                             'avatar' => $filename]);
                     
                         if($farmer){
+                            $assign=AssignToOfficer::create(['officer_id'=> $farmer->id,'tehsil_id'=>$request->assign_tehsil_id]);
                             return back()->with('success','Tehsil Officer created successfully!');
                         }else{
                             return back()->with('error','Something Went Wrong!');

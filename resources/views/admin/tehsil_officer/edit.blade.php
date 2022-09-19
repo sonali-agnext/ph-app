@@ -146,6 +146,20 @@
                                         <label for="status">Status<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
+                                <hr />
+
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="assign_tehsil_id" required id="assign_tehsil_id" aria-label="Assign Tehsil">
+                                            <option value="">Assign Tehsil</option>
+                                            @forelse($tehsils as $tehsil)                                            
+                                            <option @if($state->tehsil_officer_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                        <label for="assign_tehsil_id">Assign Tehsil<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
                                 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>

@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit District Officer</h5>
+                        <h5 class="card-title">Add District Officer</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -144,6 +144,19 @@
                                             <option value="0">False</option>
                                         </select>
                                         <label for="status">Status<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="assign_district_id" required id="assign_district_id" aria-label="Assign District">
+                                            <option value="">Assign District</option>
+                                            @forelse($districts as $district)                                            
+                                            <option value="{{ $district->id }}">{{$district->district_name}}</option>                                            
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                        <label for="assign_district_id">Assign District<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 

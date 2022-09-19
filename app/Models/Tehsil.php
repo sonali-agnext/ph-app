@@ -11,4 +11,8 @@ class Tehsil extends Model
     protected $fillable = [
         'district_id', 'tehsil_name'
     ];
+
+    public function getTehsilName($id){
+        return $this->where('id',$id)->pluck('tehsil_name')->first();
+    }
 }

@@ -146,6 +146,20 @@
                                         <label for="status">Status<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
+
+                                <hr />
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" name="assign_district_id" required id="assign_district_id" aria-label="Assign District">
+                                            <option value="">Assign District</option>
+                                            @forelse($districts as $district)                                            
+                                            <option @if($state->district_officer_id == $district->id) selected @endif value="{{ $district->id }}">{{$district->district_name}}</option>                                            
+                                            @empty
+                                            @endforelse
+                                        </select>
+                                        <label for="assign_district_id">Assign District<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
                                 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>

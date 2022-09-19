@@ -41,12 +41,13 @@
                             $districts = App\Models\District::all();
                             $tehsils = App\Models\Tehsil::all();
                         @endphp
-                    </div>
+                    </div>@inject('tehsil', 'App\Models\Tehsil')
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Sr No</th>
                                 <th>Avatar</th>
+                                <th>Assigned Tehsil</th>
                                 <th>Officer Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
@@ -58,7 +59,7 @@
                             <tr>
                                 <td>{{ ($key+1) }}</td>
                                 <td><img src="{{ asset('storage/images/'.$state->avatar)}}" width="50" height="50"/></td>
-                                
+                                <td>{{ $tehsil->getTehsilName($state->tehsil_officer_id) }}</td>
                                 <td>{{ $state->name }}</td>
                                 <td>{{ $state->email}}</td>
                                 <td>{{ $state->phone_number}}</td>
@@ -108,6 +109,10 @@
                                             <div class="row">
                                                 <div class="col-md-6"><b>Pin Code</b></div>
                                                 <div class="col-md-6"><p>{{ $state->pincode}}</p></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">Assigned Block</div>
+                                                <div class="col-md-6">{{ $tehsil->getTehsilName($state->tehsil_officer_id) }}</div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6"><b>Created</b></div>

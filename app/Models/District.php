@@ -12,4 +12,7 @@ class District extends Model
     ];
 
     //
+    public function getDistrictName($id){
+        return $this->where('id',$id)->pluck('district_name')->first();
+    }
 }
