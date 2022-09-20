@@ -13,11 +13,11 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>Manage Tehsil Officer</h1>
+    <h1>Manage Block Officer</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-tehsil-officer')}}">Manage Tehsil Officer</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-tehsil-officer')}}">Manage Block Officer</a></li>
     </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit Block Officer</h5>
+                        <h5 class="card-title">Add Block Officer</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>

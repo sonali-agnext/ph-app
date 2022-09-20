@@ -42,7 +42,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $exist = User::where('email', $request->email)->where('role_id','!=' ,1)->first();
+        $exist = User::where('email', $request->email)->where('role_id','!=' ,1)->where('role_id','!=' ,3)->first();
 
         if ($exist){
             return $this->sendFailedLoginResponse($request);

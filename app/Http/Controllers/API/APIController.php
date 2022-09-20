@@ -18,6 +18,7 @@ use App\Models\SchemeSubCategory;
 use App\Models\GovtScheme;
 use App\Models\MarketPrice;
 use App\Models\Component;
+use App\Models\SubComponent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\YoutubeVideo;
@@ -404,10 +405,10 @@ class APIController extends Controller
 
     public function fetchSchemes(Request $request){
         // try{
-            $schemes_data = $this->fetchSubSchemes();  
+            $schemes_data = $this->fetchAllSchemes();  
 
             return response()
-            ->json(['message' => 'Schemes/ Scheme Category /Sub Scheme Category', 'media_url' => 'storage/scheme-images/','data' => $schemes_data], 200);
+            ->json(['message' => 'Schemes/ Scheme Category / Component Type/ Component/ Sub Component', 'media_url' => 'storage/scheme-images/','data' => $schemes_data], 200);
         // }catch (\Exception $e) {
         //     return response()
         //             ->json(['message' => 'Data not processed!'], 401);
@@ -552,48 +553,213 @@ class APIController extends Controller
             ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
     }
 
-    public function fetchAllSchemes(Request $request){
-        // $scheme_subcategories = SchemeSubCategory::selectRaw(
-        //     "schemes.*,
-        //     scheme_sub_categories.*,
-        //     schemes.id as scheme_id"
-        // )
-        //     ->join('schemes', 'schemes.scheme_subcategory_id', '=', 'scheme_sub_categories.id')
-           
-        //     ->orderBy('scheme_sub_categories.id')
-        //     ->orderBy('schemes.id')
-        //     // select('schemes.*', 'schemes.id as scheme_id', 'scheme_sub_categories.*')
-        //     // ->join('schemes', 'scheme_sub_categories.id', '=', 'schemes.scheme_subcategory_id')
-        //     // ->where('schemes.status',"1")
-        //     ->get();
+    public function fetchAllSchemes(){
+        $all_govts = GovtScheme::all();        
 
-        $govt_schemes = GovtScheme::selectRaw(
-                "schemes.*,
-                govt_schemes.*,
-                schemes.id as scheme_id"
-            )
-                ->join('schemes', 'schemes.govt_id', '=', 'govt_schemes.id')
-                ->join('scheme_categories', 'schemes.category_id', '=', 'scheme_categories.id')
-                ->join('scheme_sub_categories', 'schemes.scheme_subcategory_id', '=', 'scheme_sub_categories.id')
-                ->join('components', 'schemes.component_id', '=', 'components.id')
-                ->join('sub_components', 'schemes.sub_component_id', '=', 'sub_components.id')
-                ->where('schemes.status',"1")
-                ->orderBy('govt_schemes.id')
-                ->orderBy('scheme_categories.id')
-                ->orderBy('scheme_sub_categories.id')
-                ->orderBy('components.id')
-                ->orderBy('sub_components.id')
-                ->orderBy('schemes.id')
-                ->get();
-        
-        $component = new Component();
-        $type = new SchemeSubCategory();                                                                                     
-            echo '<pre>';
-        $all_schemes=[];
-        foreach($govt_schemes as $gkey=>$govt_scheme){
-            $all_schemes[$gkey]['govt_scheme_cat_id'] = $govt_scheme->id;
-            $all_schemes[$gkey]['govt_scheme_cat_name'] = $govt_scheme->govt_name;
-            print_r($govt_scheme);
+        $all_schemes = [];
+        if(!empty($all_govts)){
+            // govt scheme
+            foreach($all_govts as $gkey => $all_govt){
+                $all_schemes[$gkey]['govt_scheme_cat_id'] = $all_govt->id;
+                $all_schemes[$gkey]['govt_scheme_cat_name'] = $all_govt->govt_name;
+                // scheme category
+                $scheme_categories = SchemeCategory::where('govt_scheme_id', $all_govt->id)->get();
+                foreach($scheme_categories as $key => $scheme_cat){
+                    $all_schemes[$gkey]['cat'][$key]['scheme_cat_id'] = $scheme_cat->id;
+                    $all_schemes[$gkey]['cat'][$key]['scheme_cat_name'] = $scheme_cat->category_name;
+                    // scheme sub category  or component type
+                    $scheme_subcategories = SchemeSubCategory::where('scheme_category_id', $scheme_cat->id)->get();
+                    if(!empty($scheme_subcategories)){
+                        foreach($scheme_subcategories as $subkey => $scheme_subcategory){
+                            $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['subscheme_id'] = $scheme_subcategory->id;
+                            $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['subscheme_name'] = $scheme_subcategory->subcategory_name;
+                            // component 
+                            $scheme_components = Component::where('scheme_sub_category_id', $scheme_subcategory->id)->get();
+                            
+                            if(!empty($scheme_components)){
+                                foreach($scheme_components as $cokey => $scheme_component){
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['component_id'] = $scheme_component->id;
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['component_name'] = $scheme_component->component_name;
+                                    // sub component
+                                    $scheme_subcomponents = SubComponent::where('component_id', $scheme_component->id)->get();
+                                    if(!empty($scheme_subcomponents)){
+                                        foreach($scheme_subcomponents as $sckey => $scheme_subcomponent){
+                                            $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['sub_component_id'] = $scheme_subcomponent->id;
+                                            $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['sub_component_name'] = $scheme_subcomponent->sub_component_name;
+                                            // scheme
+                                            $schemes = Scheme::where('sub_component_id', $scheme_subcomponent->id)->get();
+                                            if(!empty($schemes)){
+                                                foreach($schemes as $ckey => $scheme){
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
+                                                    $all_videos = [];
+                                                    if(!empty($scheme->videos)){
+                                                        $videos = json_decode($scheme->videos);
+                                                        $video_titles = json_decode($scheme->videos_title);
+                                                        
+                                                        foreach($videos as $jsv => $video){
+                                                            $all_videos[$jsv]['video'] = $video;
+                                                            $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                                                        }
+                                                    
+                                                    }
+                                                    $all_sector = [];
+                                                    if(!empty($scheme->sector)){
+                                                        $sectors = json_decode($scheme->sector);
+                                                        $sector_description = json_decode($scheme->sector_description);
+                                                        
+                                                        foreach($sectors as $jsd => $sector){
+                                                            $all_sector[$jsd]['sector'] = $sector;
+                                                            $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                                                        }
+                                                    
+                                                    }
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['videos'] = $all_videos;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['sectors'] = $all_sector;
+                                                }
+                                                // scheme
+                                            }
+                                            // end scheme
+                                            $schemes = Scheme::where('component_id', $scheme_component->id)->where('sub_component_id', null)->get();
+                                            if(!empty($schemes)){
+                                                foreach($schemes as $ckey => $scheme){
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
+                                                    $all_videos = [];
+                                                    if(!empty($scheme->videos)){
+                                                        $videos = json_decode($scheme->videos);
+                                                        $video_titles = json_decode($scheme->videos_title);
+                                                        
+                                                        foreach($videos as $jsv => $video){
+                                                            $all_videos[$jsv]['video'] = $video;
+                                                            $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                                                        }
+                                                    
+                                                    }
+                                                    $all_sector = [];
+                                                    if(!empty($scheme->sector)){
+                                                        $sectors = json_decode($scheme->sector);
+                                                        $sector_description = json_decode($scheme->sector_description);
+                                                        
+                                                        foreach($sectors as $jsd => $sector){
+                                                            $all_sector[$jsd]['sector'] = $sector;
+                                                            $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                                                        }
+                                                    
+                                                    }
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['videos'] = $all_videos;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['sectors'] = $all_sector;
+                                                }
+                                                // scheme
+                                            }
+                                            // endif scheme
+                                        }
+                                        // endfor subcomponent
+                                    }
+
+                                    $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->where('component_id',null)->get();
+                                        if(!empty($schemes)){
+                                            foreach($schemes as $ckey => $scheme){
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
+                                                $all_videos = [];
+                                                if(!empty($scheme->videos)){
+                                                    $videos = json_decode($scheme->videos);
+                                                    $video_titles = json_decode($scheme->videos_title);
+                                                    
+                                                    foreach($videos as $jsv => $video){
+                                                        $all_videos[$jsv]['video'] = $video;
+                                                        $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                                                    }
+                                                
+                                                }
+                                                $all_sector = [];
+                                                if(!empty($scheme->sector)){
+                                                    $sectors = json_decode($scheme->sector);
+                                                    $sector_description = json_decode($scheme->sector_description);
+                                                    
+                                                    foreach($sectors as $jsd => $sector){
+                                                        $all_sector[$jsd]['sector'] = $sector;
+                                                        $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                                                    }
+                                                
+                                                }
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['videos'] = $all_videos;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['sectors'] = $all_sector;
+                                            }
+                                            // scheme
+                                        }
+                                        // endif scheme
+                                }
+                                // end for component
+                            }
+                            // else{
+                            //     // scheme
+                            //     $schemes = Scheme::where('category_id', $scheme_cat->id)->get();
+                            //     if(!empty($schemes)){
+                            //         foreach($schemes as $ckey => $scheme){
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['scheme_id'] = $scheme->id;
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
+                            //             $all_videos = [];
+                            //             if(!empty($scheme->videos)){
+                            //                 $videos = json_decode($scheme->videos);
+                            //                 $video_titles = json_decode($scheme->videos_title);
+                                            
+                            //                 foreach($videos as $jsv => $video){
+                            //                     $all_videos[$jsv]['video'] = $video;
+                            //                     $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                            //                 }
+                                        
+                            //             }
+                            //             $all_sector = [];
+                            //             if(!empty($scheme->sector)){
+                            //                 $sectors = json_decode($scheme->sector);
+                            //                 $sector_description = json_decode($scheme->sector_description);
+                                            
+                            //                 foreach($sectors as $jsd => $sector){
+                            //                     $all_sector[$jsd]['sector'] = $sector;
+                            //                     $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                            //                 }
+                                        
+                            //             }
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['videos'] = $all_videos;
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
+                            //             $all_schemes[$gkey]['cat'][$key]['scheme'][$ckey]['sectors'] = $all_sector;
+                            //         }
+                            //         // scheme
+                            //     }
+                            //     // endif scheme
+                            // }
+                            // endif component
+                        }
+                        // sub scheme category or component type
+                    }
+                    // endif sub scheme category or component type
+                }
+                // scheme category
+            }
+            // govt scheme
         }
+
+        return $all_schemes;
     }
 }

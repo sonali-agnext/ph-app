@@ -49,6 +49,7 @@
         </ul>
       </li><!-- End farmers Nav -->
 
+@if(Auth::user()->role_id == 1)
       <li class="nav-item">
         <a @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-block' || $route == 'add-tehsil' || $route == 'edit-block' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#district-tehsil-village-nav" data-bs-toggle="collapse" href="#"  @if($route == 'manage-city' || $route == 'add-city' || $route == 'edit-city' || $route == 'update-city' || $route == 'manage-block' || $route == 'add-tehsil' || $route == 'edit-block' || $route == 'update-tehsil' || $route == 'manage-district' || $route == 'add-district' || $route == 'edit-district' || $route == 'update-district') aria-expanded="true" @endif>
           <i class="bi bi-journal-text"></i><span>Manage District/ Block/ Village</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -97,7 +98,7 @@
           </li>          
         </ul>
       </li><!-- End Applicant Type Nav -->
-      
+    @endif  
       <li class="nav-item">
         <a @if($route == 'manage-scheme-subcomponent' || $route == 'edit-scheme-subcomponent' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcomponent' || $route == 'manage-scheme-component' || $route == 'edit-scheme-component' || $route == 'update-scheme-component' || $route == 'add-scheme-component' || $route == 'manage-pscheme' || $route == 'add-pscheme' || $route == 'edit-pscheme' || $route == 'update-pscheme' || $route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-sheme-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-scheme' || $route == 'add-scheme' || $route == 'edit-scheme' || $route == 'update-scheme' || $route == 'manage-scheme-category' || $route == 'add-scheme-category' || $route == 'edit-scheme-category' || $route == 'update-scheme-category' || $route == 'manage-scheme-subcategory' || $route == 'edit-scheme-subcategory' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcategory' || $route == 'manage-scheme-component' || $route == 'edit-scheme-component' || $route == 'update-scheme-component' || $route == 'add-scheme-component' || $route == 'manage-scheme-subcomponent' || $route == 'edit-scheme-subcomponent' || $route == 'update-scheme-subcategory' || $route == 'add-scheme-subcomponent') aria-expanded="true" @endif>
           <i class="bi bi-gem"></i><span>Manage Schemes</span><i class="bi bi-chevron-down ms-auto"></i>

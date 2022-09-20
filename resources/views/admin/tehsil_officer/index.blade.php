@@ -173,7 +173,7 @@
                         dataType: "json",
                         success: function(resultData) { 
                             if(resultData.message == 'success'){
-                                swal("Tehsil Officer Deleted Successfully!!", {
+                                swal("Block Officer Deleted Successfully!!", {
                                     icon: "success",
                                 });
                                 location.reload();

@@ -33,7 +33,8 @@
         <!-- Left side columns -->
         <div class="col-lg-12">  
              <div class="card">
-                <div class="card-body">                    
+                <div class="card-body">      
+                <h5 class="card-title">List of State Officers <a href="{{route('add-state-officer')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>                                
                     <!-- <div class="table-responsive"> -->
                     <div class="row mb-3 float-right">
                         @php
@@ -61,14 +62,14 @@
                                 <td>{{ $state->name }}</td>
                                 <td>{{ $state->email}}</td>
                                 <td>{{ $state->phone_number}}</td>
-                                <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> <a href="{{route('edit-state-officer',['id' => $state->id])}}"><i class="bi bi-pencil-square"></i></a> </td>
+                                <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> <a href="{{route('edit-state-officer',['id' => $state->id])}}"><i class="bi bi-pencil-square"></i></a> <a href="#" class="delete" data-id="{{$state->id}}"><i class="bi bi-trash-fill"></i></a></td>
                             </tr>
                             <!-- Modal -->
                             <div class="modal fade" id="viewModal{{($key+1)}}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="viewModalLabel">View state</h5>
+                                            <h5 class="modal-title" id="viewModalLabel">View State</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                                         </div>
                                         <div class="modal-body">
@@ -148,6 +149,41 @@
         $('#tehsil_id').on('change', function () {
             table.columns(4).search( this.value ).draw();
         } );
+
+        $('.delete').on('click', function(){
+            var id=$(this).attr("data-id");
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var saveData = $.ajax({
+                        type: 'POST',
+                        url: "{{route('delete-tehsil-officer')}}",
+                        data: {'id':id},
+                        dataType: "json",
+                        success: function(resultData) { 
+                            if(resultData.message == 'success'){
+                                swal("State Officer Deleted Successfully!!", {
+                                    icon: "success",
+                                });
+                                location.reload();
+                            }else{
+                                swal("Something Went Wrong!!", {
+                                    icon: "error",
+                                });
+                            }
+                         }
+                    });
+                    
+                } else {
+                }
+            });
+        });
 
     });
 </script>

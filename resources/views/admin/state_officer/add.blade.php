@@ -29,7 +29,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Edit State Officer</h5>
+                        <h5 class="card-title">Add State Officer</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -44,31 +44,30 @@
                         </div>
                         @endif
                             <!-- Floating Labels Form -->
-                            <form class="row g-3" method="POST" enctype="multipart/form-data" action="{{ route('update-state-officer',['id' => $state->id, 'user_id'=>$state->user_id]) }}">
+                            <form class="row g-3" method="POST" enctype="multipart/form-data" action="{{ route('add-state-officer') }}">
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-floating mb-3">
-                                        <input type="file" name="avatar" accept="image/gif, image/jpeg, image/png, image/jpg" @if(empty($state->avatar)) required @endif class="form-control" id="avatar" placeholder="Enter Avatar" value="">
+                                        <input type="file" name="avatar" accept="image/gif, image/jpeg, image/png, image/jpg" required class="form-control" id="avatar" placeholder="Enter Avatar" value="">
                                         <label for="avatar">Avatar<span class="text-danger">*</span></label>
                                     </div>
-                                    <img src="{{ asset('storage/images/'.$state->avatar)}}" width="50" height="50"/>
                                 </div>
                                 
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" name="phone_number" required class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ $state->phone_number }}">
+                                        <input type="text" name="phone_number" required class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="">
                                         <label for="mobile_number">Mobile Number<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" name="name" required class="form-control" id="name" placeholder="Enter Name" value="{{ $state->name }}">
+                                        <input type="text" name="name" required class="form-control" id="name" placeholder="Enter Name" value="">
                                         <label for="name">State Officer Name<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="email" name="email" required class="form-control" id="email" placeholder="Enter Email" value="{{ $state->email }}">
+                                        <input type="email" name="email" required class="form-control" id="email" placeholder="Enter Email" value="">
                                         <label for="email">Email<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
@@ -77,7 +76,7 @@
                                     <div class="form-floating mb-3">
                                         <select class="form-select" required name="state" id="state" aria-label="State">
                                             <option value="">Select State</option>                                       
-                                            <option @if($state->state == 'Punjab'){{ 'selected' }} @endif value="Punjab">Punjab</option>
+                                            <option value="Punjab">Punjab</option>
                                         </select>
                                         <label for="state">State<span class="text-danger">*</span></label>
                                     </div>
@@ -87,7 +86,7 @@
                                         <select class="form-select" required name="district_id" id="district_id" aria-label="District">
                                             <option value="">Select District</option>
                                             @forelse($districts as $district)                                            
-                                            <option @if($state->district_id == $district->id){{ 'selected' }} @endif value="{{ $district->id }}">{{$district->district_name}}</option>                                            
+                                            <option value="{{ $district->id }}">{{$district->district_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -99,7 +98,7 @@
                                         <select class="form-select" required name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
                                             <option value="">Select Block</option>
                                             @forelse($tehsils as $tehsil)                                            
-                                            <option @if($state->tehsil_id == $tehsil->id){{ 'selected' }} @endif value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
+                                            <option value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -111,7 +110,7 @@
                                         <select class="form-select" required name="city_id" id="city_id" aria-label="City">
                                             <option value="">Select Village/City</option>
                                             @forelse($cities as $city)                                            
-                                            <option @if($state->city_id == $city->id){{ 'selected' }} @endif value="{{ $city->id }}">{{$city->city_name}}</option>                                            
+                                            <option value="{{ $city->id }}">{{$city->city_name}}</option>                                            
                                             @empty
                                             @endforelse
                                         </select>
@@ -120,27 +119,29 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input type="text" name="address" required class="form-control" id="address" placeholder="Enter Full Address" value="{{ $state->address }}">
+                                        <input type="text" name="address" required class="form-control" id="address" placeholder="Enter Full Address" value="">
                                         <label for="address">Full Address<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input type="text" name="pincode" maxlength="6" required class="form-control" id="pincode" placeholder="Enter Pin Code" value="{{ $state->pincode }}">
+                                        <input type="text" name="pincode" maxlength="6" required class="form-control" id="pincode" placeholder="Enter Pin Code" value="">
                                         <label for="pincode">Pin Code<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
-                                        <input type="password" name="password" @if(empty($state->password)) required @endif class="form-control" id="password" placeholder="Enter Password" value="">
-                                        <label for="password">Password @if(empty($state->password))<span class="text-danger">*</span>@endif</label>
+                                        <input type="password" name="password" required class="form-control" id="password" placeholder="Enter Password" value="">
+                                        <label for="password">Password<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="status" id="status" aria-label="Status">
-                                            <option value="1" @if($state->status) selected @endif>True</option>
-                                            <option value="0" @if(!$state->status) selected @endif>False</option>
+                                            <option value="1">True</option>
+                                            <option value="0">False</option>
                                         </select>
                                         <label for="status">Status<span class="text-danger">*</span></label>
                                     </div>
