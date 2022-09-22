@@ -17,7 +17,7 @@
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active">Manage Block</li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-block')}}">Manage Block</a></li>
     </ol>
     <!-- <img src="{{asset('storage/app/public/image/180X180.png')}}" /> -->
     </nav>

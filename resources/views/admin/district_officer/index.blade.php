@@ -29,18 +29,18 @@
 
 <section class="section dashboard">
     <div class="row">
-
+    @php
+        $districts = App\Models\District::all();
+        $tehsils = App\Models\Tehsil::all();
+        $role_id = Auth::user()->role_id;
+    @endphp
         <!-- Left side columns -->
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">  
-                <h5 class="card-title">List of District Officers <a href="{{route('add-district-officer')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>                  
+                <h5 class="card-title">List of District Officers @if($role_id == 1)<a href="{{route('add-district-officer')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a>@endif</h5>                  
                     <!-- <div class="table-responsive"> -->
                     <div class="row mb-3 float-right">
-                        @php
-                            $districts = App\Models\District::all();
-                            $tehsils = App\Models\Tehsil::all();                            
-                        @endphp
                         @inject('district', 'App\Models\District')
                     </div>
                     <table id="example" class="table table-striped" style="width:100%">
@@ -64,14 +64,14 @@
                                 <td>{{ $state->name }}</td>
                                 <td>{{ $state->email}}</td>
                                 <td>{{ $state->phone_number}}</td>
-                                <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> <a href="{{route('edit-district-officer',['id' => $state->id])}}"><i class="bi bi-pencil-square"></i></a> <a href="#" class="delete" data-id="{{$state->id}}"><i class="bi bi-trash-fill"></i></a></td>
+                                <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> @if($role_id == 1)<a href="{{route('edit-district-officer',['id' => $state->id])}}"><i class="bi bi-pencil-square"></i></a> <a href="#" class="delete" data-id="{{$state->id}}"><i class="bi bi-trash-fill"></i></a>@endif</td>
                             </tr>
                             <!-- Modal -->
                             <div class="modal fade" id="viewModal{{($key+1)}}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="viewModalLabel">View state</h5>
+                                            <h5 class="modal-title" id="viewModalLabel">View District</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                                         </div>
                                         <div class="modal-body">

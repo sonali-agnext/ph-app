@@ -108,6 +108,11 @@ Route::post('/add-pscheme-category','Admin\SchemeController@createPSchemeCategor
 // manage subsidy
 Route::get('/manage-subsidy-state','Admin\SubsidyController@manageStateSubsidy')->name('manage-subsidy-state');
 Route::post('/manage-subsidy-state','Admin\SubsidyController@updateStateSubsidy')->name('manage-subsidy-state');
+// manage district
+Route::get('/manage-subsidy-district','Admin\SubsidyController@manageDistrictSubsidy')->name('manage-subsidy-district');
+Route::post('/manage-subsidy-district','Admin\SubsidyController@updateStateSubsidy')->name('manage-subsidy-district');
+
+
 
 // manage scheme
 Route::get('/manage-scheme','Admin\SchemeController@manageScheme')->name('manage-scheme');

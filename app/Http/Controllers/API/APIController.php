@@ -542,9 +542,55 @@ class APIController extends Controller
     }
 
     public function fetchFeaturedScheme(Request $request){
+        $all_schemes=[];
         $all = Scheme::where('is_featured','1')->get();
+        if(!empty($all)){
+            foreach($all as $ckey => $scheme){
+                $all_schemes[$ckey]['scheme_id'] = $scheme->id;
+                $all_schemes[$ckey]['scheme_name'] = $scheme->scheme_name;
+                $all_schemes[$ckey]['cost_norms'] = $scheme->cost_norms;
+                $all_schemes[$ckey]['terms'] = json_decode($scheme->terms);
+                $all_schemes[$ckey]['detailed_description'] = $scheme->detailed_description;
+                $all_videos = [];
+                if(!empty($scheme->videos)){
+                    $videos = json_decode($scheme->videos);
+                    $video_titles = json_decode($scheme->videos_title);
+                    
+                    foreach($videos as $jsv => $video){
+                        $all_videos[$jsv]['video'] = $video;
+                        $all_videos[$jsv]['title'] = $video_titles[$jsv];
+                    }
+                
+                }
+                $all_sector = [];
+                if(!empty($scheme->sector)){
+                    $sectors = json_decode($scheme->sector);
+                    $sector_description = json_decode($scheme->sector_description);
+                    
+                    foreach($sectors as $jsd => $sector){
+                        $all_sector[$jsd]['sector'] = $sector;
+                        $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
+                    }
+                
+                }
+                $all_schemes[$ckey]['non_project_based'] = $scheme->non_project_based;
+                $all_schemes[$ckey]['private_sector'] = $scheme->private_sector;
+                $all_schemes[$ckey]['public_sector'] = $scheme->public_sector;
+                $all_schemes[$ckey]['public_range'] = $scheme->public_range;
+                $all_schemes[$ckey]['private_range'] = $scheme->private_range;
+                $all_schemes[$ckey]['year'] = $scheme->year;
+                $all_schemes[$ckey]['is_featured'] = $scheme->is_featured;
+                $all_schemes[$ckey]['status'] = $scheme->status;
+                $all_schemes[$ckey]['units'] = $scheme->units;
+                $all_schemes[$ckey]['videos'] = $all_videos;
+                $all_schemes[$ckey]['scheme_image'] = $scheme->scheme_image;
+                $all_schemes[$ckey]['sectors'] = $all_sector;
+            }
+            // scheme
+        }
+        // endif scheme
         return response()
-            ->json(['message' => 'Featured Scheme', 'data' => $all], 200);
+            ->json(['message' => 'Featured Scheme', 'data' => $all_schemes], 200);
     }
 
     public function fetchVideos(Request $request){
@@ -592,7 +638,6 @@ class APIController extends Controller
                                                 foreach($schemes as $ckey => $scheme){
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
-                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
@@ -607,17 +652,15 @@ class APIController extends Controller
                                                         }
                                                     
                                                     }
-                                                    $all_sector = [];
-                                                    if(!empty($scheme->sector)){
-                                                        $sectors = json_decode($scheme->sector);
-                                                        $sector_description = json_decode($scheme->sector_description);
-                                                        
-                                                        foreach($sectors as $jsd => $sector){
-                                                            $all_sector[$jsd]['sector'] = $sector;
-                                                            $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
-                                                        }
-                                                    
-                                                    }
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['non_project_based'] = $scheme->non_project_based;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['private_sector'] = $scheme->private_sector;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['public_sector'] = $scheme->public_sector;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['public_range'] = $scheme->public_range;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['private_range'] = $scheme->private_range;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['year'] = $scheme->year;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['is_featured'] = $scheme->is_featured;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['status'] = $scheme->status;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['units'] = $scheme->units;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['videos'] = $all_videos;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['sectors'] = $all_sector;
@@ -630,7 +673,6 @@ class APIController extends Controller
                                                 foreach($schemes as $ckey => $scheme){
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
-                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
@@ -656,6 +698,15 @@ class APIController extends Controller
                                                         }
                                                     
                                                     }
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['non_project_based'] = $scheme->non_project_based;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['private_sector'] = $scheme->private_sector;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['public_sector'] = $scheme->public_sector;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['public_range'] = $scheme->public_range;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['private_range'] = $scheme->private_range;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['year'] = $scheme->year;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['is_featured'] = $scheme->is_featured;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['status'] = $scheme->status;
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['units'] = $scheme->units;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['videos'] = $all_videos;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['sectors'] = $all_sector;
@@ -672,7 +723,6 @@ class APIController extends Controller
                                             foreach($schemes as $ckey => $scheme){
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
-                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
@@ -698,6 +748,15 @@ class APIController extends Controller
                                                     }
                                                 
                                                 }
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['non_project_based'] = $scheme->non_project_based;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['private_sector'] = $scheme->private_sector;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['public_sector'] = $scheme->public_sector;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['public_range'] = $scheme->public_range;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['private_range'] = $scheme->private_range;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['year'] = $scheme->year;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['is_featured'] = $scheme->is_featured;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['status'] = $scheme->status;
+                                                $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['units'] = $scheme->units;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['videos'] = $all_videos;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_image'] = $scheme->scheme_image;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['sectors'] = $all_sector;
