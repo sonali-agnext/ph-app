@@ -149,7 +149,10 @@
         $('#tehsil_id').on('change', function () {
             table.columns(4).search( this.value ).draw();
         } );
+        $('#example').DataTable(
+            {   
 
+            "drawCallback": function() {
         $('.delete').on('click', function(){
             var id=$(this).attr("data-id");
             swal({
@@ -184,7 +187,7 @@
                 }
             });
         });
-
+    }});
     });
 </script>
 @endpush

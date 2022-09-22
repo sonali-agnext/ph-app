@@ -112,7 +112,10 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        $('#example').DataTable();
+        $('#example').DataTable(
+            {   
+
+            "drawCallback": function() {
 
         $('.delete').on('click', function(){
             var id=$(this).attr("data-id");
@@ -148,6 +151,7 @@
                 }
             });
         });
+    }});
     });
 </script>
 @endpush

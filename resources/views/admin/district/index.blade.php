@@ -96,9 +96,11 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        $('#example').DataTable();
+        $('#example').DataTable(
+            {   
 
-        $('.delete').on('click', function(){
+            "drawCallback": function() {
+                $('.delete').on('click', function(){
             var id=$(this).attr("data-id");
             swal({
                 title: "Are you sure?",
@@ -132,6 +134,11 @@
                 }
             });
         });
+            }
+        }
+        );
+
+        
     });
 </script>
 @endpush
