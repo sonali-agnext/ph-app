@@ -150,7 +150,7 @@
               <i class="bi bi-circle"></i><span>List Subsidy target for state</span>
             </a>
           </li>
-          @if($role_id == 3)
+          @if($role_id == 1)
           <li>
             <a @if($route == 'manage-subsidy-district') class="active" @endif href="{{route('manage-subsidy-district')}}">
               <i class="bi bi-circle"></i><span>List Subsidy target for district</span>

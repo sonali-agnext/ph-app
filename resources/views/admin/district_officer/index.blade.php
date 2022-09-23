@@ -148,7 +148,45 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        var table = $('#example').DataTable();
+        var table = $('#example').DataTable(
+            {
+                "drawCallback": function() {
+                $('.delete').on('click', function(){
+                    var id=$(this).attr("data-id");
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var saveData = $.ajax({
+                                type: 'POST',
+                                url: "{{route('delete-district-officer')}}",
+                                data: {'id':id},
+                                dataType: "json",
+                                success: function(resultData) { 
+                                    if(resultData.message == 'success'){
+                                        swal("District Officer Deleted Successfully!!", {
+                                            icon: "success",
+                                        });
+                                        location.reload();
+                                    }else{
+                                        swal("Something Went Wrong!!", {
+                                            icon: "error",
+                                        });
+                                    }
+                                }
+                            });
+                            
+                        } else {
+                        }
+                    });
+                });
+            }
+        });
         $('#district_id').on('change', function () {
             table.columns(5).search( this.value ).draw();
         } );
@@ -156,45 +194,7 @@
         $('#tehsil_id').on('change', function () {
             table.columns(4).search( this.value ).draw();
         } );
-        $('#example').DataTable(
-            {   
-
-            "drawCallback": function() {
-        $('.delete').on('click', function(){
-            var id=$(this).attr("data-id");
-            swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    var saveData = $.ajax({
-                        type: 'POST',
-                        url: "{{route('delete-district-officer')}}",
-                        data: {'id':id},
-                        dataType: "json",
-                        success: function(resultData) { 
-                            if(resultData.message == 'success'){
-                                swal("District Officer Deleted Successfully!!", {
-                                    icon: "success",
-                                });
-                                location.reload();
-                            }else{
-                                swal("Something Went Wrong!!", {
-                                    icon: "error",
-                                });
-                            }
-                         }
-                    });
-                    
-                } else {
-                }
-            });
-        });
-    }});
+        
     });
 </script>
 @endpush
