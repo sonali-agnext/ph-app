@@ -146,7 +146,7 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        var table = $('#example').DataTable(
+        var table = $('#example').DataTable({
             "drawCallback": function() {
             $('.delete').on('click', function(){
                 var id=$(this).attr("data-id");
