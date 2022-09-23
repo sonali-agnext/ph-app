@@ -31,7 +31,7 @@
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">List of Village/City <a href="{{route('add-tehsil')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
+                    <h5 class="card-title">List of Village/City <a href="{{route('add-city')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
                     
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
