@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Scheme;
 use App\Models\Component;
 use App\Models\SubComponent;
+use App\Models\TargetState;
+use App\Models\TargetDistrict;
 
 class SchemeSubCategory extends Model
 {
@@ -58,5 +60,15 @@ class SchemeSubCategory extends Model
                                         ->where('crop_id',$crop_id)                                        
                                         ->first();
         }
+    }
+
+    public function fetchtargetdistrict($district_id,$target_state_id){
+        $targets = TargetState::where('district_id', $district_id)->where('target_state_id', $target_state_id)->first();
+        return $targets;
+    }
+
+    public function fetchassignedtarget($target_state_id){
+        $targets = TargetState::select('SUM(assigned_physical_target) as total_public_target','SUM(assigned_private_physical_target) as total_public_target')->where('target_state_id', $target_state_id)->get();
+        return $targets;
     }
 }

@@ -37,6 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/market-mandi', [APIController::class, 'fetchMarket']);
     Route::get('/featured-scheme', [APIController::class, 'fetchFeaturedScheme']);    
     Route::get('/fetch-video',[APIController::class, 'fetchVideos']);
+    Route::get('/fetch-lands', [APIController::class, 'fetchFarmerLand']);    
+    Route::get('/fetch-banks',[APIController::class, 'fetchFarmerBank']);
+    Route::get('/delete-land',[APIController::class, 'deleteFarmerLand']);
+    Route::post('/save-land', [APIController::class, 'saveFarmerLand']);
+    Route::post('/save-bank', [APIController::class, 'saveFarmerBank']);
 });
 Route::get('/fetchallschemes',[APIController::class, 'fetchAllSchemes']);
 // Route::post('/register', [API/APIController::class, 'register']);
