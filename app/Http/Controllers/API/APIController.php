@@ -442,7 +442,7 @@ class APIController extends Controller
                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['subsidy'] = $scheme->subsidy;
                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = (object)json_decode($scheme->terms);
                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
                                     $all_videos = [];
                                     if(!empty($scheme->videos)){
@@ -551,7 +551,7 @@ class APIController extends Controller
                 $all_schemes[$ckey]['scheme_id'] = $scheme->id;
                 $all_schemes[$ckey]['scheme_name'] = $scheme->scheme_name;
                 $all_schemes[$ckey]['cost_norms'] = $scheme->cost_norms;
-                $all_schemes[$ckey]['terms'] = json_decode($scheme->terms);
+                $all_schemes[$ckey]['terms'] = (object)json_decode($scheme->terms);
                 $all_schemes[$ckey]['detailed_description'] = $scheme->detailed_description;
                 $all_videos = [];
                 if(!empty($scheme->videos)){
@@ -630,7 +630,7 @@ class APIController extends Controller
                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['sub_component_id'] = $scheme->sub_component_id;
                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                        $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                        $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = (object)json_decode($scheme->terms);
                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
                                         $all_videos = [];
                                         if(!empty($scheme->videos)){
@@ -692,7 +692,7 @@ class APIController extends Controller
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['sub_component_id'] = $scheme->sub_component_id;
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                                        $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                        $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['terms'] = (object)json_decode($scheme->terms);
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
                                                         $all_videos = [];
                                                         if(!empty($scheme->videos)){
@@ -729,7 +729,7 @@ class APIController extends Controller
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['sub_component_id'] = $scheme->sub_component_id;
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                                        $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                        $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['terms'] = (object)json_decode($scheme->terms);
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
                                                         $all_videos = [];
                                                         if(!empty($scheme->videos)){
@@ -781,7 +781,7 @@ class APIController extends Controller
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['sub_component_id'] = $scheme->sub_component_id;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['terms'] = (object)json_decode($scheme->terms);
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
                                                     $all_videos = [];
                                                     if(!empty($scheme->videos)){
@@ -830,7 +830,7 @@ class APIController extends Controller
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['sub_component_id'] = $scheme->sub_component_id;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_name'] = $scheme->scheme_name;
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['cost_norms'] = $scheme->cost_norms;
-                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['terms'] = json_decode($scheme->terms);
+                                                    $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['terms'] = (object)(object)json_decode($scheme->terms);
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['detailed_description'] = $scheme->detailed_description;
                                                     $all_videos = [];
                                                     if(!empty($scheme->videos)){
