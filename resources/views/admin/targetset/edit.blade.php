@@ -678,10 +678,12 @@ th.card-title{
                                         </tbody>
                                     </table>
                                 </div>
+                                @php if(\Auth::user()->role_id == 1){ @endphp
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <!-- <button type="reset" class="btn btn-secondary">Reset</button> -->
                                 </div>
+                                @php } @endphp
                             </form><!-- End floating Labels Form -->
                             @else
                             <p>Please select financial year</p>
@@ -701,7 +703,7 @@ th.card-title{
         $('#example').DataTable();
         $('#year').on('change', function(){
             var id = $(this).val();
-            var url = '/manage-subsidy-state?year='+id;
+            var url = "{{url('/manage-subsidy-state')}}?year="+id;
             window.location = url;             
         });   
         

@@ -129,17 +129,17 @@ th.card-title{
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">                                        
-                                        <select class="form-select" required name="year" id="year" aria-label="Select District">
+                                        <select class="form-select" required name="district_id" id="district_id" aria-label="Select District">
                                             <option value="">Select District</option>
                                             @forelse($districts as $district)
-                                            <option value="{{$district->id}}">{{$district->district_name}}</option>
+                                            <option @if(!empty($sdistrict)) @if($sdistrict == $district->id) selected @endif @endif value="{{$district->id}}">{{$district->district_name}}</option>
                                             @empty
                                             @endforelse
                                         </select>
                                         <label for="sub_component_name">District</label>
                                     </div>
                                 </div>
-                                @if(!empty($year))
+                                @if(!empty($year) && !empty($sdistrict))
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
@@ -170,7 +170,8 @@ th.card-title{
                                                         @inject('component', 'App\Models\Component')
                                                         @inject('type', 'App\Models\SchemeSubCategory')
                                                         @forelse($scheme_subcategory as  $parent_category) 
-
+                                                        <?php 
+                                                        ?>
                                                            @if(!empty($parent_category['cat'])) 
                                                                 @forelse($parent_category['cat'] as $scheme_category)
                                                                 
@@ -201,7 +202,7 @@ th.card-title{
                                                                                     <!-- targets -->
                                                                                     @php //print_r($scheme);
                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
-                                                                                        //$targetdistrict = $type->fetchtargetdistrict($district_id,$targetsset->target_id); 
+                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->target_id);
                                                                                     @endphp
                                                                                     <!-- if both sector present -->
                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -216,171 +217,174 @@ th.card-title{
                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                         </td>                                                                                     
                                                                                         <td class="w-8">
-                                                                                            {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                         </td>
                                                                                         <td class="w-8">
+                                                                                            <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
                                                                                         </td>
                                                                                         <td class="w-10">
-                                                                                            <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
+                                                                                            <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                            <td class="w-15">
-                                                                                                Private Sector
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
-                                                                                            </td>
-                                                                                            <td class="w-10">
-                                                                                                <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                            </td>
-                                                                                            
-                                                                                            <td class="w-8">
-                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                            </td>
-                                                                                            <td class="w-10">
-                                                                                                <input type="text" class="w-80" name="private_remarks[]"/>
-                                                                                            </td>
-                                                                                        </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <td class="w-10">
+                                                                                            <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                     @else
                                                                                         <!-- else part -->
                                                                                         <!-- if only public sector present -->
                                                                                         @if(!empty($scheme['public_range']))
                                                                                         <tr>
                                                                                             <td class="w-15">
-                                                                                                Public Sector
+                                                                                            Public Sector
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                             </td>
                                                                                             <td class="w-10">
-                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['cost_norms'] }}"/>
+                                                                                            <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                            </td>                                                                                     
+                                                                                            <td class="w-8">
+                                                                                                {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                            </td>
-                                                                                            
-                                                                                            <td class="w-8">
+                                                                                                <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                 <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-10">
-                                                                                                <input type="text" class="w-80" name="remarks[]"/>
+                                                                                                <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
                                                                                             </td>
                                                                                         </tr>
                                                                                         @endif
                                                                                         <!-- if only private sector present -->
                                                                                         @if(!empty($scheme['private_range']))
                                                                                         <tr>
-                                                                                            <td class="w-15">
+                                                                                            <td class="w-18">
                                                                                                 Private Sector
                                                                                             </td>
-                                                                                            <td class="w-8">
+                                                                                            <td class="w-6">
                                                                                                 <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                             </td>
                                                                                             <td class="w-10">
                                                                                                 <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                             </td>
-                                                                                            <td class="w-8">
-                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                            <td class="w-6">
+                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                             </td>
                                                                                             
-                                                                                            <td class="w-8">
-                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                            <td class="w-6">
+                                                                                                <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
                                                                                             </td>
-                                                                                            <td class="w-10">
-                                                                                                <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                            <td class="w-15">
+                                                                                                <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
                                                                                             </td>
                                                                                         </tr>
                                                                                         @endif
@@ -422,182 +426,185 @@ th.card-title{
                                                                                                 @endphp
                                                                                                 <!-- if both sector present -->
                                                                                                 @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
-                                                                                                <tr>
-                                                                                                    <td class="w-18">
-                                                                                                    Public Sector
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                    <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
-                                                                                                    </td>
-                                                                                                    <td class="w-10">
-                                                                                                    <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
-                                                                                                    </td>                                                                                     
-                                                                                                    <td class="w-6">
-                                                                                                        {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                        <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                        <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                        <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                        <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                        <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                    <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                    <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                    <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                    </td>
-                                                                                                    <td class="w-6">
-                                                                                                    <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                    </td>
-                                                                                                    <td class="w-25">
-                                                                                                        <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                            <td class="w-18">
-                                                                                                                Private Sector
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-10">
-                                                                                                                <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                                            </td>
-                                                                                                            
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-15">
-                                                                                                                <input type="text" class="w-80" name="private_remarks[]"/>
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                                    <tr>
+                                                                                                        <td class="w-15">
+                                                                                                        Public Sector
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                                        </td>
+                                                                                                        <td class="w-10">
+                                                                                                        <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                                        </td>                                                                                     
+                                                                                                        <td class="w-8">
+                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                            <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-10">
+                                                                                                            <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <td class="w-18">
+                                                                                                            Private Sector
+                                                                                                        </td>
+                                                                                                        <td class="w-6">
+                                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                                        </td>
+                                                                                                        <td class="w-10">
+                                                                                                            <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-6">
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                        </td>
+                                                                                                        
+                                                                                                        <td class="w-6">
+                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-15">
+                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
+                                                                                                        </td>
+                                                                                                    </tr>
                                                                                                 @else
                                                                                                     <!-- else part -->
                                                                                                     <!-- if only public sector present -->
                                                                                                     @if(!empty($scheme['public_range']))
                                                                                                     <tr>
                                                                                                         <td class="w-15">
-                                                                                                            Public Sector
+                                                                                                        Public Sector
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                                        <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                                         </td>
                                                                                                         <td class="w-10">
-                                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['cost_norms'] }}"/>
+                                                                                                        <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                                        </td>                                                                                     
+                                                                                                        <td class="w-8">
+                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                                        </td>
-                                                                                                        
-                                                                                                        <td class="w-8">
+                                                                                                            <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-10">
-                                                                                                            <input type="text" class="w-80" name="remarks[]"/>
+                                                                                                            <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     @endif
                                                                                                     <!-- if only private sector present -->
                                                                                                     @if(!empty($scheme['private_range']))
                                                                                                     <tr>
-                                                                                                        <td class="w-15">
+                                                                                                        <td class="w-18">
                                                                                                             Private Sector
                                                                                                         </td>
-                                                                                                        <td class="w-8">
+                                                                                                        <td class="w-6">
                                                                                                             <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                                         </td>
                                                                                                         <td class="w-10">
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>
-                                                                                                        <td class="w-8">
-                                                                                                            {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        <td class="w-6">
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                        <td class="w-6">
+                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
                                                                                                         </td>
-                                                                                                        <td class="w-10">
-                                                                                                            <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                        <td class="w-15">
+                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     @endif
@@ -650,171 +657,174 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
+                                                                                                            <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
                                                                                                         </td>
-                                                                                                        <td class="w-25">
-                                                                                                            <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
+                                                                                                        <td class="w-10">
+                                                                                                            <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <tr>
-                                                                                                            <td class="w-15">
-                                                                                                                Private Sector
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-10">
-                                                                                                                <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                                            </td>
-                                                                                                            
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-15">
-                                                                                                                <input type="text" class="w-80" name="private_remarks[]"/>
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                                        <td class="w-18">
+                                                                                                            Private Sector
+                                                                                                        </td>
+                                                                                                        <td class="w-6">
+                                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                                        </td>
+                                                                                                        <td class="w-10">
+                                                                                                            <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-6">
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                        </td>
+                                                                                                        
+                                                                                                        <td class="w-6">
+                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-15">
+                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
+                                                                                                        </td>
+                                                                                                    </tr>
                                                                                                     @else
                                                                                                      <!-- else part -->
                                                                                                      <!-- if only public sector present -->
                                                                                                      @if(!empty($scheme['public_range']))
-                                                                                                        <tr>
-                                                                                                            <td class="w-15">
-                                                                                                                Public Sector
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-10">
-                                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['cost_norms'] }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                                            </td>
-                                                                                                            
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
-                                                                                                            </td>
-                                                                                                            <td class="w-15">
-                                                                                                                <input type="text" class="w-80" name="remarks[]"/>
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                                     <tr>
+                                                                                                        <td class="w-15">
+                                                                                                        Public Sector
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                                        </td>
+                                                                                                        <td class="w-10">
+                                                                                                        <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                                        </td>                                                                                     
+                                                                                                        <td class="w-8">
+                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                            <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-8">
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
+                                                                                                        </td>
+                                                                                                        <td class="w-10">
+                                                                                                            <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
+                                                                                                        </td>
+                                                                                                    </tr>
                                                                                                         @endif
                                                                                                         <!-- if only private sector present -->
                                                                                                         @if(!empty($scheme['private_range']))
                                                                                                         <tr>
-                                                                                                            <td class="w-15">
+                                                                                                            <td class="w-18">
                                                                                                                 Private Sector
                                                                                                             </td>
-                                                                                                            <td class="w-8">
+                                                                                                            <td class="w-6">
                                                                                                                 <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                                             </td>
                                                                                                             <td class="w-10">
                                                                                                                 <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                             </td>
-                                                                                                            <td class="w-8">
-                                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                            <td class="w-6">
+                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                                             </td>
                                                                                                             
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <td class="w-6">
+                                                                                                                <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
                                                                                                             </td>
-                                                                                                            <td class="w-10">
-                                                                                                                <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                            <td class="w-15">
+                                                                                                                <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                         @endif
@@ -861,171 +871,174 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
+                                                                                                            <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                        <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-10">
-                                                                                                            <input type="text" class="w-80" name="remarks[]" value="{{ empty($targetsset->remarks)?'0.00': $targetsset->remarks }}" />
+                                                                                                            <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <tr>
-                                                                                                        <td class="w-15">
+                                                                                                        <td class="w-18">
                                                                                                             Private Sector
                                                                                                         </td>
-                                                                                                        <td class="w-8">
+                                                                                                        <td class="w-6">
                                                                                                             <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                                         </td>
                                                                                                         <td class="w-10">
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>
-                                                                                                        <td class="w-8">
-                                                                                                            {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        <td class="w-6">
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                        <td class="w-6">
+                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
                                                                                                         </td>
-                                                                                                        <td class="w-10">
-                                                                                                            <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                        <td class="w-15">
+                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     @else
                                                                                                      <!-- else part -->
                                                                                                      <!-- if only public sector present -->
                                                                                                      @if(!empty($scheme['public_range']))
-                                                                                                        <tr>
+                                                                                                     <tr>
                                                                                                             <td class="w-15">
-                                                                                                                Public Sector
+                                                                                                            Public Sector
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
+                                                                                                            <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                                             </td>
                                                                                                             <td class="w-10">
-                                                                                                                <input type="text" class="w-80" disabled value="{{ $scheme['cost_norms'] }}"/>
+                                                                                                            <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
+                                                                                                            </td>                                                                                     
+                                                                                                            <td class="w-8">
+                                                                                                                {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
-                                                                                                            </td>
-                                                                                                            
-                                                                                                            <td class="w-8">
+                                                                                                                <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                                 <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->st_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->women_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-10">
-                                                                                                                <input type="text" class="w-80" name="remarks[]"/>
+                                                                                                                <input type="text" class="w-80" name="district_remarks[]" value="{{ empty($targetdistrict->district_remarks)?'': $targetdistrict->district_remarks }}" />
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                         @endif
                                                                                                         <!-- if only private sector present -->
                                                                                                         @if(!empty($scheme['private_range']))
                                                                                                         <tr>
-                                                                                                            <td class="w-15">
+                                                                                                            <td class="w-18">
                                                                                                                 Private Sector
                                                                                                             </td>
-                                                                                                            <td class="w-8">
+                                                                                                            <td class="w-6">
                                                                                                                 <input type="text" class="w-80" disabled value="{{ $scheme['units'] }}" />
                                                                                                             </td>
                                                                                                             <td class="w-10">
                                                                                                                 <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                             </td>
-                                                                                                            <td class="w-8">
-                                                                                                                {{ number_format($targetsset->physical_target, 2) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                            <td class="w-6">
+                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                                             </td>
                                                                                                             
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                            <td class="w-6">
+                                                                                                                <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetsset->physical_target)?'0.00': $targetsset->physical_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" disabled />
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ number_format((float)$scheme['cost_norms']*(float)$targetsset->physical_target, 2) }}" disabled />
+                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" disabled />
                                                                                                             </td>
-                                                                                                            <td class="w-10">
-                                                                                                                <input type="text" class="w-80" name="private_remarks[]"/>
+                                                                                                            <td class="w-15">
+                                                                                                                <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                         @endif
@@ -1096,12 +1109,12 @@ th.card-title{
             var id = $(this).val();
             var district_id = $('#district_id').val();
             console.log(district_id, id)
-            if(id != null && (district_id == null || district_id == undefined)){
+            if(id != null && (district_id == '' || district_id == null || district_id == undefined)){
                 swal("Please select district", {
                     icon: "error",
                 });
             }else{
-                var url = '/manage-subsidy-district?year='+id+'&district_id='+district_id;
+                var url = '{{url("/manage-subsidy-district")}}?year='+id+'&district_id='+district_id;
                 window.location = url;
             }
                          
@@ -1110,12 +1123,12 @@ th.card-title{
         $('#district_id').on('change', function(){
             var id = $(this).val();
             var year = $('#year').val();
-            if(id != null && (year == null || year == undefined)){
+            if(id != null && (year == '' || year == null || year == undefined)){
                 swal("Please select district", {
                     icon: "error",
                 });
             }else{
-                var url = '/manage-subsidy-district?year='+year+'&district_id='+id;
+                var url = '{{url("/manage-subsidy-district")}}?year='+year+'&district_id='+id;
                 window.location = url;
             }
                          
