@@ -928,12 +928,11 @@ class APIController extends Controller
             
             foreach($total_land_area as $key => $land){
                 if(empty($land_id[$key])){
-                    dd($request);
-                    if($request->hasFile('upload_fard[$key]') && $request->hasFile('upload_pattedar[$key]')){
-                        $upload_fard_name = time().$request->upload_fard[$key]->getClientOriginalName();
-                        $request->upload_fard[$key]->storeAs('land-images',$upload_fard_name,'public');
-                        $upload_pattedar_name = time().$request->upload_pattedar[$key]->getClientOriginalName();
-                        $request->upload_pattedar[$key]->storeAs('land-images',$upload_pattedar_name,'public');
+                    if($request->file('upload_fard')[$key] && $request->file('upload_pattedar')[$key]){
+                        $upload_fard_name = time().$request->file('upload_fard')[$key]->getClientOriginalName();
+                        $request->file('upload_pattedar')[$key]->storeAs('land-images',$upload_fard_name,'public');
+                        $upload_pattedar_name = time().$request->file('upload_pattedar')[$key]->getClientOriginalName();
+                        $request->file('upload_pattedar')[$key]->storeAs('land-images',$upload_pattedar_name,'public');
                         $land_detail = FarmerLandDetail::create([
                             'farmer_id' => $farmer_id,
                             'total_land_area' => $total_land_area[$key], 
@@ -955,11 +954,11 @@ class APIController extends Controller
                         ->json(['message' => 'Land Detail added Successfully','media_url'=>'storage/land-images/','data'=> $land_detail], 200);
                     }
                 }else{
-                    if($request->hasFile('upload_fard[$key]') && $request->hasFile('upload_pattedar[$key]')){
-                        $upload_fard_name = time().$request->upload_fard[$key]->getClientOriginalName();
-                        $request->upload_fard[$key]->storeAs('land-images',$upload_fard_name,'public');
-                        $upload_pattedar_name = time().$request->upload_pattedar[$key]->getClientOriginalName();
-                        $request->upload_pattedar[$key]->storeAs('land-images',$upload_pattedar_name,'public');
+                    if($request->file('upload_fard')[$key] && $request->file('upload_pattedar')[$key]){
+                        $upload_fard_name = time().$request->file('upload_fard')[$key]->getClientOriginalName();
+                        $request->file('upload_pattedar')[$key]->storeAs('land-images',$upload_fard_name,'public');
+                        $upload_pattedar_name = time().$request->file('upload_pattedar')[$key]->getClientOriginalName();
+                        $request->file('upload_pattedar')[$key]->storeAs('land-images',$upload_pattedar_name,'public');
                         $land_detail = FarmerLandDetail::where('id', $land_id[$key])->update([
                             'farmer_id' => $farmer_id,
                             'total_land_area' => $total_land_area[$key], 
@@ -1014,6 +1013,7 @@ class APIController extends Controller
             $bank_branch_address = $request->bank_branch_address;
             $upload_cancel_check = $request->upload_cancel_check;
             $passbook_no = $request->passbook_no;
+            $ifsc_code = $request->ifsc_code;
             $bank_details = FarmerBankDetail::where('farmer_id', $farmer_id)->first();
             if(empty($bank_details)){
                 if($request->hasFile('upload_cancel_check') && $request->hasFile('upload_passbook')){
@@ -1030,7 +1030,8 @@ class APIController extends Controller
                         'bank_branch_address' => $bank_branch_address, 
                         'upload_cancel_check' => $upload_cancel_name, 
                         'upload_passbook' => $upload_passbook_name,
-                        'passbook_no' => $passbook_no
+                        'passbook_no' => $passbook_no,
+                        'ifsc_code' => $ifsc_code
                     ]);
 
                     if($details){
@@ -1058,7 +1059,8 @@ class APIController extends Controller
                         'bank_branch_address' => $bank_branch_address, 
                         'upload_cancel_check' => $upload_cancel_check, 
                         'upload_passbook' => $upload_passbook_name,
-                        'passbook_no' => $passbook_no
+                        'passbook_no' => $passbook_no,
+                        'ifsc_code' => $ifsc_code
                     ]);
                     if($details){
                         $bank_user = FarmerBankDetail::where('id', $bank_details->id)->first();
@@ -1077,7 +1079,8 @@ class APIController extends Controller
                     'account_no' => $account_no, 
                     'account_name' => $account_name, 
                     'bank_branch_address' => $bank_branch_address,  
-                    'passbook_no' => $passbook_no
+                    'passbook_no' => $passbook_no,
+                    'ifsc_code' => $ifsc_code
                 ]);
                 if($details){
                     $bank_user = FarmerBankDetail::where('id', $bank_details->id)->first();
