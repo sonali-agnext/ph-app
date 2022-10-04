@@ -66,6 +66,7 @@ th.card-title{
     padding-left: 5px;
 }
 </style>
+
 <div class="pagetitle">
     <h1>Manage Subsidy Targets for District</h1>
     <nav>
@@ -202,7 +203,9 @@ th.card-title{
                                                                                     <!-- targets -->
                                                                                     @php //print_r($scheme);
                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
-                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->target_id);
+                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
+
+                                                                                        
                                                                                     @endphp
                                                                                     <!-- if both sector present -->
                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -423,7 +426,9 @@ th.card-title{
                                                                                                 <!-- targets -->
                                                                                                 @php //print_r($scheme);
                                                                                                     $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
-                                                                                                @endphp
+                                                                                                    $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
+                                                                                                    
+                                                                                                  @endphp
                                                                                                 <!-- if both sector present -->
                                                                                                 @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
                                                                                                     <tr>
@@ -643,6 +648,8 @@ th.card-title{
                                                                                                     <!-- targets -->
                                                                                                     @php 
                                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
+                                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
+                                                                                                        
                                                                                                     @endphp
                                                                                                     <!-- if both sector present -->
                                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -857,6 +864,8 @@ th.card-title{
                                                                                                     <!-- targets -->
                                                                                                     @php 
                                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
+                                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
+                                                                                                        
                                                                                                     @endphp
                                                                                                     <!-- if both sector present -->
                                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))

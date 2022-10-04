@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -62,13 +61,23 @@ class SchemeSubCategory extends Model
         }
     }
 
-    public function fetchtargetdistrict($district_id,$target_state_id){
-        $targets = TargetState::where('district_id', $district_id)->where('target_state_id', $target_state_id)->first();
-        return $targets;
+    public function fetchtargetdistrict($district_id,$target_id, $year){
+        $targets = TargetDistrict::where('target_state_id',$target_id)->where('district_year',$year)->where('district_id',$district_id)->first();
+
+        if(empty($targets)){
+            return false;
+        }else{
+            return $targets;
+        }
     }
 
     public function fetchassignedtarget($target_state_id){
-        $targets = TargetState::select('SUM(assigned_physical_target) as total_public_target','SUM(assigned_private_physical_target) as total_public_target')->where('target_state_id', $target_state_id)->get();
-        return $targets;
+
+        $assignedtarget = App\Models\TargetDistrict::where('target_state_id', 7)
+        ->sum('assigned_physical_target');
+        $private_assignedtarget = App\Models\TargetDistrict::where('target_state_id', 7)
+        ->sum('assigned_private_physical_target');
+
+        return [$assignedtarget,$private_assignedtarget];
     }
 }

@@ -19,6 +19,7 @@ use App\Models\GovtScheme;
 use App\Models\Component;
 use App\Models\SubComponent;
 use App\Models\TargetState;
+use App\Models\TargetDistrict;
 use Illuminate\Support\Facades\Validator;
 
 class SubsidyController extends Controller
@@ -626,7 +627,7 @@ class SubsidyController extends Controller
         $subcomponents = SubComponent::where('status',"1")->get();
         $districts = District::all();
 
-        return view('admin.targetset.districtedit',['districts'=>$districts,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
+        return view('admin.targetset.districtedit',['districts'=>$districts,'sdistrict'=>$request->district_id,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
     }
 
     public static function updateStateSubsidy(Request $request){
@@ -639,11 +640,96 @@ class SubsidyController extends Controller
         $all_private_physical_target=$request->private_physical_target;
         
         foreach($all_targets as $key=> $target){
-            $targets = TargetState::where('id',$target)->update(['physical_target'=> $all_physical_target[$key], 'remarks' => $all_remarks[$key]]);
+            $privatetargets = TargetState::where('id',$all_private_targets[$key])->update(['private_physical_target'=> $all_private_physical_target[$key],'private_remarks' => $all_private_remarks[$key]]);
+        }
+
+        foreach($all_private_targets as $key=> $target){
             $privatetargets = TargetState::where('id',$all_private_targets[$key])->update(['private_physical_target'=> $all_private_physical_target[$key],'private_remarks' => $all_private_remarks[$key]]);
         }
 
         return redirect()->route('manage-subsidy-state')->with('success','Schemes updated successfully!');
+        
+    }
+
+    public static function updateDistrictSubsidy(Request $request){
+
+        // $targets = TargetState::where('id',)->update();
+        $all_targets = $request->target_id;
+        $all_private_targets = $request->private_target_id;
+        $all_district_targets = $request->target_district_id;
+        $all_private_target_district_ids = $request->private_target_district_id;
+        $all_remarks = $request->district_remarks;
+        $all_private_remarks = $request->district_private_remarks;
+        $all_private_gen_targets = $request->private_gen_target;
+        $all_private_sc_targets = $request->private_sc_target;
+        $all_private_st_targets = $request->private_st_target;
+        $all_private_women_targets = $request->private_women_target;
+        $all_gen_targets = $request->gen_target;
+        $all_sc_targets = $request->sc_target;
+        $all_st_targets = $request->st_target;
+        $all_women_targets = $request->women_target;
+        $year = $request->year;
+        $district = $request->district_id;
+        
+        foreach($all_targets as $key=> $target){ 
+            $targets = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();           
+            if(empty($all_district_targets[$key]) && empty($targets)){                
+                $targets = TargetDistrict::create([
+                    'district_id' => $district, 
+                    'target_state_id' => $target, 
+                    'assigned_physical_target'=> ((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
+                    'district_remarks'=>$all_remarks[$key],
+                    'district_year' => $year,
+                    'gen_target' => $all_gen_targets[$key],
+                    'sc_target' => $all_sc_targets[$key],
+                    'st_target' => $all_st_targets[$key],
+                    'women_target' => $all_women_targets[$key]
+                ]);
+            }else{
+                $targets = TargetDistrict::where('id', $targets->id)->update([
+                    'district_id' => $district, 
+                    'target_state_id' => $target, 
+                    'assigned_physical_target'=> ((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
+                    'district_remarks'=>$all_remarks[$key],
+                    'district_year' => $year,
+                    'gen_target' => $all_gen_targets[$key],
+                    'sc_target' => $all_sc_targets[$key],
+                    'st_target' => $all_st_targets[$key],
+                    'women_target' => $all_women_targets[$key]
+                ]);
+            }
+        }
+
+        foreach($all_private_targets as $key=> $target){ 
+            $targets = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();           
+            if(empty($all_district_targets[$key]) && empty($targets)){                
+                $targets = TargetDistrict::create([
+                    'district_id' => $district, 
+                    'target_state_id' => $target, 
+                    'assigned_private_physical_target'=> ((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]), 
+                    'district_private_remarks'=>$all_private_remarks[$key],
+                    'district_year' => $year,
+                    'private_gen_target' => $all_private_gen_targets[$key],
+                    'private_sc_target' => $all_private_sc_targets[$key],
+                    'private_st_target' => $all_private_st_targets[$key],
+                    'private_women_target' => $all_private_women_targets[$key]
+                ]);
+            }else{
+                $targets = TargetDistrict::where('id', $targets->id)->update([
+                    'district_id' => $district, 
+                    'target_state_id' => $target, 
+                    'assigned_private_physical_target'=> ((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]), 
+                    'district_private_remarks'=>$all_private_remarks[$key],
+                    'district_year' => $year,
+                    'private_gen_target' => $all_private_gen_targets[$key],
+                    'private_sc_target' => $all_private_sc_targets[$key],
+                    'private_st_target' => $all_private_st_targets[$key],
+                    'private_women_target' => $all_private_women_targets[$key]
+                ]);
+            }
+        }
+
+        return redirect()->route('manage-subsidy-district')->with('success','Schemes updated successfully!');
         
     }
 

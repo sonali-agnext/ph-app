@@ -18,6 +18,10 @@ class TargetDistrict extends Model
         'gen_target',
         'sc_target',
         'st_target',
-        'women_target'
+        'women_target',
+        'private_gen_target',
+        'private_sc_target',
+        'private_st_target',
+        'private_women_target'
     ];
 }
