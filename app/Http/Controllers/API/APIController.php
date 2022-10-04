@@ -907,6 +907,7 @@ class APIController extends Controller
     }
 
     public function saveFarmerLand(Request $request){
+        dd($request);
         $land_id = $request->land_id;
         $farmer_id = $request->farmer_id;
         $total_land_area = $request->total_land_area; 
