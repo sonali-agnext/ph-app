@@ -907,7 +907,6 @@ class APIController extends Controller
     }
 
     public function saveFarmerLand(Request $request){
-        dd($request);
         $land_id = $request->land_id;
         $farmer_id = $request->farmer_id;
         $total_land_area = $request->total_land_area; 
@@ -926,9 +925,9 @@ class APIController extends Controller
         $khasra_no = $request->khasra_no;
         
         if(!empty($total_land_area)){
-            
             foreach($total_land_area as $key => $land){
                 if(empty($land_id[$key])){
+                    if(!empty($request->file('upload_fard')[$key]) && !empty($request->file('upload_pattedar')[$key])){
                     if($request->file('upload_fard')[$key] && $request->file('upload_pattedar')[$key]){
                         $upload_fard_name = time().$request->file('upload_fard')[$key]->getClientOriginalName();
                         $request->file('upload_pattedar')[$key]->storeAs('land-images',$upload_fard_name,'public');
@@ -951,10 +950,9 @@ class APIController extends Controller
                             'khatauni_no' => $khatauni_no[$key], 
                             'khasra_no' => $khasra_no[$key]
                         ]);
-                        return response()
-                        ->json(['message' => 'Land Detail added Successfully','media_url'=>'storage/land-images/','data'=> $land_detail], 200);
                     }
-                }else{
+                }}else{
+                    if(!empty($request->file('upload_fard')[$key]) && !empty($request->file('upload_pattedar')[$key])){
                     if($request->file('upload_fard')[$key] && $request->file('upload_pattedar')[$key]){
                         $upload_fard_name = time().$request->file('upload_fard')[$key]->getClientOriginalName();
                         $request->file('upload_pattedar')[$key]->storeAs('land-images',$upload_fard_name,'public');
@@ -977,9 +975,8 @@ class APIController extends Controller
                             'khatauni_no' => $khatauni_no[$key], 
                             'khasra_no' => $khasra_no[$key]
                         ]);
-                        return response()
-                        ->json(['message' => 'Land Detail added Successfully','media_url'=>'storage/land-images/','data'=> $land_detail], 200);
-                    }else{
+                        
+                    }}else{
                         $land_detail = FarmerLandDetail::where('id', $land_id[$key])->update([
                             'farmer_id' => $farmer_id,
                             'total_land_area' => $total_land_area[$key], 
@@ -995,11 +992,12 @@ class APIController extends Controller
                             'khatauni_no' => $khatauni_no[$key], 
                             'khasra_no' => $khasra_no[$key]
                         ]);
-                        return response()
-                        ->json(['message' => 'Land Detail added Successfully','media_url'=>'storage/land-images/','data'=> $land_detail], 200);
+                        
                     }
                 }
             }
+            return response()
+                        ->json(['message' => 'Land Detail added Successfully','media_url'=>'storage/land-images/'], 200);
             
         }
     }
