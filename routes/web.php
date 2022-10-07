@@ -171,3 +171,6 @@ Route::get('/latest', 'CronController@latestVideos');
 Route::get('/ajax-tehsil', 'AjaxController@fetchTehsil');
 Route::get('/ajax-village', 'AjaxController@fetchVillage');
 
+//manage applied scheme
+Route::get('/manage-applied-scheme','Admin\SchemeController@manageAppliedScheme')->name('manage-applied-scheme');
+

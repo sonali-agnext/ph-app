@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\YoutubeVideo;
 use App\Models\FarmerBankDetail;
 use App\Models\FarmerLandDetail;
+use App\Models\AppliedScheme;
 
 class APIController extends Controller
 {
@@ -893,7 +894,7 @@ class APIController extends Controller
 
     public function fetchFarmerLand(Request $request){
         $bank_details = FarmerLandDetail::where('farmer_id', $request->farmer_id)->get();
-        return response()->json(['message' => 'Land Detail','media_url'=>'storage/land-images/' ,'data'=> $bank_user], 200);
+        return response()->json(['message' => 'Land Detail','media_url'=>'storage/land-images/' ,'data'=> $bank_details], 200);
     }
 
     public function deleteFarmerLand(Request $request){
@@ -903,7 +904,7 @@ class APIController extends Controller
 
     public function fetchFarmerBank(Request $request){
         $bank_details = FarmerBankDetail::where('farmer_id', $request->farmer_id)->first();
-        return response()->json(['message' => 'Bank Detail','media_url'=>'storage/bank-images/' ,'data'=> $bank_user], 200);
+        return response()->json(['message' => 'Bank Detail','media_url'=>'storage/bank-images/' ,'data'=> $bank_details], 200);
     }
 
     public function saveFarmerLand(Request $request){
@@ -1096,5 +1097,122 @@ class APIController extends Controller
         }
     }
 
+    public function appliedScheme(Request $request){
+        $farmer_id = $request->farmer_id;
+        $scheme_id = $request->scheme_id;
+        $land_applied = $request->land_applied;
+        $land_address_id = $request->land_address_id;
+        $project_note = $request->project_note;
+        $technical_datasheet = $request->technical_datasheet;
+        $bank_sanction = $request->bank_sanction;
+        $quotation_solar = $request->quotation_solar;
+        $site_plan = $request->site_plan;
+        $partnership_deep = $request->partnership_deep;
+        $pan_aadhar = $request->pan_aadhar;
+        $location_plan = $request->location_plan;
+        $land_documents = $request->land_documents;
+        $self_declaration = $request->self_declaration;
+        $other_documents = $request->other_documents;
 
+        if(!empty($farmer_id) && !empty($scheme_id) && !empty($land_address_id)){
+            $project_note_name ='';
+            $technical_datasheet_name ='';
+            $bank_sanction_name ='';
+            $quotation_solar_name ='';
+            $site_plan_name ='';
+            $partnership_deep_name ='';
+            $pan_aadhar_name ='';
+            $location_plan_name ='';
+            $land_documents_name ='';
+            $self_declaration_name ='';
+            $other_documents_name ='';
+            if($request->hasFile('project_note')){
+                $project_note_name = time().$request->project_note->getClientOriginalName();
+                $request->project_note->storeAs('scheme-documents/'.date('Y'),$project_note_name,'public');
+            }
+            if($request->hasFile('technical_datasheet')){
+                $technical_datasheet_name = time().$request->technical_datasheet->getClientOriginalName();
+                $request->technical_datasheet->storeAs('scheme-documents/'.date('Y'),$technical_datasheet_name,'public');
+            }
+            if($request->hasFile('bank_sanction')){
+                $bank_sanction_name = time().$request->bank_sanction->getClientOriginalName();
+                $request->bank_sanction->storeAs('scheme-documents/'.date('Y'),$bank_sanction_name,'public');
+            }
+            if($request->hasFile('quotation_solar')){
+                $quotation_solar_name = time().$request->quotation_solar->getClientOriginalName();
+                $request->quotation_solar->storeAs('scheme-documents/'.date('Y'),$quotation_solar_name,'public');
+            }
+            if($request->hasFile('site_plan')){
+                $site_plan_name = time().$request->site_plan->getClientOriginalName();
+                $request->site_plan->storeAs('scheme-documents/'.date('Y'),$site_plan_name,'public');
+            }
+            if($request->hasFile('partnership_deep')){
+                $partnership_deep_name = time().$request->partnership_deep->getClientOriginalName();
+                $request->partnership_deep->storeAs('scheme-documents/'.date('Y'),$partnership_deep_name,'public');
+            }
+            if($request->hasFile('pan_aadhar')){
+                $pan_aadhar_name = time().$request->pan_aadhar->getClientOriginalName();
+                $request->pan_aadhar->storeAs('scheme-documents/'.date('Y'),$pan_aadhar_name,'public');
+            }
+            if($request->hasFile('location_plan')){
+                $location_plan_name = time().$request->location_plan->getClientOriginalName();
+                $request->location_plan->storeAs('scheme-documents/'.date('Y'),$location_plan_name,'public');
+            }
+            if($request->hasFile('land_documents')){
+                $location_plan_name = time().$request->land_documents->getClientOriginalName();
+                $request->land_documents->storeAs('scheme-documents/'.date('Y'),$location_plan_name,'public');
+            }
+            if($request->hasFile('self_declaration')){
+                $self_declaration_name = time().$request->self_declaration->getClientOriginalName();
+                $request->self_declaration->storeAs('scheme-documents/'.date('Y'),$self_declaration_name,'public');
+            }
+            if($request->hasFile('other_documents')){
+                $other_documents_name = time().$request->other_documents->getClientOriginalName();
+                $request->other_documents->storeAs('scheme-documents/'.date('Y'),$other_documents_name,'public');
+            }
+            $bank_details = FarmerLandDetail::where('farmer_id', $farmer_id)->where('id', $land_address_id)->first();
+            $applied_schemes = AppliedScheme::create([
+                'farmer_id' => $farmer_id,
+                'scheme_id' => $scheme_id,
+                'land_applied' => $land_applied,
+                'land_address_id' => $land_address_id,
+                'project_note' => $project_note_name,
+                'technical_datasheet' => $technical_datasheet_name,
+                'bank_sanction' => $bank_sanction_name,
+                'quotation_solar' => $quotation_solar_name,
+                'site_plan' => $site_plan_name,
+                'partnership_deep' => $partnership_deep_name,
+                'pan_aadhar' => $pan_aadhar_name,
+                'location_plan' => $location_plan_name,
+                'land_documents' => $land_documents_name,
+                'self_declaration' => $self_declaration_name,
+                'other_documents' => $other_documents_name,
+                'state' => $bank_details->state, 
+                'district_id' => $bank_details->district_id, 
+                'tehsil_id' => $bank_details->tehsil_id                
+            ]);
+            if($applied_schemes){
+                $submit = AppliedScheme::where('id', $applied_schemes->id)->update([
+                    'application_number' => 'PHSCHM000'.$applied_schemes->id
+                ]);
+                return response()
+                        ->json(['message' => 'Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ,'application_id'=> 'PHSCHM'.str_pad($applied_schemes->id,6, "0", STR_PAD_LEFT)], 200);
+            }
+        }else{
+            return response()
+                    ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
+        }
+    }
+
+    public function fetchSchemeStatus(Request $request){
+        $fetchapp = AppliedScheme::select('applied_schemes.*','schemes.*','farmer_land_details.*','districts.district_name', 'tehsils.tehsil_name')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('districts','districts.id','=','applied_schemes.district_id')
+            ->join('farmer_land_details','farmer_land_details.id','=','applied_schemes.land_address_id')
+            ->join('tehsils','tehsils.id','=','applied_schemes.tehsil_id')
+            ->where('applied_schemes.farmer_id', $request->farmer_id)
+            ->get();
+        return response()
+                    ->json(['message' => 'Fetch all applied schemes', 'data' => $fetchapp], 200);
+    }
 }

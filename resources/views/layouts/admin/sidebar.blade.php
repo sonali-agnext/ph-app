@@ -9,9 +9,10 @@
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
-
+      @php $route = \Request::route()->getName(); $role_id = Auth::user()->role_id; @endphp
+      @if($role_id != 5)
       <li class="nav-item">
-        @php $route = \Request::route()->getName(); $role_id = Auth::user()->role_id; @endphp
+        
         <a @if($route == 'manage-district-officer' || $route == 'add-district-officer' || $route == 'edit-district-officer' || $route == 'update-district-officer' || $route == 'manage-tehsil-officer' || $route == 'add-tehsil-officer' || $route == 'edit-tehsil-officer' || $route == 'update-tehsil-officer' || $route == 'manage-state-officer' || $route == 'add-state-officer' || $route == 'edit-state-officer' || $route == 'update-state-officer') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#officer-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-district-officer' || $route == 'add-district-officer' || $route == 'edit-district-officer' || $route == 'update-district-officer' || $route == 'manage-tehsil-officer' || $route == 'add-tehsil-officer' || $route == 'edit-tehsil-officer' || $route == 'update-tehsil-officer' || $route == 'manage-state-officer' || $route == 'add-state-officer' || $route == 'edit-state-officer' || $route == 'update-state-officer') aria-expanded="true" @endif>
           <i class="bi bi-menu-button-wide"></i><span>Manage Officers</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -36,7 +37,7 @@
         </ul>
       </li>
       <!-- End Users nav -->
-
+      @endif
       <li class="nav-item">
         @php $route = \Request::route()->getName(); @endphp
         <a @if($route == 'manage-farmer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#farmers-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-farmer' || $route == 'add-farmer' || $route == 'edit-farmer' || $route == 'update-farmer') aria-expanded="true" @endif>
@@ -158,6 +159,11 @@
           </li>
           @endif
         </ul>
+      </li>
+      <li class="nav-item">
+        <a  class="nav-link" class="nav-link collapsed" data-bs-target="#manage-applied-nav" data-bs-toggle="collapse" href="#" aria-expanded="true">
+          <i class="bi bi-gem"></i><span>Manage Applied Scheme</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
       </li>
       <!-- End Schemes Nav -->
 
