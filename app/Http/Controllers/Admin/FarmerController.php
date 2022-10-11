@@ -37,7 +37,8 @@ class FarmerController extends Controller
         $tehsils = Tehsil::all();
         $applicant_types = ApplicantType::all();
         $caste_categories = CasteCategory::all();
-        return view('admin.farmer.edit',['farmer' => $farmer, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils, 'caste_categories' => $caste_categories, 'applicant_types'=>$applicant_types]);
+        $user = User::find($farmer->user_id);
+        return view('admin.farmer.edit',['farmer' => $farmer, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils, 'caste_categories' => $caste_categories, 'applicant_types'=>$applicant_types, 'user' => $user]);
     }
 
     public function updateFarmer(Request $request){
@@ -86,8 +87,7 @@ class FarmerController extends Controller
                 'city_id' => $city_id, 
                 'full_address'=> $full_address, 
                 'pin_code'=> $postal_code, 
-                'avatar' => $filename,
-                'status' => $request->status
+                'avatar' => $filename
             ]);
                 if($district){
                     $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number, 'status' => $request->status]);
@@ -112,8 +112,7 @@ class FarmerController extends Controller
                 'tehsil_id' => $tehsil_id, 
                 'city_id' => $city_id, 
                 'full_address'=> $full_address, 
-                'pin_code'=> $postal_code,
-                'status' => $request->status
+                'pin_code'=> $postal_code
             ]);
                 if($district){
                     $user=User::where('id',$farmer->user_id)->update(['name'=>$mobile_number, 'status' => $request->status]);

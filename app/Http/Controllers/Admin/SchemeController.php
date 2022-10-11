@@ -19,6 +19,7 @@ use App\Models\GovtScheme;
 use App\Models\Component;
 use App\Models\SubComponent;
 use App\Models\TargetState;
+use App\Models\AppliedScheme;
 use Illuminate\Support\Facades\Validator;
 
 class SchemeController extends Controller
@@ -561,5 +562,40 @@ class SchemeController extends Controller
             return response()
             ->json(['message' => 'error']);
         }
+    }
+
+    public function manageAppliedScheme(Request $request){
+        $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
+        ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+        ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+        ->join('cities','farmers.city_id','=','cities.id')
+        ->join('users','farmers.user_id','=','users.id')
+        ->join('districts','farmers.district_id','=','districts.id')
+        ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+        ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+        ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+        ->get();
+
+
+        return view('admin.applied_scheme.index',['farmers' => $farmers]);
+    }
+
+    public function viewAppliedScheme(Request $request){
+        
+        $farmers = AppliedScheme::select('applied_schemes.*','farmers.*','farmer_bank_details.*','farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
+        ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+        ->join('farmer_bank_details','farmer_bank_details.farmer_id','=','applied_schemes.farmer_id')
+        ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+        ->join('cities','farmers.city_id','=','cities.id')
+        ->join('users','farmers.user_id','=','users.id')
+        ->join('districts','farmers.district_id','=','districts.id')
+        ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+        ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+        ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+        ->where('applied_schemes.id', $request->id)
+        ->first();
+
+
+        return view('admin.applied_scheme.view',['farmers' => $farmers]);
     }
 }

@@ -1113,6 +1113,7 @@ class APIController extends Controller
         $land_documents = $request->land_documents;
         $self_declaration = $request->self_declaration;
         $other_documents = $request->other_documents;
+        $public_private = $request->public_private;
 
         if(!empty($farmer_id) && !empty($scheme_id) && !empty($land_address_id)){
             $project_note_name ='';
@@ -1189,7 +1190,8 @@ class APIController extends Controller
                 'other_documents' => $other_documents_name,
                 'state' => $bank_details->state, 
                 'district_id' => $bank_details->district_id, 
-                'tehsil_id' => $bank_details->tehsil_id                
+                'tehsil_id' => $bank_details->tehsil_id,
+                'public_private' => $public_private            
             ]);
             if($applied_schemes){
                 $submit = AppliedScheme::where('id', $applied_schemes->id)->update([

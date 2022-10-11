@@ -33,6 +33,7 @@ class AppliedScheme extends Model
         'district_updated',
         'tehsil_updated',
         'approved_tehsil',
-        'approved_district'
+        'approved_district',
+        'public_private'
     ];
 }

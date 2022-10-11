@@ -198,8 +198,8 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" name="status" id="status" aria-label="Status">
-                                            <option @if($farmer->status) selected @endif value="1">True</option>
-                                            <option @if(!$farmer->status) selected @endif value="0">False</option>
+                                            <option @if($user->status) selected @endif value="1">True</option>
+                                            <option @if(!$user->status) selected @endif value="0">False</option>
                                         </select>
                                         <label for="status">Status<span class="text-danger">*</span></label>
                                     </div>

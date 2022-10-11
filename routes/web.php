@@ -173,4 +173,4 @@ Route::get('/ajax-village', 'AjaxController@fetchVillage');
 
 //manage applied scheme
 Route::get('/manage-applied-scheme','Admin\SchemeController@manageAppliedScheme')->name('manage-applied-scheme');
-
+Route::get('/view-applied-scheme', 'Admin\SchemeController@viewAppliedScheme')->name('view-applied-scheme');
