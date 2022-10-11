@@ -622,7 +622,7 @@ class APIController extends Controller
                             foreach($scheme_subcategories as $subkey => $scheme_subcategory){
                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['subscheme_id'] = $scheme_subcategory->id;
                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['subscheme_name'] = $scheme_subcategory->subcategory_name;
-                                $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->whereNull('component_id')->whereNull('sub_component_id')->where('year', '2020-21')->get();
+                                $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->whereNull('component_id')->whereNull('sub_component_id')->where('year', '2020-21')->orWhere('year', '2021-22')->get();
                                 if(!empty($schemes)){
                                     foreach($schemes as $ckey => $scheme){
                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
@@ -684,7 +684,7 @@ class APIController extends Controller
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['sub_component_id'] = $scheme_subcomponent->id;
                                                 $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['sub_component_name'] = $scheme_subcomponent->sub_component_name;
                                                 // scheme
-                                                $schemes = Scheme::where('sub_component_id', $scheme_subcomponent->id)->where('year', '2020-21')->get();
+                                                $schemes = Scheme::where('sub_component_id', $scheme_subcomponent->id)->where('year', '2020-21')->orWhere('year', '2021-22')->get();
                                                 if(!empty($schemes)){
                                                     foreach($schemes as $ckey => $scheme){
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['subcomp'][$sckey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
@@ -721,7 +721,7 @@ class APIController extends Controller
                                                     // scheme
                                                 }
                                                 // end scheme
-                                                $schemes = Scheme::where('component_id', $scheme_component->id)->whereNull('sub_component_id')->where('year', '2020-21')->get();
+                                                $schemes = Scheme::where('component_id', $scheme_component->id)->whereNull('sub_component_id')->where('year', '2020-21')->orWhere('year', '2021-22')->get();
                                                 if(!empty($schemes)){
                                                     foreach($schemes as $ckey => $scheme){
                                                         $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['comp'][$cokey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
@@ -773,7 +773,7 @@ class APIController extends Controller
                                             // endfor subcomponent
                                         }
     
-                                        $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->whereNull('component_id')->where('year', '2020-21')->get();
+                                        $schemes = Scheme::where('scheme_subcategory_id', $scheme_subcategory->id)->whereNull('component_id')->where('year', '2020-21')->orWhere('year', '2021-22')->get();
                                             if(!empty($schemes)){
                                                 foreach($schemes as $ckey => $scheme){
                                                     $all_schemes[$gkey]['cat'][$key]['sub_cat'][$subkey]['scheme'][$ckey]['scheme_id'] = $scheme->id;
@@ -821,7 +821,7 @@ class APIController extends Controller
                                                 // scheme
                                             }
                                             // endif scheme
-                                            $schemes = Scheme::where('component_id',$scheme_component->id)->whereNull('sub_component_id')->where('year', '2020-21')->get();
+                                            $schemes = Scheme::where('component_id',$scheme_component->id)->whereNull('sub_component_id')->where('year', '2020-21')->orWhere('year', '2021-22')->get();
 
                                             if(!empty($schemes)){
                                                 foreach($schemes as $ckey => $scheme){
