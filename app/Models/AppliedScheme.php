@@ -28,12 +28,14 @@ class AppliedScheme extends Model
         'tehsil_id', 
         'status', 
         'reason', 
+        'district_reason',
         'application_number',
         'applied_schemes',
         'district_updated',
         'tehsil_updated',
         'approved_tehsil',
         'approved_district',
-        'public_private'
+        'public_private',
+        'attempts'
     ];
 }

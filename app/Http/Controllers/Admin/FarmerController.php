@@ -18,16 +18,46 @@ class FarmerController extends Controller
 {
     //Farmers
     public function manageFarmers(Request $request){
-        $farmers = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
-        ->join('cities','farmers.city_id','=','cities.id')
-        ->join('users','farmers.user_id','=','users.id')
-        ->join('districts','farmers.district_id','=','districts.id')
-        ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
-        ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
-        ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
-        ->get();
 
-        return view('admin.farmer.index',['farmers' => $farmers]);
+        if(auth()->user()->role_id == 4){
+            $farmers = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('farmers.tehsil_id',auth()->user()->officer()->assigned_district)
+            ->get();
+
+            return view('admin.farmer.index',['farmers' => $farmers]);
+
+        }elseif(auth()->user()->role_id == 5){
+            $farmers = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('farmers.tehsil_id',auth()->user()->officer()->assigned_tehsil)
+            ->get();
+
+            return view('admin.farmer.index',['farmers' => $farmers]);
+            
+        }else{
+            $farmers = Farmer::select('farmers.*','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->get();
+
+            return view('admin.farmer.index',['farmers' => $farmers]);
+        }
+        
     }
     public function editFarmer(Request $request){
         $id = $request->id;

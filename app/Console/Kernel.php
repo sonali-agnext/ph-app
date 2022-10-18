@@ -30,6 +30,8 @@ class Kernel extends ConsoleKernel
             ->twiceDaily(1, 14);
         $schedule->command('latest:videos')
         ->twiceDaily(1, 14);
+        $schedule->command('auto:approved')
+        ->everyMinute();
     }
 
     /**

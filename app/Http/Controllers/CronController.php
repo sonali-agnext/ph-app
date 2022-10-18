@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\MarketPrice;
 use Youtube;
 use App\Models\YoutubeVideo;
+use App\Models\AppliedScheme;
 
 class CronController extends Controller
 {
@@ -137,6 +138,106 @@ class CronController extends Controller
                                 'views' => $view_count,
                                 'publish_time' => date('Y-m-d H:i:s',strtotime($publish_time))
                             ]);
+                    }
+                }
+            }
+        }
+        
+    }
+    public function getAllMoveSchemes(){
+        $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.created_at as acreated_at','applied_schemes.updated_at as aupdated_at')
+        ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+        ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+        ->join('cities','farmers.city_id','=','cities.id')
+        ->join('users','farmers.user_id','=','users.id')
+        ->join('districts','farmers.district_id','=','districts.id')
+        ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+        ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+        ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+        ->get();
+        if(!empty($farmers)){
+            foreach($farmers as $key => $farmer){
+                if($farmer->stage == 'Tehsil' && empty($farmer->tehsil_updated) && ($farmer->applied_status == "In Progress")){
+
+                    $date1= date('Y-m-d',strtotime($farmer->aupdated_at.'+7 day'));
+                    $date2= date('Y-m-d');
+                    $date11 = date_create($date1);
+                    $date22 = date_create($date2);
+
+                    $dateDifference = date_diff($date11, $date22)->format('%d');
+                    if(empty($dateDifference) && $farmer->stage == "Tehsil"){
+                        $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
+                            'stage' => 'District',
+                            'tehsil_updated' => date('Y-m-d H:i:s'),
+                            'status' => 'Auto Approved',
+                            'district_status' => 'In Progress',
+                            'attempts' => 0
+                        ]);
+                    }
+                }
+                if($farmer->stage == 'Tehsil' && !empty($farmer->tehsil_updated) && ($farmer->applied_status == "Resubmit")){
+
+                    $date1= date('Y-m-d',strtotime($farmer->tehsil_updated.'+7 day'));
+                    $date2= date('Y-m-d');
+                    $date11 = date_create($date1);
+                    $date22 = date_create($date2);
+
+                    $dateDifference = date_diff($date11, $date22)->format('%d');
+                    if(empty($dateDifference) && $farmer->stage == "Tehsil"){
+                        $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
+                            'stage' => 'District',
+                            'tehsil_updated' => date('Y-m-d H:i:s'),
+                            'status' => 'Auto Approved',
+                            'district_status' => 'In Progress',
+                            'attempts' => 0
+                        ]);
+                    }
+                }
+                if($farmer->stage == 'Distict' && empty($farmer->district_updated) && ($farmer->applied_status == "In Progress")){
+
+                    $date1= date('Y-m-d',strtotime($farmer->aupdated_at.'+7 day'));
+                    $date2= date('Y-m-d');
+                    $date11 = date_create($date1);
+                    $date22 = date_create($date2);
+
+                    $dateDifference = date_diff($date11, $date22)->format('%d');
+                    if(empty($dateDifference) && $farmer->stage == "District"){
+                        $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
+                            'stage' => 'State',
+                            'district_updated' => date('Y-m-d H:i:s'),
+                            'district_status' => 'Auto Approved',
+                            'attempts' => 0
+                        ]);
+                    }
+                }
+                if($farmer->stage == 'District' && !empty($farmer->district_updated) && ($farmer->applied_status == "Resubmit") && (!empty($farmer->attempts))){
+                    if($farmer->attempts < 3){
+                        $date1= date('Y-m-d',strtotime($farmer->district_updated.'+7 day'));
+                        $date2= date('Y-m-d');
+                        $date11 = date_create($date1);
+                        $date22 = date_create($date2);
+
+                        $dateDifference = date_diff($date11, $date22)->format('%d');
+                        if(empty($dateDifference) && $farmer->stage == "District"){
+                            $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
+                                'stage' => 'State',
+                                'district_updated' => date('Y-m-d H:i:s'),
+                                'district_status' => 'Auto Approved',
+                                'attempts' => 0
+                            ]);
+                        }
+                    }else{
+                        $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
+                            'stage' => 'State',
+                            'district_updated' => date('Y-m-d H:i:s'),
+                            'district_status' => 'Rejected',
+                        ]);
+                       $user_info = auth()->user()->farmer($farmer->farmer_id);
+                       if(!empty($user_info)){
+                            $user_id = $user_info->id;
+                            $users = User::find($user_id);
+                            $users->delete();
+                       }
                     }
                 }
             }

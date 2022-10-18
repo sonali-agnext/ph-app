@@ -565,24 +565,53 @@ class SchemeController extends Controller
     }
 
     public function manageAppliedScheme(Request $request){
-        $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
-        ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
-        ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
-        ->join('cities','farmers.city_id','=','cities.id')
-        ->join('users','farmers.user_id','=','users.id')
-        ->join('districts','farmers.district_id','=','districts.id')
-        ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
-        ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
-        ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
-        ->get();
+        if(auth()->user()->role_id == 4){
+            $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.created_at as acreated_at','applied_schemes.updated_at as aupdated_at')
+            ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('farmers.district_id',auth()->user()->officer()->assigned_district)
+            ->get();
 
+            return view('admin.applied_scheme.index',['farmers' => $farmers]);
+        }elseif(auth()->user()->role_id == 5){
+            $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.updated_at as aupdated_at','applied_schemes.created_at as acreated_at')
+            ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('farmers.tehsil_id',auth()->user()->officer()->assigned_tehsil)
+            ->get();
 
-        return view('admin.applied_scheme.index',['farmers' => $farmers]);
+            return view('admin.applied_scheme.index',['farmers' => $farmers]);
+        }else{
+            $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.updated_at as aupdated_at','applied_schemes.created_at as acreated_at')
+            ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->get();
+
+            return view('admin.applied_scheme.index',['farmers' => $farmers]);
+        }
     }
 
     public function viewAppliedScheme(Request $request){
         
-        $farmers = AppliedScheme::select('applied_schemes.*','farmers.*','farmer_bank_details.*','farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status')
+        $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*','farmer_bank_details.*','farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.updated_at as aupdated_at','applied_schemes.created_at as acreated_at')
         ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
         ->join('farmer_bank_details','farmer_bank_details.farmer_id','=','applied_schemes.farmer_id')
         ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
@@ -598,4 +627,78 @@ class SchemeController extends Controller
 
         return view('admin.applied_scheme.view',['farmers' => $farmers]);
     }
+
+    public function appliedScheme(Request $request){
+        $farmer = AppliedScheme::where('id', $request->id)->first();
+
+        if(!empty($farmer) && $request->accept == 'accept'){
+            if($farmer->stage == 'Tehsil'){
+                $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Approved', 'stage' => 'District','attempts' => 0,'district_status' => 'In Progress']);
+                if($updateFarmer){
+                    return response()
+                    ->json(['message' => 'success']);
+                }else{
+                    return response()
+                    ->json(['message' => 'error']);
+                } 
+            }elseif($farmer->stage == 'District'){
+                $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Approved', 'stage' => 'State','attempts' => 0]);
+                if($updateFarmer){
+                    return response()
+                    ->json(['message' => 'success']);
+                }else{
+                    return response()
+                    ->json(['message' => 'error']);
+                } 
+            }else{
+
+            }
+            
+        }else{
+            $status = $request->status;
+            $reasons = json_encode($request->reason);
+            if($farmer->stage == 'Tehsil'){
+                if($status == 'Resubmit'){
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Resubmit', 'stage' => 'Tehsil','reason' => $reasons]);
+                    if($updateFarmer){
+                        return response()
+                        ->json(['message' => 'success']);
+                    }else{
+                        return response()
+                        ->json(['message' => 'error']);
+                    } 
+                }elseif($status == 'Rejected'){
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Rejected', 'stage' => 'Tehsil','reason' => $reason]);
+                    if($updateFarmer){
+                        return response()
+                        ->json(['message' => 'success']);
+                    }else{
+                        return response()
+                        ->json(['message' => 'error']);
+                    } 
+                }
+            }
+            elseif($farmer->stage == 'District'){
+                if($status == 'Resubmit'){
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Resubmit', 'stage' => 'District','district_reason' => $reasons]);
+                    if($updateFarmer){
+                        return response()
+                        ->json(['message' => 'success']);
+                    }else{
+                        return response()
+                        ->json(['message' => 'error']);
+                    } 
+                }elseif($status == 'Rejected'){
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Rejected', 'stage' => 'District','district_reason' => $reason]);
+                    if($updateFarmer){
+                        return response()
+                        ->json(['message' => 'success']);
+                    }else{
+                        return response()
+                        ->json(['message' => 'error']);
+                    } 
+                }
+            }
+        }
+    } 
 }

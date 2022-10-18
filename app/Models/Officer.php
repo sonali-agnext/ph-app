@@ -10,4 +10,8 @@ class Officer extends Model
     protected $fillable = [
         'user_id', 'phone_number', 'address', 'city_id', 'tehsil_id','district_id', 'state', 'pincode','avatar'
     ];
+    public function assignedOfficer()
+    {
+        return $this->belongsTo('App\Models\AssignToOfficer', 'officer_id');
+    }
 }

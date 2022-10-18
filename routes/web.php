@@ -174,3 +174,8 @@ Route::get('/ajax-village', 'AjaxController@fetchVillage');
 //manage applied scheme
 Route::get('/manage-applied-scheme','Admin\SchemeController@manageAppliedScheme')->name('manage-applied-scheme');
 Route::get('/view-applied-scheme', 'Admin\SchemeController@viewAppliedScheme')->name('view-applied-scheme');
+Route::post('/applied-scheme', 'Admin\SchemeController@appliedScheme')->name('applied-scheme');
+
+Route::get('getAllMoveSchemes','CronController@getAllMoveSchemes');
+
+Route::get('fetchCategorySchemes','API\APIController@fetchCategorySchemes');
