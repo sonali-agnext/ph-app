@@ -1262,7 +1262,13 @@ class APIController extends Controller
             $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2020-21')->orWhere('year', '2022-23')->paginate();
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
-                    $schemes[$key]['terms']=([(object)(json_decode($scheme['terms']))]);
+                    $terms=[];
+                    if(!empty(json_decode($scheme['terms']))){
+                        foreach(json_decode($scheme['terms']) as $keys => $req){
+                            $terms[$keys]['terms'] = $req;
+                        }
+                    }
+                    $schemes[$key]['terms']=$terms;
                     $all_videos = [];
                     if(!empty($scheme->videos)){
                         $videos = json_decode($scheme['videos']);
@@ -1283,7 +1289,13 @@ class APIController extends Controller
             $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('year', '2020-21')->orWhere('year', '2021-22')->paginate();
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
-                    $schemes[$key]['terms']=([(object)(json_decode($scheme['terms']))]);
+                    $terms=[];
+                    if(!empty(json_decode($scheme['terms']))){
+                        foreach(json_decode($scheme['terms']) as $keys => $req){
+                            $terms[$keys]['terms'] = $req;
+                        }
+                    }
+                    $schemes[$key]['terms']=$terms;
                     $all_videos = [];
                     if(!empty($scheme->videos)){
                         $videos = json_decode($scheme['videos']);
@@ -1304,7 +1316,13 @@ class APIController extends Controller
             $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2020-21')->orWhere('year', '2022-23')->paginate();
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
-                    $schemes[$key]['terms']=([(object)(json_decode($scheme['terms']))]);
+                    $terms=[];
+                    if(!empty(json_decode($scheme['terms']))){
+                        foreach(json_decode($scheme['terms']) as $keys => $req){
+                            $terms[$keys]['terms'] = $req;
+                        }
+                    }
+                    $schemes[$key]['terms']=$terms;
                     $all_videos = [];
                     if(!empty($scheme->videos)){
                         $videos = json_decode($scheme['videos']);
@@ -1332,7 +1350,13 @@ class APIController extends Controller
             }
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
-                    $schemes[$key]['terms']=([(object)(json_decode($scheme['terms']))]);
+                    $terms=[];
+                    if(!empty(json_decode($scheme['terms']))){
+                        foreach(json_decode($scheme['terms']) as $keys => $req){
+                            $terms[$keys]['terms'] = $req;
+                        }
+                    }
+                    $schemes[$key]['terms']=$terms;
                     $all_videos = [];
                     if(!empty($scheme->videos)){
                         $videos = json_decode($scheme['videos']);

@@ -359,7 +359,19 @@ class SchemeController extends Controller
 
     public function updateScheme(Request $request){
         $id = $request->id;
-        if($request->hasFile('scheme_image')){
+        if($request->hasFile('dpr_upload')){            
+            $dpr_upload = time().$request->dpr_upload->getClientOriginalName();
+            $request->dpr_upload->storeAs('scheme-doc',$filename,'public');
+            $scheme = Scheme::where('id',$id)->update(['dpr_upload' => $dpr_upload]);
+        }
+
+        if($request->hasFile('self_upload')){
+            $self_upload = time().$request->self_upload->getClientOriginalName();
+            $request->self_upload->storeAs('scheme-doc',$filename,'public');
+            $scheme = Scheme::where('id',$id)->update(['self_upload' => $self_upload]);
+        }
+        
+        if($request->hasFile('scheme_image')){            
             $filename = time().$request->scheme_image->getClientOriginalName();
             $request->scheme_image->storeAs('scheme-images',$filename,'public');
             $scheme = Scheme::where('id',$id)->update([
@@ -462,6 +474,18 @@ class SchemeController extends Controller
             return back()->with('error','Scheme name should be unique and fill required!');
         }else{
             if($request->hasFile('scheme_image')){
+                $dpr_upload = '';
+                $self_upload = '';
+                if($request->hasFile('dpr_upload')){
+                    $dpr_upload = time().$request->dpr_upload->getClientOriginalName();
+                    $request->dpr_upload->storeAs('scheme-doc',$filename,'public');
+                }
+
+                if($request->hasFile('self_upload')){
+                    $self_upload = time().$request->self_upload->getClientOriginalName();
+                    $request->self_upload->storeAs('scheme-doc',$filename,'public');
+                }
+
                 $filename = time().$request->scheme_image->getClientOriginalName();
                 $request->scheme_image->storeAs('scheme-images',$filename,'public');
                 $scheme = Scheme::create([
@@ -485,6 +509,8 @@ class SchemeController extends Controller
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
+                    'dpr_upload' => $dpr_upload,
+                    'self_upload' => $self_upload
                 ]);
                 if($scheme){
                     $target = TargetState::create(['crop_id' => $scheme->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
