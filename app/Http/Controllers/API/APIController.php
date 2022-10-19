@@ -25,6 +25,7 @@ use App\Models\YoutubeVideo;
 use App\Models\FarmerBankDetail;
 use App\Models\FarmerLandDetail;
 use App\Models\AppliedScheme;
+use App\Models\Notification;
 
 class APIController extends Controller
 {
@@ -46,9 +47,12 @@ class APIController extends Controller
                 return response()
                     ->json(['message' => ''], 200);
             }else{
-                if($userFound->status){
+                if($userFound->status == 1){
                     return response()
                     ->json(['message' => 'Mobile Number Already Exists!'], 401);
+                }elseif($userFound->status == 2){
+                    return response()
+                    ->json(['message' => 'Your account is blocked. Please contact to administrator!'], 401);
                 }else{
                     return response()
                     ->json(['message' => 'Your account is inactive. Please contact to administrator!'], 401);
@@ -481,47 +485,134 @@ class APIController extends Controller
     }
 
     public function fetchMarketRate(Request $request){
+        $min_price='';
+        $max_price='';
+        $modal_price='';
         if(!empty($request->commodity) && !empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('district',$request->district)
                             ->where('market',$request->market)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->sum('modal_price');
         }elseif(!empty($request->commodity) && !empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('district',$request->district)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('district',$request->district)
+                            ->sum('modal_price');
         }elseif(!empty($request->commodity) && empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('market',$request->market)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('market',$request->market)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('market',$request->market)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->where('market',$request->market)
+                            ->sum('modal_price');
         }elseif(empty($request->commodity) && !empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('district',$request->district)
                             ->where('market',$request->market)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->where('market',$request->market)
+                            ->sum('modal_price');
         }
         elseif(!empty($request->commodity) && empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('commodity',$request->commodity)
+                            ->sum('modal_price');
         }elseif(empty($request->commodity) && !empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('district',$request->district)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('district',$request->district)
+                            ->sum('modal_price');
         }elseif(empty($request->commodity) && empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('market',$request->market)
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->where('market',$request->market)
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->where('market',$request->market)
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->where('market',$request->market)
+                            ->sum('modal_price');
         }else{
             $marketPrice = MarketPrice::select("*")
                             ->get();
+            $min_price = MarketPrice::select("*")
+                            ->sum('min_price');
+            $max_price = MarketPrice::select("*")
+                            ->sum('max_price');
+            $modal_price = MarketPrice::select("*")
+                            ->sum('modal_price');
         }
         
         return response()
-            ->json(['message' => 'Market Prices', 'data' => $marketPrice], 200);
+            ->json(['message' => 'Market Prices', 'total_min_price' => $min_price,'total_max_price' => $max_price,'total_modal_price' => $modal_price,'data' => $marketPrice], 200);
     }
 
     public function fetchCommodity(){
@@ -600,6 +691,18 @@ class APIController extends Controller
         $video = YoutubeVideo::all();
         return response()
             ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
+    }
+
+    public function searchVideos(Request $request){
+        if(!empty($request->keyword)){
+            $video = YoutubeVideo::where('title', 'LIKE', '%'.$request->keyword.'%')->get();
+            return response()
+                ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
+        }else{
+            return response()
+                ->json(['message' => 'Fetch Latest Videos', 'data' => ''], 200);
+        }
+        
     }
 
     public function fetchAllSchemes(){
@@ -952,7 +1055,11 @@ class APIController extends Controller
                             'khasra_no' => $khasra_no[$key]
                         ]);
                     }
-                }}else{
+                }else{
+                    return response()
+                        ->json(['message' => 'Provide Documents'], 401);
+                }
+            }else{
                     if(!empty($request->file('upload_fard')[$key]) && !empty($request->file('upload_pattedar')[$key])){
                     if($request->file('upload_fard')[$key] && $request->file('upload_pattedar')[$key]){
                         $upload_fard_name = time().$request->file('upload_fard')[$key]->getClientOriginalName();
@@ -1042,6 +1149,9 @@ class APIController extends Controller
                         return response()
                             ->json(['message' => 'Something Went Wrong!'], 401);
                     }
+                }else{
+                    return response()
+                        ->json(['message' => 'Provide Documents'], 401);
                 }
 
             }else{
@@ -1211,6 +1321,11 @@ class APIController extends Controller
                     $submit = AppliedScheme::where('id', $applied_schemes->id)->update([
                         'application_number' => 'PHSCHM000'.$applied_schemes->id
                     ]);
+                    $user_id = User::farmer($farmer_id);
+                    Notification::create([
+                        'user_id' => $user_id->id,
+                        'message'=>('New Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
+                    ]);
                     return response()
                             ->json(['message' => 'Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ,'application_id'=> 'PHSCHM'.str_pad($applied_schemes->id,6, "0", STR_PAD_LEFT)], 200);
                 }
@@ -1233,6 +1348,11 @@ class APIController extends Controller
                         'tehsil_id' => $bank_details->tehsil_id,
                         'public_private' => $public_private,
                         'attempts' => ($check_apply_scheme->attempts+1)          
+                    ]);
+                    $user_id = User::farmer($farmer_id);
+                    Notification::create([
+                        'user_id' => $user_id->id,
+                        'message'=>('Resubmitted Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
                     ]);
                     return response()
                             ->json(['message' => 'Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ], 200);
@@ -1283,7 +1403,7 @@ class APIController extends Controller
                 }
                 // scheme
                 return response()
-                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/bank-images/' ,'data'=> $schemes], 200);
+                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }elseif(!empty($request->component_id) && empty($request->subcomponent_id)){
             $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('year', '2020-21')->orWhere('year', '2021-22')->paginate();
@@ -1310,7 +1430,7 @@ class APIController extends Controller
                 }
                 // scheme
                 return response()
-                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/bank-images/' ,'data'=> $schemes], 200);
+                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }elseif(empty($request->component_id) && !empty($request->subcomponent_id)){
             $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2020-21')->orWhere('year', '2022-23')->paginate();
@@ -1337,17 +1457,11 @@ class APIController extends Controller
                 }
                 // scheme
                 return response()
-                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/bank-images/' ,'data'=> $schemes], 200);
+                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }else{
             $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('year', '2020-21')->orWhere('year', '2022-23')->paginate();
-            $components = Component::where('scheme_sub_category_id', $request->id)->get();
-            $subcomponents = [];
-            if(!empty($components)){
-                foreach($components as $component){
-                    $subcomponents = SubComponent::where('component_id', $component->id)->get();
-                }
-            }
+            
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
                     $terms=[];
@@ -1371,7 +1485,7 @@ class APIController extends Controller
                 }
                 // scheme
                 return response()
-                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/','doc_url'=>'storage/scheme-doc/' ,'components'=>$components,'subcomponents'=>$subcomponents,'data'=> $schemes], 200);
+                            ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/','doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }        
     }
@@ -1380,6 +1494,18 @@ class APIController extends Controller
         $scheme_subcategories = SchemeSubCategory::where('scheme_category_id', $request->id)->paginate();
         return response()
                             ->json(['message' => 'Fetched Component Type Successfully' ,'component_types'=>$scheme_subcategories], 200);
+    }
+
+    public function fetchComponentList(Request $request){
+        $components = Component::select('id as component_id','component_name')->where('scheme_sub_category_id', $request->id)->get();
+        $subcomponents = [];
+        if(!empty($components)){
+            foreach($components as $key=> $component){
+                $components[$key]['sub_component'] = SubComponent::select('id as sub_component_id','sub_component_name')->where('component_id', $component->component_id)->get();
+            }
+        }
+
+        return response()->json(['message' => 'Fetch Component and Sub components' ,'components'=>$components], 200);
     }
 
 }

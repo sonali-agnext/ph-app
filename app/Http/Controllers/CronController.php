@@ -36,7 +36,6 @@ class CronController extends Controller
 
     public static function latestVideos(){
         $views = Youtube::getVideoInfo('fUJ9y3VmiZA');
-        dd($views);
         $channels = Youtube::listChannelVideos('UCuVuHrghkZeJHQTjesosDJA', 10, "date");
 
         if(!empty($channels)){
@@ -236,7 +235,7 @@ class CronController extends Controller
                        if(!empty($user_info)){
                             $user_id = $user_info->id;
                             $users = User::find($user_id);
-                            $users->delete();
+                            $users->update(['status' => 2]);
                        }
                     }
                 }

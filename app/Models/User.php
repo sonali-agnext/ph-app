@@ -50,11 +50,11 @@ class User extends Authenticatable
         return $items;
     }
 
-    public function farmer($id)
+    public static function farmer($id)
     {
         $items = DB::table('users')
         ->select('users.*')
-        ->join('farmers','officers.user_id','=','users.id')
+        ->join('farmers','farmers.user_id','=','users.id')
         ->where('farmers.id',$id)
         ->first();
         return $items;
