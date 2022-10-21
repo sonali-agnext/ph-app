@@ -40,6 +40,9 @@
     .modal-dialog{
         max-width: 50%;
     }
+    #hide{
+        display: none;
+    }
 </style>
 <div class="pagetitle">
     <h1>View Farmer Application</h1>
@@ -69,7 +72,45 @@
                         <div class="col-md-12">
                             <div class="nested card-body">
                                 <h6 class="card-title">Your Remarks</h6> 
-                                <p class="card-p">Ut in ea error laudantium quas omnis officia. Sit sed praesentium voluptas. Corrupti inventore consequatur nisi necessitatibus modi consequuntur soluta id. Enim autem est esse natus assumenda. Non sunt dignissimos officiis expedita. Consequatur sint repellendus voluptas. Quidem sit est nulla ullam. Suscipit debitis ullam iusto dolorem animi dolorem numquam. Enim fuga ipsum dolor nulla quia ut. Rerum dolor voluptatem et deleniti libero totam numquam nobis distinctio. Sit sint aut. Consequatur rerum in.</p>
+                                <div class="card-p">
+                                    @if(!empty($farmers->reason) && !empty($farmers->district_reason)) 
+                                        @php $reason = json_decode($farmers->reason);
+                                        $district_reason = json_decode($farmers->district_reason);
+                                        @endphp
+                                        <p>
+                                        @forelse($reason as $ress)
+                                        {{ ucwords($ress) }} <br>
+                                        @empty
+                                        @endforelse
+                                        @forelse($district_reason as $res)
+                                        {{ ucwords($res) }} <br>
+                                        @empty
+                                        @endforelse
+                                        </p>
+                                    @elseif(!empty($farmers->reason) && empty($farmers->district_reason))
+                                        @php $reason = json_decode($farmers->reason);
+                                        @endphp
+                                        <p>
+                                        @forelse($reason as $ress)
+                                        {{ ucwords($ress) }} <br>
+                                        @empty
+                                        @endforelse
+                                        </p>
+                                        @elseif(empty($farmers->reason) && !empty($farmers->district_reason))
+                                        @php
+                                        $district_reason = json_decode($farmers->district_reason);
+                                        @endphp
+                                        <p>
+                                        @forelse($district_reason as $res)
+                                        {{ ucwords($res) }} <br>
+                                        @empty
+                                        @endforelse
+                                        </p>
+                                    @elseif(empty($farmers->reason) && empty($farmers->district_reason))
+                                        <p>No Remarks Found</p>
+                                    @endif
+
+                                </div>
                             </div>
                         </div>
 
@@ -492,9 +533,68 @@
                         </div>
 
                         <div class="col-md-12">
-                            <form>
-                                <input type="hidden" name="farmer_id" value="{{$farmers->farmer_id}}"/>
-                            </form>
+                            <input type="hidden" id="applied_id" value="{{$farmers->apply_id}}"/>
+                            @if((Auth::user()->role_id == 5 && $farmers->stage == 'Tehsil') || (Auth::user()->role_id == 4 && $farmers->stage == 'District'))
+                            <button class="btn btn-success" type="button" name="accept" id="accept">Accept</button>
+                            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#viewModal">Reject</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="viewModalLabel">Reject Application</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <div class="row g-3">                                                
+                                                <div class="col-md-12">
+                                                    <div class="form-floating mb-3">
+                                                        <select class="form-select" required name="status" id="status" aria-label="Status">   
+                                                            <option value="">Select Status</option>                                    
+                                                            <option value="Rejected">Rejected</option>
+                                                            <option value="Resubmit">Resubmit</option>
+                                                        </select>
+                                                        <label for="status">Status<span class="text-danger">*</span></label>
+                                                    </div>                                                    
+                                                </div>
+                                                <p>Choose Reason to reject schemes?</p>
+                                                <div class="col-md-12">
+                                                    <div class="form-check"> 
+                                                        <input class="form-check-input" type="checkbox" name="reason[]" id="reason" value="Invalid Inputs"> 
+                                                        <label class="form-check-label" for="reason">Invalid Inputs</label>
+                                                    </div>
+                                                    <div class="form-check"> 
+                                                        <input class="form-check-input" type="checkbox" name="reason[]" id="reason" value="Missing Content"> 
+                                                        <label class="form-check-label" for="reason">Missing Content</label>
+                                                    </div>
+                                                    <div class="form-check"> 
+                                                        <input class="form-check-input" type="checkbox" name="reason[]" id="reason" value="Invalid Schemes requirement"> 
+                                                        <label class="form-check-label" for="reason">Invalid Schemes requirement</label>
+                                                    </div>
+                                                    <div class="form-check"> 
+                                                        <input class="form-check-input" type="checkbox" id="other"> 
+                                                        <label class="form-check-label" for="other">Other</label>
+                                                    </div>
+                                                    <div class="form-floating" id="hide">
+                                                        <textarea class="form-control" name="reason[]" id="reason" placeholder="Leave a comment here" style="height: 100px;"></textarea>
+                                                        <label for="reason">Other Reason</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            
+                                            <div class="row text-center">
+                                                <button class="btn btn-danger" type="button" name="reject" id="reject">Reject</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                         
                     </div>
@@ -511,8 +611,101 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
+        $('#other').change(function(){
+            if($(this).prop("checked")) {
+                $('#hide').css('display', 'unset');
+            } else {
+                $('#hide').css('display', 'none');
+            }
+        });
+
+        $('#reject').on('click', function(){
+            var id = $('#applied_id').val();
+            var status = $('#status').val();
+            var reason = [];
+            $("input[name='reason[]']:checked").each(function(){
+                reason.push($(this).val());
+            });
+            $("textarea[name='reason[]']").each(function(){
+                reason.push($(this).val());
+            });
+                    console.log(reason);
+            swal({
+                    title: "Are you sure?",
+                    text: "Once "+status+", you will not be able to Approved!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var saveData = $.ajax({
+                        type: 'POST',
+                        url: "{{route('applied-scheme')}}",
+                        data: {'id':id, 'accept': 'reject', 'status':status, 'reason':reason },
+                        dataType: "json",
+                        success: function(resultData) { 
+                            if(resultData.message == 'success'){
+                                swal("Farmer Application "+status+"!!", {
+                                    icon: "success",
+                                }).then((willDelete) => {
+                                    if (willDelete) {
+                                        location.reload();
+                                                }
+                                            });
+                            }else{
+                                swal("Something Went Wrong!!", {
+                                    icon: "error",
+                                });
+                            }
+                        }
+                    });
+                    
+                } else {
+                }
+            });
+        });
+
+        $('#accept').on('click', function(){
+            var id=$('#applied_id').val();
+            swal({
+                    title: "Are you sure?",
+                    text: "Once Accepted, you will not be able to Reject!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var saveData = $.ajax({
+                        type: 'POST',
+                        url: "{{route('applied-scheme')}}",
+                        data: {'id':id, 'accept': 'accept'},
+                        dataType: "json",
+                        success: function(resultData) { 
+                            if(resultData.message == 'success'){
+                                swal("Farmer Application Successfully Transfered to District Officer!!", {
+                                    icon: "success",
+                                }).then((willDelete) => {
+                                    if (willDelete) {
+                                        location.reload();
+                                                }
+                                            });
+                                // location.reload();
+                            }else{
+                                swal("Something Went Wrong!!", {
+                                    icon: "error",
+                                });
+                            }
+                        }
+                    });
+                    
+                } else {
+                }
+            });
+        });
         var table = $('#example').DataTable(
-            {   
+            { 
 
             "drawCallback": function() {
                 $('.delete').on('click', function(){

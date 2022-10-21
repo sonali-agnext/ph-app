@@ -358,6 +358,19 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-6 mt-1">
+                                    <div class="form-floating">
+                                        <input type="file" name="dpr_upload" @if(empty($scheme->dpr_upload)) required @endif class="form-control" id="dpr_upload" value="" >
+                                        <label for="dpr_upload">DPR Upload</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-1">
+                                    <div class="form-floating">
+                                        <input type="file" name="self_upload" @if(empty($scheme->self_upload)) required @endif class="form-control" id="self_upload" value="" >
+                                        <label for="self_upload">Self Declaration Upload</label>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6 mt-1">
                                         <div class="form-check form-switch"> 
@@ -643,7 +656,7 @@
         var classNameTerms = ".terms-field";
         var countTerms = 0;
         var fieldTerms = "";
-        var maxFieldsTerms=5;
+        var maxFieldsTerms=30;
 
         function totalTermsFields() {
             return $(classNameTerms).length;

@@ -37,7 +37,7 @@
                         <thead>
                             <tr>
                                 <th>Sr No</th>
-                                <th>Scheme Sub Category Name</th>
+                                <th>Scheme Component Type</th>
                                 <th>Scheme</th>
                                 <th>Action</th>
                             </tr>

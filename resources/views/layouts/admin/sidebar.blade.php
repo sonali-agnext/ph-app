@@ -145,13 +145,14 @@
           <i class="bi bi-gem"></i><span>Manage Subsidy</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="manage-subsidy-nav" @if($route == 'manage-subsidy-state'|| $route == 'manage-subsidy-district') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
-
+          @if($role_id == 3)
           <li>
             <a @if($route == 'manage-subsidy-state') class="active" @endif href="{{route('manage-subsidy-state')}}">
               <i class="bi bi-circle"></i><span>List Subsidy target for state</span>
             </a>
           </li>
-          @if($role_id == 3)
+          @endif
+          @if($role_id == 4)
           <li>
             <a @if($route == 'manage-subsidy-district') class="active" @endif href="{{route('manage-subsidy-district')}}">
               <i class="bi bi-circle"></i><span>List Subsidy target for district</span>
@@ -161,10 +162,10 @@
         </ul>
       </li>
       <li class="nav-item">
-        <a @if( $route == 'manage-applied-scheme') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-applied-nav" data-bs-toggle="collapse" href="#" @if( $route == 'manage-applied-scheme') aria-expanded="true" @endif>
-          <i class="bi bi-gem"></i><span>Manage Schemes</span><i class="bi bi-chevron-down ms-auto"></i>
+        <a @if($route == 'manage-applied-scheme') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-applied-nav" data-bs-toggle="collapse" href="#" @if( $route == 'manage-applied-scheme') aria-expanded="true" @endif>
+          <i class="bi bi-gem"></i><span>Manage Applied Schemes</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="manage-applied-nav" @if( $route == 'manage-applied-scheme') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
+        <ul id="manage-applied-nav" @if($route == 'manage-applied-scheme') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
           <li class="nav-item">
             <a @if($route == 'manage-applied-scheme') class="active" @endif href="{{route('manage-applied-scheme')}}">
             <i class="bi bi-circle"></i><span>Manage Applied Scheme</span>
