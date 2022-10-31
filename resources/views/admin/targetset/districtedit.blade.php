@@ -265,7 +265,7 @@ th.card-title{
                                                                                         <td class="w-6">
                                                                                         @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
                                                                                         @endphp
-                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                         </td>
                                                                                         
                                                                                         <td class="w-6">
