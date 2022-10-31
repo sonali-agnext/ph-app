@@ -187,8 +187,7 @@ th.card-title{
 
                                                                         <!-- component -->
                                                                         @php //print_r($component); @endphp
-                                                                        @if(!empty($component_type['scheme']))
-                                                                                    
+                                                                        @if(!empty($component_type['scheme']))   
                                                                         <tr>
                                                                             <td>
                                                                                 <table class="table-bordered" style="width:100%">
@@ -225,16 +224,16 @@ th.card-title{
                                                                                         <td class="w-8">
                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -278,8 +277,7 @@ th.card-title{
                                                                                         </td>
                                                                                         
                                                                                         <td class="w-8">
-                                                                                            {{number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)}}
-                                                                                       
+                                                                                      
                                                                                             <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
@@ -326,16 +324,16 @@ th.card-title{
                                                                                             <td class="w-8">
                                                                                                 <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                 <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty($targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty($targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty($targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty($targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -375,16 +373,16 @@ th.card-title{
                                                                                             <td class="w-6">
                                                                                                 <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                 <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]"  @if(empty($targetdistrict->private_gen_target)) disabled @endif value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targetdistrict->private_st_target)) disabled @endif value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targetdistrict->private_women_target)) disabled @endif value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                             </td>
                                                                                             <td class="w-8">
                                                                                                 <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
@@ -461,16 +459,16 @@ th.card-title{
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                         <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -507,16 +505,16 @@ th.card-title{
                                                                                                         <td class="w-6">
                                                                                                             <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) disabled @endif value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targetdistrict->private_st_target)) disabled @endif value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targetdistrict->private_women_target)) disabled @endif value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
@@ -556,16 +554,16 @@ th.card-title{
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                         <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -605,16 +603,16 @@ th.card-title{
                                                                                                         <td class="w-6">
                                                                                                             <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) disabled @endif value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targetdistrict->private_st_target)) disabled @endif value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targetdistrict->private_women_target)) disabled @endif value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
@@ -691,16 +689,16 @@ th.card-title{
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                         <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -737,16 +735,16 @@ th.card-title{
                                                                                                         <td class="w-6">
                                                                                                             <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) disabled @endif value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targetdistrict->private_st_target)) disabled @endif value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targetdistrict->private_women_target)) disabled @endif value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
@@ -786,16 +784,16 @@ th.card-title{
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                         <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -835,16 +833,16 @@ th.card-title{
                                                                                                             <td class="w-6">
                                                                                                                 <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                                 <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) disabled @endif value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targetdistrict->private_st_target)) disabled @endif value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targetdistrict->private_women_target)) disabled @endif value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
                                                                                                                 <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
@@ -915,16 +913,16 @@ th.card-title{
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                         <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
@@ -961,16 +959,16 @@ th.card-title{
                                                                                                         <td class="w-6">
                                                                                                             <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                             <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) disabled @endif value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) disabled @endif value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targetdistrict->private_st_target)) disabled @endif value="{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
+                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targetdistrict->private_women_target)) disabled @endif value="{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}"/>
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" disabled />
@@ -1010,16 +1008,16 @@ th.card-title{
                                                                                                             <td class="w-8">
                                                                                                                 <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                                 <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="gen_target[]" @if(empty((float)$targetdistrict->gen_target)) disabled @endif value="{{ empty($targetdistrict->gen_target)?'0.00': $targetdistrict->gen_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="sc_target[]" @if(empty((float)$targetdistrict->sc_target)) disabled @endif value="{{ empty($targetdistrict->sc_target)?'0.00': $targetdistrict->sc_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="st_target[]" @if(empty((float)$targetdistrict->st_target)) disabled @endif value="{{ empty($targetdistrict->st_target)?'0.00': $targetdistrict->st_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
+                                                                                                                <input type="text" maxlength="9" class="w-80" name="women_target[]" @if(empty((float)$targetdistrict->women_target)) disabled @endif value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                                             </td>
                                                                                                             <td class="w-8">
                                                                                                             <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
