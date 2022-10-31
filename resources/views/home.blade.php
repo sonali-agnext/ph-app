@@ -195,7 +195,13 @@ if(!empty($officer)){
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>{{\App\Models\AppliedScheme::count()}}</h6>
+                      <h6>@if(!empty($tehsil_id))
+                        {{\App\Models\AppliedScheme::where('tehsil_id', $tehsil_id)->count()}}
+                        @elseif(!empty($district_id))
+                        {{\App\Models\AppliedScheme::where('district_id', $district_id)->count()}}
+                        @else
+                        {{\App\Models\AppliedScheme::count()}}
+                        @endif</h6>
 
                     </div>
                   </div>
