@@ -637,54 +637,33 @@ class APIController extends Controller
 
     public function fetchFeaturedScheme(Request $request){
         $all_schemes=[];
-        $all = Scheme::where('is_featured','1')->get();
-        if(!empty($all)){
-            foreach($all as $ckey => $scheme){
-                $all_schemes[$ckey]['scheme_id'] = $scheme->id;
-                $all_schemes[$ckey]['scheme_name'] = $scheme->scheme_name;
-                $all_schemes[$ckey]['cost_norms'] = $scheme->cost_norms;
-                $all_schemes[$ckey]['terms'] = (object)json_decode($scheme->terms);
-                $all_schemes[$ckey]['detailed_description'] = $scheme->detailed_description;
+        $schemes = Scheme::where('is_featured','1')->get();
+        
+        if(!empty($schemes)){
+            foreach($schemes as $key=>$scheme){
+                $terms=[];
+                if(!empty(json_decode($scheme['terms']))){
+                    foreach(json_decode($scheme['terms']) as $keys => $req){
+                        $terms[$keys]['terms'] = $req;
+                    }
+                }
+                $schemes[$key]['terms']=$terms;
                 $all_videos = [];
                 if(!empty($scheme->videos)){
-                    $videos = json_decode($scheme->videos);
-                    $video_titles = json_decode($scheme->videos_title);
+                    $videos = json_decode($scheme['videos']);
+                    $video_titles = json_decode($scheme['videos_title']);
                     
                     foreach($videos as $jsv => $video){
                         $all_videos[$jsv]['video'] = $video;
                         $all_videos[$jsv]['title'] = $video_titles[$jsv];
-                    }
-                
+                    }                
                 }
-                $all_sector = [];
-                if(!empty($scheme->sector)){
-                    $sectors = json_decode($scheme->sector);
-                    $sector_description = json_decode($scheme->sector_description);
-                    
-                    foreach($sectors as $jsd => $sector){
-                        $all_sector[$jsd]['sector'] = $sector;
-                        $all_sector[$jsd]['sector_description'] = $sector_description[$jsd];
-                    }
-                
-                }
-                $all_schemes[$ckey]['non_project_based'] = $scheme->non_project_based;
-                $all_schemes[$ckey]['private_sector'] = $scheme->private_sector;
-                $all_schemes[$ckey]['public_sector'] = $scheme->public_sector;
-                $all_schemes[$ckey]['public_range'] = $scheme->public_range;
-                $all_schemes[$ckey]['private_range'] = $scheme->private_range;
-                $all_schemes[$ckey]['year'] = $scheme->year;
-                $all_schemes[$ckey]['is_featured'] = $scheme->is_featured;
-                $all_schemes[$ckey]['status'] = $scheme->status;
-                $all_schemes[$ckey]['units'] = $scheme->units;
-                $all_schemes[$ckey]['videos'] = $all_videos;
-                $all_schemes[$ckey]['scheme_image'] = $scheme->scheme_image;
-                // $all_schemes[$ckey]['sectors'] = $all_sector;
+                $schemes[$key]['video'] = $all_videos;
             }
             // scheme
+            return response()
+                        ->json(['message' => 'Fetch Featured Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
         }
-        // endif scheme
-        return response()
-            ->json(['message' => 'Featured Scheme', 'data' => $all_schemes], 200);
     }
 
     public function fetchVideos(Request $request){

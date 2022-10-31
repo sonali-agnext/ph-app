@@ -144,7 +144,7 @@ class CronController extends Controller
         }
         
     }
-    public function getAllMoveSchemes(){
+    public static function getAllMoveSchemes(){
         $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.created_at as acreated_at','applied_schemes.updated_at as aupdated_at')
         ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
         ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
