@@ -148,7 +148,7 @@ th.card-title{
                                                 <th class="w-15" rowspan="2">Component/ Sub Component/ Crop/Item</th>
                                                 <th class="w-8" rowspan="2">Unit</th>
                                                 <th class="w-10" rowspan="2">Cost Norms (Rs.)</th>
-                                                <th class="w-10" rowspan="2">Total Targets/ Unassigned Targets</th>
+                                                <th class="w-10" rowspan="2">Unassigned Targets/ Total Targets</th>
                                                 <th class="w-20" colspan="4">Physical Target</th>
                                                 <th class="w-20" colspan="4">Financial Target(Rs.)</th>
                                                 <th class="w-15" rowspan="2">Remarks</th>
@@ -201,11 +201,9 @@ th.card-title{
                                                                                         <td colspan="12"></td>
                                                                                     </tr>
                                                                                     <!-- targets -->
-                                                                                    @php //print_r($scheme);
+                                                                                    @php
                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
-                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
-
-                                                                                        
+                                                                                        $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);                                
                                                                                     @endphp
                                                                                     <!-- if both sector present -->
                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -220,7 +218,9 @@ th.card-title{
                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                         </td>                                                                                     
                                                                                         <td class="w-8">
-                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                            @endphp
+                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                         </td>
                                                                                         <td class="w-8">
                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -237,7 +237,7 @@ th.card-title{
                                                                                             <input type="text" maxlength="9" class="w-80" name="women_target[]" value="{{ empty($targetdistrict->women_target)?'0.00': $targetdistrict->women_target }}"/>
                                                                                         </td>
                                                                                         <td class="w-8">
-                                                                                        <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
+                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->gen_target, 2) }}" disabled />
                                                                                         </td>
                                                                                         <td class="w-8">
                                                                                         <input type="text" class="w-80" value="{{ empty($targetdistrict->sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->sc_target, 2) }}" disabled />
@@ -263,13 +263,16 @@ th.card-title{
                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                         </td>
                                                                                         <td class="w-6">
-                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
                                                                                         </td>
                                                                                         
                                                                                         <td class="w-6">
                                                                                             <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                             <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_gen_target[]" value="{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}" onChange="return getvalues();"/>
                                                                                         </td>
                                                                                         <td class="w-8">
                                                                                             <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" value="{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}"/>
@@ -311,7 +314,9 @@ th.card-title{
                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                             </td>                                                                                     
                                                                                             <td class="w-8">
-                                                                                                {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                            @endphp
+                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                             </td>
                                                                                             <td class="w-8">
                                                                                                 <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -357,7 +362,9 @@ th.card-title{
                                                                                                 <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                             </td>
                                                                                             <td class="w-6">
-                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
                                                                                             </td>
                                                                                             
                                                                                             <td class="w-6">
@@ -442,7 +449,9 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                            @endphp
+                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -485,7 +494,9 @@ th.card-title{
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>
                                                                                                         <td class="w-6">
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
                                                                                                         </td>
                                                                                                         
                                                                                                         <td class="w-6">
@@ -533,7 +544,9 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -579,7 +592,9 @@ th.card-title{
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>
                                                                                                         <td class="w-6">
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                     
                                                                                                         </td>
                                                                                                         
                                                                                                         <td class="w-6">
@@ -664,7 +679,9 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -707,7 +724,9 @@ th.card-title{
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>
                                                                                                         <td class="w-6">
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
                                                                                                         </td>
                                                                                                         
                                                                                                         <td class="w-6">
@@ -755,7 +774,9 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -801,7 +822,9 @@ th.card-title{
                                                                                                                 <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                             </td>
                                                                                                             <td class="w-6">
-                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                            @endphp
+                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
                                                                                                             </td>
                                                                                                             
                                                                                                             <td class="w-6">
@@ -880,7 +903,9 @@ th.card-title{
                                                                                                         <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>                                                                                     
                                                                                                         <td class="w-8">
-                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                            @endphp
+                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                         </td>
                                                                                                         <td class="w-8">
                                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -923,7 +948,9 @@ th.card-title{
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                         </td>
                                                                                                         <td class="w-6">
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                        @endphp
+                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
                                                                                                         </td>
                                                                                                         
                                                                                                         <td class="w-6">
@@ -971,7 +998,9 @@ th.card-title{
                                                                                                             <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                             </td>                                                                                     
                                                                                                             <td class="w-8">
-                                                                                                                {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetdistrict->assigned_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
+                                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                            @endphp
+                                                                                                            {{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format($alltargetdistrict->public, 2)) : 0.00) }}  / {{ number_format($targetsset->physical_target, 2) }}                                                                                                
                                                                                                             </td>
                                                                                                             <td class="w-8">
                                                                                                                 <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
@@ -1017,7 +1046,9 @@ th.card-title{
                                                                                                                 <input type="text" class="w-80" disabled value="{{$scheme['cost_norms']}}"/>
                                                                                                             </td>
                                                                                                             <td class="w-6">
-                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetdistrict->assigned_private_physical_target, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget($targetdistrict->target_state_id);
+                                                                                                            @endphp
+                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format($alltargetdistrict->private, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
                                                                                                             </td>
                                                                                                             
                                                                                                             <td class="w-6">
@@ -1112,6 +1143,14 @@ th.card-title{
 @endsection
 @push('scripts')
 <script>
+    function getvalues(){
+            var inps = document.getElementsByName('private_gen_target[]');
+            for (var i = 0; i <inps.length; i++) {
+            var inp=inps[i];
+            var unass=$("input[name=private_un_assigned["+i+"]]").val();
+                alert("private_gen_target["+i+"].value="+inp.value+" "+unass);
+            }
+        }
     $(document).ready(function () {
         $('#example').DataTable();
         $('#year').on('change', function(){

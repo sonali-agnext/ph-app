@@ -8,6 +8,7 @@ use App\Models\MarketPrice;
 use Youtube;
 use App\Models\YoutubeVideo;
 use App\Models\AppliedScheme;
+use App\Models\User;
 
 class CronController extends Controller
 {
@@ -174,22 +175,37 @@ class CronController extends Controller
                         ]);
                     }
                 }
-                if($farmer->stage == 'Tehsil' && !empty($farmer->tehsil_updated) && ($farmer->applied_status == "Resubmit")){
+                if($farmer->stage == 'Tehsil' && !empty($farmer->tehsil_updated) && ($farmer->applied_status == "Resubmit") && (!empty($farmer->attempts))){
+                    if($farmer->attempts < 3){
+                        $date1= date('Y-m-d',strtotime($farmer->district_updated.'+7 day'));
+                        $date2= date('Y-m-d');
+                        $date11 = date_create($date1);
+                        $date22 = date_create($date2);
 
-                    $date1= date('Y-m-d',strtotime($farmer->tehsil_updated.'+7 day'));
-                    $date2= date('Y-m-d');
-                    $date11 = date_create($date1);
-                    $date22 = date_create($date2);
-
-                    $dateDifference = date_diff($date11, $date22)->format('%d');
-                    if(empty($dateDifference) && $farmer->stage == "Tehsil"){
+                        $dateDifference = date_diff($date11, $date22)->format('%d');
+                        if(empty($dateDifference) && $farmer->stage == "District"){
+                            $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
+                                'stage' => 'District',
+                                'tehsil_updated' => date('Y-m-d H:i:s'),
+                                'status' => 'Auto Approved',
+                                'district_status' => 'In Progress',
+                                'attempts' => 0
+                            ]);
+                        }
+                    }else{
                         $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
-                            'stage' => 'District',
+                            'stage' => 'Tehsil',
                             'tehsil_updated' => date('Y-m-d H:i:s'),
-                            'status' => 'Auto Approved',
-                            'district_status' => 'In Progress',
-                            'attempts' => 0
+                            'status' => 'Rejected',
                         ]);
+                        if($farmer->reattempts > 3){
+                            $user_info = auth()->user()->farmer($farmer->farmer_id);
+                            if(!empty($user_info)){
+                                    $user_id = $user_info->id;
+                                    $users = User::find($user_id);
+                                    $users->update(['status' => 2]);
+                            }
+                        }
                     }
                 }
                 if($farmer->stage == 'Distict' && empty($farmer->district_updated) && ($farmer->applied_status == "In Progress")){
@@ -227,16 +243,18 @@ class CronController extends Controller
                         }
                     }else{
                         $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
-                            'stage' => 'State',
+                            'stage' => 'District',
                             'district_updated' => date('Y-m-d H:i:s'),
                             'district_status' => 'Rejected',
                         ]);
-                       $user_info = auth()->user()->farmer($farmer->farmer_id);
-                       if(!empty($user_info)){
-                            $user_id = $user_info->id;
-                            $users = User::find($user_id);
-                            $users->update(['status' => 2]);
-                       }
+                        if($farmer->reattempts > 3){
+                            $user_info = auth()->user()->farmer($farmer->farmer_id);
+                            if(!empty($user_info)){
+                                    $user_id = $user_info->id;
+                                    $users = User::find($user_id);
+                                    $users->update(['status' => 2]);
+                            }
+                        }
                     }
                 }
             }

@@ -50,6 +50,28 @@ class User extends Authenticatable
         return $items;
     }
 
+    public function officerdistrict($district_id)
+    {
+        $items = DB::table('users')
+        ->select('users.*', 'officers.id as officer_id' , 'officers.*','assign_to_officers.tehsil_id as assigned_tehsil','assign_to_officers.district_id as assigned_district')
+        ->join('officers','officers.user_id','=','users.id')
+        ->join('assign_to_officers','assign_to_officers.officer_id','=','officers.id')
+        ->where('assign_to_officers.district_id',$district_id)
+        ->first();
+        return $items;
+    }
+    public function officerstate()
+    {
+        $items = DB::table('users')
+        ->select('users.*', 'officers.id as officer_id' , 'officers.*','assign_to_officers.tehsil_id as assigned_tehsil','assign_to_officers.district_id as assigned_district')
+        ->join('officers','officers.user_id','=','users.id')
+        ->join('assign_to_officers','assign_to_officers.officer_id','=','officers.id')
+        ->whereNull('assign_to_officers.district_id')
+        ->whereNull('assign_to_officers.tehsil_id')
+        ->first();
+        return $items;
+    }
+
     public static function farmer($id)
     {
         $items = DB::table('users')
@@ -58,5 +80,62 @@ class User extends Authenticatable
         ->where('farmers.id',$id)
         ->first();
         return $items;
+    } 
+
+    public static function appliedScheme()
+    {
+        if(auth()->user()->role_id == 4){
+            $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.created_at as acreated_at','applied_schemes.updated_at as aupdated_at')
+            ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('farmers.district_id',auth()->user()->officer()->assigned_district)
+            ->where('applied_schemes.district_status','In Progress')
+            ->orWhere('applied_schemes.district_status','Resubmit')
+            ->whereRaw('DATE("updated_at") = DATE_SUB(CURDATE(), INTERVAL 7 DAY)')
+            ->get();
+
+            return $farmers;
+        }elseif(auth()->user()->role_id == 5){
+            $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.updated_at as aupdated_at','applied_schemes.created_at as acreated_at')
+            ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('farmers.tehsil_id',auth()->user()->officer()->assigned_tehsil)
+            ->where('applied_schemes.status','In Progress')
+            ->orWhere('applied_schemes.status','Resubmit')
+            ->whereRaw('DATE("updated_at") = DATE_SUB(CURDATE(), INTERVAL 7 DAY)')
+            ->get();
+
+            return $farmers;
+        }else{
+            $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*', 'farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.updated_at as aupdated_at','applied_schemes.created_at as acreated_at')
+            ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
+            ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
+            ->join('cities','farmers.city_id','=','cities.id')
+            ->join('users','farmers.user_id','=','users.id')
+            ->join('districts','farmers.district_id','=','districts.id')
+            ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
+            ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
+            ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->where('applied_schemes.status','In Progress')
+            ->orWhere('applied_schemes.status','Resubmit')
+            ->orwhere('applied_schemes.district_status','In Progress')
+            ->orWhere('applied_schemes.district_status','Resubmit')
+            ->whereRaw('DATE("updated_at") = DATE_SUB(CURDATE(), INTERVAL 7 DAY)')
+            ->get();
+
+            return $farmers;
+        }
     } 
 }

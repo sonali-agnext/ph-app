@@ -1,6 +1,20 @@
 @extends('layouts.admin.app')
 
 @section('content')
+@php
+$role_id = Auth::user()->role_id;
+$officer = Auth::user()->officer();
+$district_id = 0;
+$tehsil_id = 0;
+if(!empty($officer)){
+  if($role_id == 4){
+    $district_id = $officer->assigned_district;
+  }
+  if($role_id == 5){
+    $tehsil_id = $officer->assigned_tehsil;
+  }
+}
+@endphp
 <div class="pagetitle">
       <h1>Dashboard</h1>
       <nav>
@@ -93,7 +107,7 @@
 
               <div class="card info-card customers-card">
 
-                <div class="filter">
+                <!-- <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
@@ -101,20 +115,26 @@
                     </li>
 
                     <li><a class="dropdown-item" href="#">Today</a></li>
-                    <!-- <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li> -->
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
-                </div>
+                </div> -->
 
                 <div class="card-body">
-                  <h5 class="card-title">Farmers <span>| This Year</span></h5>
+                  <h5 class="card-title">Farmers </h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>{{\App\Models\Farmer::count()}}</h6>
+                      <h6>@if(!empty($tehsil_id))
+                        {{\App\Models\Farmer::where('tehsil_id', $tehsil_id)->count()}}
+                        @elseif(!empty($district_id))
+                        {{\App\Models\Farmer::where('district_id', $district_id)->count()}}
+                        @else
+                        {{\App\Models\Farmer::count()}}
+                        @endif</h6>
                       <!-- <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span> -->
 
                     </div>
@@ -124,13 +144,13 @@
               </div>
 
             </div><!-- End Customers Card -->
-
+          @if($role_id == 1 || $role_id == 3)
             <!-- Customers Card -->
             <div class="col-xxl-4 col-md-6">
 
               <div class="card info-card customers-card">
 
-                <div class="filter">
+                <!-- <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
@@ -138,10 +158,10 @@
                     </li>
 
                     <li><a class="dropdown-item" href="#">Today</a></li>
-                    <!-- <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li> -->
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
-                </div>
+                </div> -->
 
                 <div class="card-body">
                   <h5 class="card-title">Schemes <span>| This Year</span></h5>
@@ -161,7 +181,30 @@
               </div>
 
             </div><!-- End Customers Card -->
+          @endif
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-md-6">
 
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Applied Schemes <span>| This Year</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{\App\Models\AppliedScheme::count()}}</h6>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+          @php $inProgress = (Auth::user()->appliedScheme()); @endphp
             <!-- Reports -->
             <!-- <div class="col-12">
               <div class="card">
@@ -245,11 +288,11 @@
             </div> -->
             <!-- End Reports -->
 
-            <!-- Recent Sales -->
-            <!-- <div class="col-12">
+            <!-- Recent In review application -->
+            <div class="col-12">
               <div class="card recent-sales overflow-auto">
 
-                <div class="filter">
+                <!-- <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
@@ -260,64 +303,168 @@
                     <li><a class="dropdown-item" href="#">This Month</a></li>
                     <li><a class="dropdown-item" href="#">This Year</a></li>
                   </ul>
-                </div>
+                </div> -->
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                  <h5 class="card-title">In Review Application <span>| This week</span></h5>
+                  <table id="example" class="table table-borderless datatable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sr No</th>
+                                <th scope="col">Application Number</th>
+                                <th scope="col">Farmer Name</th>
+                                <th scope="col">Days Left</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Date Applied</th>
+                                <th scope="col">Block</th>
+                                <th scope="col">District</th>
+                                <th scope="col">Stage</th>
+                                <!-- <th>Father's/Husband's Name</th> -->
+                                
+                                <!-- <th>City</th> -->
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($inProgress as $key => $farmer)
+                            <tr>
+                                <td>{{ ($key+1) }}</td>
+                                <td>{{ $farmer->application_number }}</td>
+                                <td>{{ $farmer->name }}</td>
+                                <td>@if($role_id == 5 && $farmer->stage != 'Tehsil')
+                                    --
+                                    @elseif($role_id == 4 && $farmer->stage != 'District')
+                                    --
+                                    @elseif($farmer->stage == 'State')
+                                    --
+                                    @else
+                                    @if($farmer->stage == 'District' && !empty($farmer->district_updated)  && ($farmer->district_status == "Resubmit" || $farmer->district_status == "Auto Approved"))
+                                        @php
+                                            $date1= date('Y-m-d',strtotime($farmer->district_updated.'+7 day'));
+                                            $date2= date('Y-m-d');
+                                            $date11 = date_create($date1);
+                                            $date22 = date_create($date2);
 
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                                            $dateDifference = date_diff($date11, $date22)->format('%d');
+                                        @endphp
+                                        @if($dateDifference == 1)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F47564 !important;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 2)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F6A69B !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 3)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F8C699 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 4)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #FBDDC2 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 5)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #C4FFE6 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 6)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #DDFFF1 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 7)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #fff !important; border: 1px solid #222222 !important; color:#000;">{{$dateDifference}}</span>
+                                        @endif
+                                    @endif
+                                    @if($farmer->stage == 'Tehsil' && !empty($farmer->tehsil_updated)  && ($farmer->applied_status == "Resubmit" || $farmer->applied_status == "Auto Approved"))
+                                        @php
+                                            $date1= date('Y-m-d',strtotime($farmer->tehsil_updated.'+7 day'));
+                                            $date2= date('Y-m-d');
+                                            $date11 = date_create($date1);
+                                            $date22 = date_create($date2);
+
+                                            $dateDifference = date_diff($date11, $date22)->format('%d');
+                                            
+                                        @endphp
+                                        @if($dateDifference == 1)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F47564 !important;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 2)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F6A69B !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 3)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F8C699 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 4)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #FBDDC2 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 5)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #C4FFE6 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 6)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #DDFFF1 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 7)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #fff !important; border: 1px solid #222222 !important; color:#000;">{{$dateDifference}}</span>
+                                        @endif
+                                        @endif
+                                        
+
+                                        @if($farmer->stage == 'Tehsil' && empty($farmer->tehsil_updated) && ($farmer->applied_status == "Resubmit") || $farmer->applied_status == "In Progress")
+                                        @php
+                                            $date1= date('Y-m-d',strtotime($farmer->aupdated_at.'+7 day'));
+                                            $date2= date('Y-m-d');
+                                            $date11 = date_create($date1);
+                                            $date22 = date_create($date2);
+
+                                            $dateDifference = date_diff($date11, $date22)->format('%d');
+                                        @endphp 
+                                        @if($dateDifference == 1)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F47564 !important;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 2)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F6A69B !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 3)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F8C699 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 4)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #FBDDC2 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 5)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #C4FFE6 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 6)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #DDFFF1 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 7)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #fff !important; border: 1px solid #222222 !important; color:#000;">{{$dateDifference}}</span>
+                                        @endif
+                                        @endif
+                                        
+                                        @if($farmer->stage == 'District' && empty($farmer->district_updated) && ($farmer->district_status == "Resubmit" || $farmer->district_status == "In Progress"))
+                                        @php
+                                            $date1= date('Y-m-d',strtotime($farmer->tehsil_updated.'+7 day'));
+                                            $date2= date('Y-m-d');
+                                            $date11 = date_create($date1);
+                                            $date22 = date_create($date2);
+
+                                            $dateDifference = date_diff($date11, $date22)->format('%d');
+                                        @endphp
+
+                                        @if($dateDifference == 1)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F47564 !important;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 2)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F6A69B !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 3)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F8C699 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 4)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #FBDDC2 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 5)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #C4FFE6 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 6)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #DDFFF1 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 7)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #fff !important; border: 1px solid #222222 !important; color:#000;">{{$dateDifference}}</span>
+                                        @endif
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>@if($farmer->stage == 'Tehsil'){{ $farmer->applied_status }}@else {{$farmer->district_status}} @endif</td>
+                                <td>{{ date('d-m-Y',strtotime($farmer->acreated_at)) }}</td>
+                                <td>{{ $farmer->tehsil_name }}</td>
+                                <td>{{ $farmer->district_name }}</td>
+                                <td>{{ $farmer->stage }}</td>
+                                <td><a href="{{ route('view-applied-scheme',['id' => $farmer->apply_id])}}"><i class="bi bi-eye-fill"></i></a> </td>
+                            </tr>
+                            
+                            @empty
+                            <tr>
+                                <td colspan="10">No Record Found</td>
+                            </tr>
+                            @endforelse                    
+                        </tbody>
+                    </table>                 
 
                 </div>
 
               </div>
-            </div> -->
+            </div>
             <!-- End Recent Sales -->
 
             <!-- Top Selling -->

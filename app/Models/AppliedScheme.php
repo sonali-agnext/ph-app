@@ -36,6 +36,7 @@ class AppliedScheme extends Model
         'approved_tehsil',
         'approved_district',
         'public_private',
-        'attempts'
+        'attempts',
+        'reattempts'
     ];
 }

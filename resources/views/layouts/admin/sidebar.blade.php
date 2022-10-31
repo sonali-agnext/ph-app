@@ -145,14 +145,14 @@
           <i class="bi bi-gem"></i><span>Manage Subsidy</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="manage-subsidy-nav" @if($route == 'manage-subsidy-state'|| $route == 'manage-subsidy-district') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
-          @if($role_id == 3)
+          @if($role_id == 3 || $role_id == 1)
           <li>
             <a @if($route == 'manage-subsidy-state') class="active" @endif href="{{route('manage-subsidy-state')}}">
               <i class="bi bi-circle"></i><span>List Subsidy target for state</span>
             </a>
           </li>
           @endif
-          @if($role_id == 4)
+          @if($role_id == 4 || $role_id == 3)
           <li>
             <a @if($route == 'manage-subsidy-district') class="active" @endif href="{{route('manage-subsidy-district')}}">
               <i class="bi bi-circle"></i><span>List Subsidy target for district</span>

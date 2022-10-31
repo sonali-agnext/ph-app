@@ -106,12 +106,37 @@
                                 <td>{{ $farmer->name }}</td>
                                 <td>@if($role_id == 5 && $farmer->stage != 'Tehsil')
                                     --
-                                    @elseif($role_id == 4 && $farmer->stage != 'Committee' )
+                                    @elseif($role_id == 4 && $farmer->stage != 'District')
                                     --
                                     @elseif($farmer->stage == 'State')
                                     --
                                     @else
-                                        @if($farmer->stage == 'Tehsil' && !empty($farmer->tehsil_updated)  && ($farmer->applied_status == "Resubmit" || $farmer->applied_status == "Auto Approved"))
+                                    @if($farmer->stage == 'District' && !empty($farmer->district_updated)  && ($farmer->district_status == "Resubmit" || $farmer->district_status == "Auto Approved"))
+                                        @php
+                                            $date1= date('Y-m-d',strtotime($farmer->district_updated.'+7 day'));
+                                            $date2= date('Y-m-d');
+                                            $date11 = date_create($date1);
+                                            $date22 = date_create($date2);
+
+                                            $dateDifference = date_diff($date11, $date22)->format('%d');
+                                        @endphp
+                                        @if($dateDifference == 1)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F47564 !important;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 2)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F6A69B !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 3)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #F8C699 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 4)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #FBDDC2 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 5)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #C4FFE6 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 6)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #DDFFF1 !important; color:#000;">{{$dateDifference}}</span>
+                                        @elseif($dateDifference == 7)
+                                        <span class="badge bg-primary badge-pill badge-number" style="background: #fff !important; border: 1px solid #222222 !important; color:#000;">{{$dateDifference}}</span>
+                                        @endif
+                                    @endif
+                                    @if($farmer->stage == 'Tehsil' && !empty($farmer->tehsil_updated)  && ($farmer->applied_status == "Resubmit" || $farmer->applied_status == "Auto Approved"))
                                         @php
                                             $date1= date('Y-m-d',strtotime($farmer->tehsil_updated.'+7 day'));
                                             $date2= date('Y-m-d');
@@ -165,7 +190,7 @@
                                         @endif
                                         @endif
                                         
-                                        @if($farmer->stage == 'District' && empty($farmer->district_updated) && $farmer->district_status == "In Progress")
+                                        @if($farmer->stage == 'District' && empty($farmer->district_updated) && ($farmer->district_status == "Resubmit" || $farmer->district_status == "In Progress"))
                                         @php
                                             $date1= date('Y-m-d',strtotime($farmer->tehsil_updated.'+7 day'));
                                             $date2= date('Y-m-d');
@@ -173,7 +198,8 @@
                                             $date22 = date_create($date2);
 
                                             $dateDifference = date_diff($date11, $date22)->format('%d');
-                                        @endphp 
+                                        @endphp
+
                                         @if($dateDifference == 1)
                                         <span class="badge bg-primary badge-pill badge-number" style="background: #F47564 !important;">{{$dateDifference}}</span>
                                         @elseif($dateDifference == 2)
@@ -192,7 +218,7 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td>{{ $farmer->applied_status }}</td>
+                                <td>@if($farmer->stage == 'Tehsil'){{ $farmer->applied_status }}@else {{$farmer->district_status}} @endif</td>
                                 <td>{{ date('d-m-Y',strtotime($farmer->acreated_at)) }}</td>
                                 <td>{{ $farmer->tehsil_name }}</td>
                                 <td>{{ $farmer->district_name }}</td>

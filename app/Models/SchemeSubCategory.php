@@ -72,12 +72,12 @@ class SchemeSubCategory extends Model
     }
 
     public function fetchassignedtarget($target_state_id){
-
-        $assignedtarget = App\Models\TargetDistrict::where('target_state_id', 7)
+    //date("m") >= 4 ? date("Y"). '-' . (date("y")+1) : (date("Y") - 1). '-' . date("y");
+        $assignedtarget = TargetDistrict::where('target_state_id',$target_state_id)
         ->sum('assigned_physical_target');
-        $private_assignedtarget = App\Models\TargetDistrict::where('target_state_id', 7)
+        $private_assignedtarget = TargetDistrict::where('target_state_id', $target_state_id)
         ->sum('assigned_private_physical_target');
 
-        return [$assignedtarget,$private_assignedtarget];
+        return (object)['public'=>$assignedtarget,'private'=>$private_assignedtarget];
     }
 }
