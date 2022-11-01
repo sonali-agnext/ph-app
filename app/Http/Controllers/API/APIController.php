@@ -1336,7 +1336,10 @@ class APIController extends Controller
                             'message'=>('Resubmitted Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
                         ]);
                         return response()
-                                ->json(['message' => 'Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ], 200);
+                                ->json(['message' => 'Resubmitted Scheme Successfully','document_url'=>'storage/scheme-documents/'.date('Y').'/' ], 200);
+                    }else{
+                        return response()
+                                ->json(['message' => 'Already Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ], 200);
                     }
                 }
 

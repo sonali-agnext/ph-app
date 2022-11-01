@@ -49,7 +49,8 @@ class CronController extends Controller
                 $publish_time = $channel->snippet->publishTime;
 
                 $find_video = YoutubeVideo::where('video_id',$video_id)->first();
-                if($channel->snippet->categoryId == 27){
+
+                if($channel->id->kind == "youtube#video"){
                     if(empty($find_video)){
                         
                         if(date('Y-m-d',strtotime($publish_time)) == date('Y-m-d')){
@@ -103,7 +104,7 @@ class CronController extends Controller
                 $publish_time = $channel->snippet->publishTime;
 
                 $find_video = YoutubeVideo::where('video_id',$video_id)->first();
-                if($channel->snippet->categoryId == 27){
+                if($channel->id->kind == "youtube#video"){
                     if(empty($find_video)){
                         
                         if(date('Y-m-d',strtotime($publish_time)) == date('Y-m-d')){
