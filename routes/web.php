@@ -112,7 +112,9 @@ Route::post('/manage-subsidy-state','Admin\SubsidyController@updateStateSubsidy'
 Route::get('/manage-subsidy-district','Admin\SubsidyController@manageDistrictSubsidy')->name('manage-subsidy-district');
 Route::post('/manage-subsidy-district','Admin\SubsidyController@updateDistrictSubsidy')->name('manage-subsidy-district');
 
-
+// manage block
+Route::get('/manage-subsidy-block','Admin\SubsidyController@manageBlockSubsidy')->name('manage-subsidy-block');
+Route::post('/manage-subsidy-block','Admin\SubsidyController@updateBlockSubsidy')->name('manage-subsidy-block');
 
 // manage scheme
 Route::get('/manage-scheme','Admin\SchemeController@manageScheme')->name('manage-scheme');
