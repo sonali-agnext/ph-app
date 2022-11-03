@@ -240,6 +240,8 @@
 </header><!-- End Header -->
 @push('scripts')
 <script>
+  var interval = setInterval(counter, 5000);
+  function counter(){
 $.ajax({
         type: 'GET',
         url: "{{url('fetch-notification')}}",
@@ -287,6 +289,6 @@ $.ajax({
           $('.ajax-dropdown').append(html);
             console.log(resultData.data.length);
         }
-    }); 
+    }); }
     </script>
 @endpush
