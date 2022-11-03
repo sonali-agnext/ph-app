@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tehsil;
 use App\Models\City;
+use App\Models\Notification;
 
 class AjaxController extends Controller
 {
@@ -21,5 +22,12 @@ class AjaxController extends Controller
         $city = City::where('tehsil_id', $tehsil_id)->get();
         return response()
         ->json(['data' =>$city]);
+    }
+
+    public function fetchNotification(Request $request){
+        $user_id = auth()->user()->id;
+        $count = Notification::where('user_id', $user_id)->where('read_status', 0)->count();
+        $notification = Notification::where('user_id', $user_id)->where('read_status', 0)->get();
+        return response()->json(['data' => $notification,'count' => $count]);
     }
 }

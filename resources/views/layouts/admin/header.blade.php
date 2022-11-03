@@ -31,11 +31,11 @@
 
       <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
         <i class="bi bi-bell"></i>
-        <span class="badge bg-primary badge-number">4</span>
+        <span class="badge bg-primary badge-number ajax-badge">4</span>
       </a>
       <!-- End Notification Icon -->
 
-      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications ajax-dropdown">
         <li class="dropdown-header">
           You have 4 new notifications
           <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
@@ -238,3 +238,55 @@
 </nav><!-- End Icons Navigation -->
 
 </header><!-- End Header -->
+@push('scripts')
+<script>
+$.ajax({
+        type: 'GET',
+        url: "{{url('fetch-notification')}}",
+        data: { },
+        dataType: "json",
+        success: function(resultData) {
+          var html = '';
+          if(resultData.data.length > 0){
+            if(resultData.count){
+              $('.ajax-badge').text(resultData.count);
+            }else{
+              $('.ajax-badge').empty();
+            }
+            // html += '<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications show">';
+            html += '<li class="dropdown-header">';
+            html += 'You have '+resultData.count+' new notifications';
+            // html += '<a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>';
+            
+            $.each(resultData.data, function (key, val) {
+              
+              html += '</li>';            
+              html += '<li>';
+              html += '<hr class="dropdown-divider">';
+              html += '</li>';
+              html += '<li class="notification-item">';
+              html += '<i class="bi bi-info-circle text-info"></i>';
+              html += '<div>';
+              // html += '<h4>Lorem Ipsum</h4>';
+              html += '<p>'+val.message+'</p>';
+              // html += '<p>'++'</p>';
+              html += '</div>';
+              html += '</li>';
+            });
+ 
+            // html +='<li class="dropdown-footer">';
+            // html +='<a href="#">Show all notifications</a>';
+            // html +='</li>';
+
+            // html +='</ul>';
+            
+          }else{
+
+          }
+          $('.ajax-dropdown').empty();
+          $('.ajax-dropdown').append(html);
+            console.log(resultData.data.length);
+        }
+    }); 
+    </script>
+@endpush

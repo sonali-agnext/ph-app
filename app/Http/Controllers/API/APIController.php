@@ -117,7 +117,11 @@ class APIController extends Controller
         try{
             $mobile_number = $request->mobile_number;
             $userFound = User::where('name', $mobile_number)->first();
+            
             if($userFound){
+                $userFound->tokens->each(function($token, $key) {
+                    $token->delete();
+                });
                 if(!$userFound->status){
                     return response()
                     ->json(['message' => 'Mobile Number not exists!'], 401);
@@ -1309,7 +1313,11 @@ class APIController extends Controller
                         $user_id = User::farmer($farmer_id);
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
-                            'message'=>('New Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
+                            'message'=>('New Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => 1,
+                            'message'=>('New Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
                         ]);
                         return response()
                                 ->json(['message' => 'Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ,'application_id'=> 'PHSCHM'.str_pad($applied_schemes->id,6, "0", STR_PAD_LEFT)], 200);
@@ -1338,7 +1346,11 @@ class APIController extends Controller
                         $user_id = User::farmer($farmer_id);
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
-                            'message'=>('Resubmitted Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
+                            'message'=>('Resubmitted Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => 1,
+                            'message'=>('Resubmitted Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
                         ]);
                         return response()
                                 ->json(['message' => 'Resubmitted Scheme Successfully','document_url'=>'storage/scheme-documents/'.date('Y').'/' ], 200);

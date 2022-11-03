@@ -181,3 +181,4 @@ Route::post('/applied-scheme', 'Admin\SchemeController@appliedScheme')->name('ap
 Route::get('getAllMoveSchemes','CronController@getAllMoveSchemes');
 
 Route::get('fetchCategorySchemes','API\APIController@fetchCategorySchemes');
+Route::get('fetch-notification','AjaxController@fetchNotification');
