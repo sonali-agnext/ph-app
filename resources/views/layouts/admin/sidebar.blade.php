@@ -159,6 +159,13 @@
             </a>
           </li>
           @endif
+          @if($role_id == 4 || $role_id == 5)
+          <li>
+            <a @if($route == 'manage-subsidy-block') class="active" @endif href="{{route('manage-subsidy-block')}}">
+              <i class="bi bi-circle"></i><span>List Subsidy target for block</span>
+            </a>
+          </li>
+          @endif
         </ul>
       </li>
       <li class="nav-item">

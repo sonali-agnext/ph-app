@@ -68,11 +68,11 @@ th.card-title{
 </style>
 
 <div class="pagetitle">
-    <h1>Manage Subsidy Targets for District</h1>
+    <h1>Manage Subsidy Targets for Block</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
-        <li class="breadcrumb-item active"><a href="{{url('/manage-subsidy-district')}}">Manage Subsidy Targets for District</a></li>
+        <li class="breadcrumb-item active"><a href="{{url('/manage-subsidy-district')}}">Manage Subsidy Targets for Block</a></li>
     </ol>
     <!-- <img src="{{asset('storage/app/public/image/180X180.png')}}" /> -->
     </nav>
@@ -84,7 +84,7 @@ th.card-title{
         <div class="col-lg-12">  
              <div class="card">
                 <div class="card-body">
-                        <h5 class="card-title">Manage Subsidy Targets for District</h5>
+                        <h5 class="card-title">Manage Subsidy Targets for Block</h5>
                         @if ($message = Session::get('success'))
                         <div class="alert alert-success alert-block">                            
                             <strong>{{ $message }}</strong>
@@ -1227,7 +1227,7 @@ th.card-title{
                                         </tbody>
                                     </table>
                                 </div>
-                                @php if(\Auth::user()->role_id == 3){ @endphp
+                                @php if(\Auth::user()->role_id == 4){ @endphp
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <!-- <button type="reset" class="btn btn-secondary">Reset</button> -->
@@ -1260,7 +1260,7 @@ th.card-title{
                     icon: "error",
                 });
             }else{
-                var url = '{{url("/manage-subsidy-district")}}?year='+id+'&district_id='+district_id;
+                var url = '{{url("/manage-subsidy-block")}}?year='+id+'&district_id='+district_id;
                 window.location = url;
             }
                          
@@ -1274,7 +1274,7 @@ th.card-title{
                     icon: "error",
                 });
             }else{
-                var url = '{{url("/manage-subsidy-district")}}?year='+year+'&district_id='+id;
+                var url = '{{url("/manage-subsidy-block")}}?year='+year+'&district_id='+id;
                 window.location = url;
             }
                          

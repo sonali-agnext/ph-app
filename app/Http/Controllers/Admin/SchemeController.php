@@ -858,7 +858,7 @@ class SchemeController extends Controller
         }
     }
 
-    public function viewAppliedScheme(Request $request){
+    public function viewAppliedScheme(Request $request){        
         
         $farmers = AppliedScheme::select('applied_schemes.*','applied_schemes.status as applied_status','applied_schemes.id as apply_id','farmers.*','farmer_bank_details.*','farmers.id as ffarmer_id','schemes.*','schemes.id as sscheme_id','cities.city_name','districts.district_name','tehsils.tehsil_name', 'applicant_types.applicant_type_name', 'caste_categories.caste_name', 'users.status','applied_schemes.updated_at as aupdated_at','applied_schemes.created_at as acreated_at')
         ->join('farmers','farmers.id','=','applied_schemes.farmer_id')
@@ -882,7 +882,9 @@ class SchemeController extends Controller
 
         if(!empty($farmer) && $request->accept == 'accept'){
             if($farmer->stage == 'Tehsil'){
-                $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Approved', 'stage' => 'District','attempts' => 0,'district_status' => 'In Progress']);
+                $user = new User;
+                $districtInfo =$user->officerdistrict(1);
+                $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Approved', 'stage' => 'District','attempts' => 0, 'approved_district'=>$districtInfo->officer_id,'district_status' => 'In Progress']);
                 if($updateFarmer){
                     $user_id = User::officerdistrict($farmer->district_id);
                         Notification::create([
@@ -927,7 +929,16 @@ class SchemeController extends Controller
             if($farmer->stage == 'Tehsil'){
                 if($status == 'Resubmit'){
                     $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Resubmit', 'stage' => 'Tehsil','reason' => $reasons,'approved_tehsil' => auth()->user()->user_id,'attempts'=>($farmer->attempts +1)]);
+                    
                     if($updateFarmer){
+                        Notification::create([
+                            'user_id' => $farmer->approved_tehsil,
+                            'message'=>('Resubmitted by Tehsil Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => 1,
+                            'message'=>('Resubmitted by Tehsil Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
                         return response()
                         ->json(['message' => 'success']);
                     }else{
@@ -935,8 +946,16 @@ class SchemeController extends Controller
                         ->json(['message' => 'error']);
                     } 
                 }elseif($status == 'Rejected'){
-                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Rejected', 'stage' => 'Tehsil','approved_tehsil' => auth()->user()->user_id,'reason' => $reason]);
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Rejected', 'stage' => 'Tehsil','approved_tehsil' => auth()->user()->user_id,'reason' => $reason]);
                     if($updateFarmer){
+                        Notification::create([
+                            'user_id' => $farmer->approved_tehsil,
+                            'message'=>('Rejected by Tehsil Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => 1,
+                            'message'=>('Rejected by Tehsil Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
                         return response()
                         ->json(['message' => 'success']);
                     }else{
@@ -949,6 +968,14 @@ class SchemeController extends Controller
                 if($status == 'Resubmit'){
                     $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Resubmit', 'stage' => 'District','district_reason' => $reasons,'approved_district' => auth()->user()->user_id,'attempts'=>($farmer->attempts +1)]);
                     if($updateFarmer){
+                        Notification::create([
+                            'user_id' => $farmer->approved_district,
+                            'message'=>('Resubmitted by District Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => 1,
+                            'message'=>('Resubmitted by District Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
                         return response()
                         ->json(['message' => 'success']);
                     }else{
@@ -958,6 +985,14 @@ class SchemeController extends Controller
                 }elseif($status == 'Rejected'){
                     $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Rejected', 'stage' => 'District','district_reason' => $reason,'approved_district' => auth()->user()->user_id]);
                     if($updateFarmer){
+                        Notification::create([
+                            'user_id' => $farmer->approved_district,
+                            'message'=>('Rejected by District Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => 1,
+                            'message'=>('Rejected by District Officer <a href="'.url('/view-applied-scheme',['id'=>$farmer->id]).'">Click to view</a>')
+                        ]);
                         return response()
                         ->json(['message' => 'success']);
                     }else{

@@ -493,7 +493,7 @@ class APIController extends Controller
                             ->where('commodity',$request->commodity)
                             ->where('district',$request->district)
                             ->where('market',$request->market)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('district',$request->district)
@@ -513,7 +513,7 @@ class APIController extends Controller
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('district',$request->district)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('district',$request->district)
@@ -530,7 +530,7 @@ class APIController extends Controller
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('market',$request->market)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->where('market',$request->market)
@@ -547,7 +547,7 @@ class APIController extends Controller
             $marketPrice = MarketPrice::select("*")
                             ->where('district',$request->district)
                             ->where('market',$request->market)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('district',$request->district)
                             ->where('market',$request->market)
@@ -564,7 +564,7 @@ class APIController extends Controller
         elseif(!empty($request->commodity) && empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('commodity',$request->commodity)
                             ->sum('min_price');
@@ -577,7 +577,7 @@ class APIController extends Controller
         }elseif(empty($request->commodity) && !empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('district',$request->district)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('district',$request->district)
                             ->sum('min_price');
@@ -590,7 +590,7 @@ class APIController extends Controller
         }elseif(empty($request->commodity) && empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('market',$request->market)
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('market',$request->market)
                             ->sum('min_price');
@@ -602,7 +602,7 @@ class APIController extends Controller
                             ->sum('modal_price');
         }else{
             $marketPrice = MarketPrice::select("*")
-                            ->get();
+                            ->paginate();
             $min_price = MarketPrice::select("*")
                             ->sum('min_price');
             $max_price = MarketPrice::select("*")
@@ -667,14 +667,14 @@ class APIController extends Controller
     }
 
     public function fetchVideos(Request $request){
-        $video = YoutubeVideo::all();
+        $video = YoutubeVideo::paginate();
         return response()
             ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
     }
 
     public function searchVideos(Request $request){
         if(!empty($request->keyword)){
-            $video = YoutubeVideo::where('title', 'LIKE', '%'.$request->keyword.'%')->get();
+            $video = YoutubeVideo::where('title', 'LIKE', '%'.$request->keyword.'%')->paginate();
             return response()
                 ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
         }else{
@@ -1273,8 +1273,11 @@ class APIController extends Controller
                     ->where('land_address_id', $land_address_id)
                     ->where('scheme_id', $scheme_id)
                     ->first();
+                $user = new User;
+                $districtInfo =$user->officertehsil($bank_details->tehsil_id); 
                 
-                if(empty($check_apply_scheme) && empty($request->reject)){            
+                if(empty($check_apply_scheme) && empty($request->reject)){ 
+                              
                     $applied_schemes = AppliedScheme::create([
                         'farmer_id' => $farmer_id,
                         'scheme_id' => $scheme_id,
@@ -1295,6 +1298,7 @@ class APIController extends Controller
                         'district_id' => $bank_details->district_id, 
                         'tehsil_id' => $bank_details->tehsil_id,
                         'public_private' => $public_private,
+                        'approved_tehsil' => $districtInfo->officer_id,
                         'reattempts'=>1         
                     ]);
                 
@@ -1304,7 +1308,7 @@ class APIController extends Controller
                         ]);
                         $user_id = User::farmer($farmer_id);
                         Notification::create([
-                            'user_id' => $user_id->id,
+                            'user_id' => $districtInfo->user_id,
                             'message'=>('New Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
                         ]);
                         return response()
@@ -1328,11 +1332,12 @@ class APIController extends Controller
                             'district_id' => $bank_details->district_id, 
                             'tehsil_id' => $bank_details->tehsil_id,
                             'public_private' => $public_private,
-                            'reattempts' => ($check_apply_scheme->reattempts+1)     
+                            'reattempts' => ($check_apply_scheme->reattempts+1),
+                            'approved_tehsil' => $districtInfo->officer_id    
                         ]);
                         $user_id = User::farmer($farmer_id);
                         Notification::create([
-                            'user_id' => $user_id->id,
+                            'user_id' => $districtInfo->user_id,
                             'message'=>('Resubmitted Application Received <a href="'.url('/view-applied-scheme',['id'=>$applied_schemes->id]).'">Click to view</a>')
                         ]);
                         return response()

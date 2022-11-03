@@ -60,14 +60,31 @@ class User extends Authenticatable
         ->first();
         return $items;
     }
-    public function officerstate()
+    public function officertehsil($tehsil_id)
     {
         $items = DB::table('users')
         ->select('users.*', 'officers.id as officer_id' , 'officers.*','assign_to_officers.tehsil_id as assigned_tehsil','assign_to_officers.district_id as assigned_district')
         ->join('officers','officers.user_id','=','users.id')
         ->join('assign_to_officers','assign_to_officers.officer_id','=','officers.id')
-        ->whereNull('assign_to_officers.district_id')
-        ->whereNull('assign_to_officers.tehsil_id')
+        ->where('assign_to_officers.tehsil_id',$tehsil_id)
+        ->first();
+        return $items;
+    }
+    public function officerstate()
+    {
+        $items = DB::table('users')
+        ->select('users.*', 'officers.id as officer_id' , 'officers.*','assign_to_officers.tehsil_id as assigned_tehsil','assign_to_officers.district_id as assigned_district')
+        ->join('officers','officers.user_id','=','users.id')
+        ->where('users.role_id',3)
+        ->get();
+        return $items;
+    }
+
+    public function admin()
+    {
+        $items = DB::table('users')
+        ->select('users.*')
+        ->where('users.role_id',1)
         ->first();
         return $items;
     }
