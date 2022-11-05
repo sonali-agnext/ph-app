@@ -963,7 +963,7 @@ class SchemeController extends Controller
                         ->json(['message' => 'error']);
                     } 
                 }elseif($status == 'Rejected'){
-                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Rejected', 'stage' => 'Tehsil','approved_tehsil' => auth()->user()->id,'reason' => $reason]);
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Rejected', 'stage' => 'Tehsil','approved_tehsil' => auth()->user()->id,'reason' => $reasons]);
                     if($updateFarmer){
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
@@ -1010,7 +1010,7 @@ class SchemeController extends Controller
                         ->json(['message' => 'error']);
                     } 
                 }elseif($status == 'Rejected'){
-                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Rejected', 'stage' => 'District','district_reason' => $reason,'approved_district' => auth()->user()->id]);
+                    $updateFarmer = AppliedScheme::where('id', $request->id)->update(['district_updated'=>date('Y-m-d H:i:s'), 'district_status'=>'Rejected', 'stage' => 'District','district_reason' => $reasons,'approved_district' => auth()->user()->id]);
                     if($updateFarmer){
                         Notification::create([
                             'user_id' => 1,
