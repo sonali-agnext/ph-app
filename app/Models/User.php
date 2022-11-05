@@ -73,7 +73,7 @@ class User extends Authenticatable
     public function officerstate()
     {
         $items = DB::table('users')
-        ->select('users.*', 'officers.id as officer_id' , 'officers.*','assign_to_officers.tehsil_id as assigned_tehsil','assign_to_officers.district_id as assigned_district')
+        ->select('users.*', 'officers.id as officer_id' , 'officers.*')
         ->join('officers','officers.user_id','=','users.id')
         ->where('users.role_id',3)
         ->get();
