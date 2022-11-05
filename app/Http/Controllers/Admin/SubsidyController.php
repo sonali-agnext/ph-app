@@ -20,6 +20,7 @@ use App\Models\Component;
 use App\Models\SubComponent;
 use App\Models\TargetState;
 use App\Models\TargetDistrict;
+use App\Models\TargetBlock;
 use Illuminate\Support\Facades\Validator;
 
 class SubsidyController extends Controller
@@ -626,8 +627,10 @@ class SubsidyController extends Controller
         $components = Component::all();
         $subcomponents = SubComponent::where('status',"1")->get();
         $districts = District::all();
+        $user= new User;
+        $sdistrict= $user->officer();
 
-        return view('admin.targetset.districtedit',['districts'=>$districts,'sdistrict'=>$request->district_id,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
+        return view('admin.targetset.districtedit',['districts'=>$districts,'sdistrict'=>$sdistrict->assigned_district,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
     }
 
     public static function updateStateSubsidy(Request $request){
@@ -1026,8 +1029,11 @@ class SubsidyController extends Controller
         $components = Component::all();
         $subcomponents = SubComponent::where('status',"1")->get();
         $districts = District::all();
+        $user= new User;
+        $sdistrict= $user->officer();
+        $blocks= Tehsil::where('district_id',$sdistrict->assigned_district)->get();
 
-        return view('admin.targetset.blockedit',['districts'=>$districts,'sdistrict'=>$request->district_id,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
+        return view('admin.targetset.blockedit',['districts'=>$districts,'blocks'=>$blocks,'sdistrict'=>$sdistrict->assigned_district,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
     }
 
     public static function updateBlockSubsidy(Request $request){
@@ -1051,9 +1057,9 @@ class SubsidyController extends Controller
         $district = $request->district_id;
         
         foreach($all_targets as $key=> $target){ 
-            $targets = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();           
+            $targets = TargetBlock::where('district_id',$district)->where('target_state_id',$target)->first();           
             if(empty($all_district_targets[$key]) && empty($targets)){                
-                $targets = TargetDistrict::create([
+                $targets = TargetBlock::create([
                     'district_id' => $district, 
                     'target_state_id' => $target, 
                     'assigned_physical_target'=> ((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
@@ -1065,7 +1071,7 @@ class SubsidyController extends Controller
                     'women_target' => $all_women_targets[$key]
                 ]);
             }else{
-                $targets = TargetDistrict::where('id', $targets->id)->update([
+                $targets = TargetBlock::where('id', $targets->id)->update([
                     'district_id' => $district, 
                     'target_state_id' => $target, 
                     'assigned_physical_target'=> ((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
@@ -1080,9 +1086,9 @@ class SubsidyController extends Controller
         }
 
         foreach($all_private_targets as $key=> $target){ 
-            $targets = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();           
+            $targets = TargetBlock::where('district_id',$district)->where('target_state_id',$target)->first();           
             if(empty($all_district_targets[$key]) && empty($targets)){                
-                $targets = TargetDistrict::create([
+                $targets = TargetBlock::create([
                     'district_id' => $district, 
                     'target_state_id' => $target, 
                     'assigned_private_physical_target'=> ((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]), 
@@ -1094,7 +1100,7 @@ class SubsidyController extends Controller
                     'private_women_target' => $all_private_women_targets[$key]
                 ]);
             }else{
-                $targets = TargetDistrict::where('id', $targets->id)->update([
+                $targets = TargetBlock::where('id', $targets->id)->update([
                     'district_id' => $district, 
                     'target_state_id' => $target, 
                     'assigned_private_physical_target'=> ((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]), 

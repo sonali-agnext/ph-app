@@ -180,7 +180,7 @@ class CronController extends Controller
                         ]);
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
-                            'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                            'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                     }
                 }
@@ -205,11 +205,11 @@ class CronController extends Controller
                             ]);
                             Notification::create([
                                 'user_id' => 1,
-                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                             Notification::create([
                                 'user_id' => $districtInfo->user_id,
-                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                         }
                     }else{
@@ -221,14 +221,14 @@ class CronController extends Controller
                         $user = new User;
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                            'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                    'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                 ]);
                             }
                         }
@@ -262,13 +262,13 @@ class CronController extends Controller
                         $stateInfo =$user->officerstate();
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                            'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                    'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                 ]);
                             }
                         }
@@ -292,7 +292,7 @@ class CronController extends Controller
                             ]);
                             Notification::create([
                                 'user_id' => 1,
-                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                             $user = new User;
                             $stateInfo =$user->officerstate();
@@ -300,7 +300,7 @@ class CronController extends Controller
                                 foreach($stateInfo as $state){
                                     Notification::create([
                                         'user_id' => $state->user_id,
-                                        'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                        'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                     ]);
                                 }
                             }
@@ -322,14 +322,14 @@ class CronController extends Controller
                         $user = new User;
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                            'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id={{$applied_schemes->id}}">Click to view</a>')
+                                    'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                 ]);
                             }
                         }

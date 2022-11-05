@@ -882,26 +882,26 @@ class SchemeController extends Controller
         $user = new User;
         if(!empty($farmer) && $request->accept == 'accept'){
             if($farmer->stage == 'Tehsil'){
-                
-                $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Approved', 'stage' => 'District','attempts' => 0, 'approved_district'=>$districtInfo->officer_id,'district_status' => 'In Progress']);
+                $user_id = $user->officerdistrict($farmer->district_id);
+                $updateFarmer = AppliedScheme::where('id', $request->id)->update(['tehsil_updated'=>date('Y-m-d H:i:s'), 'status'=>'Approved', 'stage' => 'District','attempts' => 0, 'approved_district'=>$user_id->user_id,'district_status' => 'In Progress']);
                 if($updateFarmer){
-                    $user_id = $user->officerdistrict($farmer->district_id);
+                    
                         Notification::create([
                             'user_id' => $user_id->user_id,
-                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                                    'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                     return response()
                     ->json(['message' => 'success']);
@@ -917,13 +917,13 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                                    'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                     return response()
                     ->json(['message' => 'success']);
@@ -948,13 +948,13 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                                    'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         return response()
                         ->json(['message' => 'success']);
@@ -970,13 +970,13 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                                    'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         return response()
                         ->json(['message' => 'success']);
@@ -992,14 +992,14 @@ class SchemeController extends Controller
                     if($updateFarmer){
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Resubmitted by District Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Resubmitted by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Resubmitted by District Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                                    'message'=>('Resubmitted by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
@@ -1014,14 +1014,14 @@ class SchemeController extends Controller
                     if($updateFarmer){
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Rejected by District Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                            'message'=>('Rejected by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Rejected by District Officer <a href="/view-applied-scheme?id={{$farmer->id}}">Click to view</a>')
+                                    'message'=>('Rejected by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
