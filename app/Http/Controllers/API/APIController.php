@@ -1379,7 +1379,7 @@ class APIController extends Controller
             ->where('applied_schemes.farmer_id', $request->farmer_id)
             ->get();
         return response()
-                    ->json(['message' => 'Fetch all applied schemes', 'data' => $fetchapp], 200);
+                    ->json(['message' => 'Fetch all applied schemes', 'data' => $fetchapp,'document_url'=>'storage/scheme-documents/'.date('Y').'/'], 200);
     }
 
     public function fetchCategorySchemes(Request $request){

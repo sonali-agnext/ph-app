@@ -17,11 +17,6 @@ class TargetBlock extends Model
         'district_remarks', 
         'district_private_remarks', 
         'district_year', 
-        'gen_target', 
-        'sc_target', 
-        'st_target', 
-        'women_target', 
-        'private_gen_target', 
         'assigned_gen_target', 
         'assigned_sc_target', 
         'assigned_st_target', 
@@ -29,9 +24,6 @@ class TargetBlock extends Model
         'assigned_private_gen_target', 
         'assigned_private_sc_target', 
         'assigned_private_st_target', 
-        'assigned_private_women_target', 
-        'private_st_target', 
-        'private_sc_target', 
-        'private_women_target'
+        'assigned_private_women_target'
     ];
 }

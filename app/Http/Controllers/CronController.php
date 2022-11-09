@@ -214,7 +214,7 @@ class CronController extends Controller
                         }
                     }else{
                         $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
-                            'stage' => 'Tehsil',
+                            'stage' => 'State',
                             'tehsil_updated' => date('Y-m-d H:i:s'),
                             'status' => 'Rejected',
                         ]);
@@ -307,7 +307,7 @@ class CronController extends Controller
                         }
                     }else{
                         $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
-                            'stage' => 'District',
+                            'stage' => 'State',
                             'district_updated' => date('Y-m-d H:i:s'),
                             'district_status' => 'Rejected',
                         ]);

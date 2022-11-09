@@ -71,6 +71,16 @@ class SchemeSubCategory extends Model
         }
     }
 
+    public function fetchtargettehsil($district_id,$tehsil_id,$target_district_id,$target_id, $year){
+        $targets = TargetBlock::where('target_state_id',$target_id)->where('target_district_id',$target_district_id)->where('district_year',$year)->where('tehsil_id',$tehsil_id)->where('district_id',$district_id)->first();
+
+        if(empty($targets)){
+            return false;
+        }else{
+            return $targets;
+        }
+    }
+
     public function fetchassignedtarget($target_state_id){
     //date("m") >= 4 ? date("Y"). '-' . (date("y")+1) : (date("Y") - 1). '-' . date("y");
         if(!empty($target_state_id)){
