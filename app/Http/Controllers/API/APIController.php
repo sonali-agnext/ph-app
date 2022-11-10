@@ -1397,7 +1397,7 @@ class APIController extends Controller
             }            
         }
         return response()
-                    ->json(['message' => 'Fetch all applied schemes', 'document_url'=>'storage/scheme-documents/'.date('Y').'/','data' => $fetchapp], 200);
+                    ->json(['message' => 'Fetch all applied schemes','document_url'=>'storage/scheme-documents/'.date('Y').'/', 'media_url'=>'storage/images/','data' => $fetchapp], 200);
     }
 
     public function fetchCategorySchemes(Request $request){

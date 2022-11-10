@@ -1058,74 +1058,74 @@ class SubsidyController extends Controller
         $block = $request->block_id;
         // dd($request->private_gen_target);
         
-        // foreach($all_targets as $key=> $target){ 
-        //     $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->where('target_district_id',$all_district_targets[$key])->first();           
-        //     if(empty($all_district_targets[$key]) && empty($targets)){                
-        //         $targets = TargetBlock::create([
-        //             'district_id'=> $district,
-        //             'tehsil_id'=> $block, 
-        //             'target_district_id'=>$all_district_targets[$key], 
-        //             'target_state_id'=>$target, 
-        //             'assigned_physical_target'=>((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
-        //             'district_remarks'=>$all_remarks[$key], 
-        //             'district_year' => $year,                  
-        //             'assigned_gen_target' => $all_gen_targets[$key],
-        //             'assigned_sc_target' => $all_sc_targets[$key],
-        //             'assigned_st_target' => $all_st_targets[$key],
-        //             'assigned_women_target' => $all_women_targets[$key]
-        //         ]);
-        //     }else{
-        //         $targets = TargetBlock::where('id', $targets->id)->update([
-        //             'district_id'=> $district,
-        //             'tehsil_id'=> $block, 
-        //             'target_district_id'=>$all_district_targets[$key], 
-        //             'target_state_id'=>$target, 
-        //             'assigned_physical_target'=>((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
-        //             'district_remarks'=>$all_remarks[$key], 
-        //             'district_year' => $year,
-        //             'district_id' => $district,                     
-        //             'assigned_gen_target' => $all_gen_targets[$key],
-        //             'assigned_sc_target' => $all_sc_targets[$key],
-        //             'assigned_st_target' => $all_st_targets[$key],
-        //             'assigned_women_target' => $all_women_targets[$key]
-        //         ]);
-        //     }
-        // }
+        foreach($all_targets as $key=> $target){ 
+            $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->where('target_district_id',$all_district_targets[$key])->first();           
+            if(empty($all_district_targets[$key]) && empty($targets)){                
+                $targets = TargetBlock::create([
+                    'district_id'=> $district,
+                    'tehsil_id'=> $block, 
+                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_state_id'=>$target, 
+                    'assigned_physical_target'=>((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
+                    'district_remarks'=>$all_remarks[$key], 
+                    'district_year' => $year,                  
+                    'assigned_gen_target' => $all_gen_targets[$key],
+                    'assigned_sc_target' => $all_sc_targets[$key],
+                    'assigned_st_target' => $all_st_targets[$key],
+                    'assigned_women_target' => $all_women_targets[$key]
+                ]);
+            }else{
+                $targets = TargetBlock::where('id', $targets->id)->update([
+                    'district_id'=> $district,
+                    'tehsil_id'=> $block, 
+                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_state_id'=>$target, 
+                    'assigned_physical_target'=>((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
+                    'district_remarks'=>$all_remarks[$key], 
+                    'district_year' => $year,
+                    'district_id' => $district,                     
+                    'assigned_gen_target' => $all_gen_targets[$key],
+                    'assigned_sc_target' => $all_sc_targets[$key],
+                    'assigned_st_target' => $all_st_targets[$key],
+                    'assigned_women_target' => $all_women_targets[$key]
+                ]);
+            }
+        }
 
-        // foreach($all_private_targets as $key=> $target){ 
-        //     $targets = TargetBlock::where('district_id',$district)->where('target_state_id',$target)->first();           
-        //     if(empty($all_district_targets[$key]) && empty($targets)){                
-        //         $targets = TargetBlock::create([
-        //             'district_id'=> $district,
-        //             'tehsil_id'=> $block, 
-        //             'target_district_id'=>$all_district_targets[$key], 
-        //             'target_state_id'=>$target,                     
-        //             'assigned_private_physical_target'=>((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]),
-        //             'district_private_remarks'=>$all_private_remarks[$key], 
-        //             'district_year' => $year,
-        //             'assigned_private_gen_target' => $all_private_gen_targets[$key], 
-        //             'assigned_private_sc_target'=>$all_private_sc_targets[$key],
-        //             'assigned_private_st_target'=> $all_private_st_targets[$key], 
-        //             'assigned_private_women_target'=>$all_private_women_targets[$key],
-        //             'district_id' => $district                    
-        //         ]);
-        //     }else{
-        //         $targets = TargetBlock::where('id', $targets->id)->update([
-        //             'district_id'=> $district,
-        //             'tehsil_id'=> $block, 
-        //             'target_district_id'=>$all_district_targets[$key], 
-        //             'target_state_id'=>$target,                     
-        //             'assigned_private_physical_target'=>((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]),
-        //             'district_private_remarks'=>$all_private_remarks[$key], 
-        //             'district_year' => $year,
-        //             'assigned_private_gen_target' => $all_private_gen_targets[$key], 
-        //             'assigned_private_sc_target'=>$all_private_sc_targets[$key],
-        //             'assigned_private_st_target'=> $all_private_st_targets[$key], 
-        //             'assigned_private_women_target'=>$all_private_women_targets[$key],
-        //             'district_id' => $district
-        //         ]);
-        //     }
-        // }
+        foreach($all_private_targets as $key=> $target){ 
+            $targets = TargetBlock::where('district_id',$district)->where('target_state_id',$target)->first();           
+            if(empty($all_district_targets[$key]) && empty($targets)){                
+                $targets = TargetBlock::create([
+                    'district_id'=> $district,
+                    'tehsil_id'=> $block, 
+                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_state_id'=>$target,                     
+                    'assigned_private_physical_target'=>((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]),
+                    'district_private_remarks'=>$all_private_remarks[$key], 
+                    'district_year' => $year,
+                    'assigned_private_gen_target' => $all_private_gen_targets[$key], 
+                    'assigned_private_sc_target'=>$all_private_sc_targets[$key],
+                    'assigned_private_st_target'=> $all_private_st_targets[$key], 
+                    'assigned_private_women_target'=>$all_private_women_targets[$key],
+                    'district_id' => $district                    
+                ]);
+            }else{
+                $targets = TargetBlock::where('id', $targets->id)->update([
+                    'district_id'=> $district,
+                    'tehsil_id'=> $block, 
+                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_state_id'=>$target,                     
+                    'assigned_private_physical_target'=>((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]),
+                    'district_private_remarks'=>$all_private_remarks[$key], 
+                    'district_year' => $year,
+                    'assigned_private_gen_target' => $all_private_gen_targets[$key], 
+                    'assigned_private_sc_target'=>$all_private_sc_targets[$key],
+                    'assigned_private_st_target'=> $all_private_st_targets[$key], 
+                    'assigned_private_women_target'=>$all_private_women_targets[$key],
+                    'district_id' => $district
+                ]);
+            }
+        }
 
         return redirect()->route('manage-subsidy-block')->with('success','Schemes updated successfully!');
         
