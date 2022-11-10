@@ -534,7 +534,7 @@
 
                         <div class="col-md-12">
                             <input type="hidden" id="applied_id" value="{{$farmers->apply_id}}"/>
-                            @if((Auth::user()->role_id == 5 && $farmers->stage == 'Tehsil') || (Auth::user()->role_id == 4 && $farmers->stage == 'District'))
+                            @if((Auth::user()->role_id == 5 && ($farmers->stage == 'Tehsil') ) || (Auth::user()->role_id == 4 && $farmers->stage == 'District'))
                             <button class="btn btn-success" type="button" name="accept" id="accept">Accept</button>
                             <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#viewModal">Reject</button>
                             <!-- Modal -->

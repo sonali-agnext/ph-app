@@ -130,7 +130,7 @@ th.card-title{
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">                                        
-                                        <select class="form-select" required name="district_id" id="district_id" aria-label="Select District">
+                                        <select class="form-select" @if(auth()->user()->role_id!=3) disabled @endif required name="district_id" id="district_id" aria-label="Select District">
                                             <option value="">Select District</option>
                                             @forelse($districts as $district)
                                             <option @if(!empty($sdistrict)) @if($sdistrict == $district->id) selected @endif @endif value="{{$district->id}}">{{$district->district_name}}</option>
@@ -1270,7 +1270,7 @@ th.card-title{
             var id = $(this).val();
             var year = $('#year').val();
             if(id != null && (year == '' || year == null || year == undefined)){
-                swal("Please select district", {
+                swal("Please select financial year", {
                     icon: "error",
                 });
             }else{

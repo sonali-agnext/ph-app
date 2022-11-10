@@ -26,6 +26,7 @@ use App\Models\FarmerBankDetail;
 use App\Models\FarmerLandDetail;
 use App\Models\AppliedScheme;
 use App\Models\Notification;
+use App\Models\Officer;
 
 class APIController extends Controller
 {
@@ -1371,15 +1372,32 @@ class APIController extends Controller
     }
 
     public function fetchSchemeStatus(Request $request){
-        $fetchapp = AppliedScheme::select('applied_schemes.*','applied_schemes.status as tehsil_status','applied_schemes.created_at as acreated_at','applied_schemes.updated_at as aupdated_at','schemes.*','farmer_land_details.*','districts.district_name', 'tehsils.tehsil_name')
+        $fetchapp = AppliedScheme::select('applied_schemes.*','applied_schemes.status as tehsil_status','applied_schemes.created_at as acreated_at','applied_schemes.updated_at as aupdated_at','farmer_land_details.*','districts.district_name', 'tehsils.tehsil_name','schemes.*')
             ->join('schemes','schemes.id','=','applied_schemes.scheme_id')
             ->join('districts','districts.id','=','applied_schemes.district_id')
             ->join('farmer_land_details','farmer_land_details.id','=','applied_schemes.land_address_id')
             ->join('tehsils','tehsils.id','=','applied_schemes.tehsil_id')
             ->where('applied_schemes.farmer_id', $request->farmer_id)
             ->get();
+        foreach($fetchapp as $fetch){
+            if($fetch->stage == 'Tehsil'){
+                $fetch['officer_details'] = Officer::select('officers.*','users.name','districts.district_name','tehsils.tehsil_name')
+                ->join('users','users.id','=','officers.user_id') 
+                ->join('districts','districts.id','=','officers.district_id')   
+                ->join('tehsils','tehsils.id','=','officers.tehsil_id')          
+                ->where('officers.id', $fetch->approved_tehsil)
+                ->first();
+            }else{
+                $fetch['officer_details'] = Officer::select('officers.*','users.name','districts.district_name','tehsils.tehsil_name')
+                ->join('users','users.id','=','officers.user_id') 
+                ->join('districts','districts.id','=','officers.district_id')   
+                ->join('tehsils','tehsils.id','=','officers.tehsil_id')          
+                ->where('officers.id', $fetch->approved_district)
+                ->first();
+            }            
+        }
         return response()
-                    ->json(['message' => 'Fetch all applied schemes', 'data' => $fetchapp,'document_url'=>'storage/scheme-documents/'.date('Y').'/'], 200);
+                    ->json(['message' => 'Fetch all applied schemes', 'document_url'=>'storage/scheme-documents/'.date('Y').'/','data' => $fetchapp], 200);
     }
 
     public function fetchCategorySchemes(Request $request){
