@@ -1042,6 +1042,7 @@ class SubsidyController extends Controller
         $all_targets = $request->target_id;
         $all_private_targets = $request->private_target_id;
         $all_district_targets = $request->target_district_id;
+        $all_tehsil_targets = $request->target_tehsil_id;
         $all_private_target_district_ids = $request->private_target_district_id;
         $all_remarks = $request->district_remarks;
         $all_private_remarks = $request->district_private_remarks;
@@ -1056,11 +1057,14 @@ class SubsidyController extends Controller
         $year = $request->year;
         $district = $request->district_id;
         $block = $request->block_id;
-        // dd($request->private_gen_target);
+        print_r($all_gen_targets);
+        print_r($all_sc_targets);
+        echo 'hi';
+        dd($request->private_gen_target);
         
         foreach($all_targets as $key=> $target){ 
             $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->where('target_district_id',$all_district_targets[$key])->first();           
-            if(empty($all_district_targets[$key]) && empty($targets)){                
+            if(empty($all_tehsil_targets[$key]) && empty($targets)){                
                 $targets = TargetBlock::create([
                     'district_id'=> $district,
                     'tehsil_id'=> $block, 
@@ -1093,8 +1097,8 @@ class SubsidyController extends Controller
         }
 
         foreach($all_private_targets as $key=> $target){ 
-            $targets = TargetBlock::where('district_id',$district)->where('target_state_id',$target)->first();           
-            if(empty($all_district_targets[$key]) && empty($targets)){                
+            $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->first();           
+            if(empty($all_tehsil_targets[$key]) && empty($targets)){                
                 $targets = TargetBlock::create([
                     'district_id'=> $district,
                     'tehsil_id'=> $block, 
