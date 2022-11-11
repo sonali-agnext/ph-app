@@ -1222,6 +1222,10 @@ class APIController extends Controller
                 $land_documents_name ='';
                 $self_declaration_name ='';
                 $other_documents_names =[];
+                $check_apply_scheme = AppliedScheme::where('farmer_id', $farmer_id)
+                    ->where('land_address_id', $land_address_id)
+                    ->where('scheme_id', $scheme_id)
+                    ->first();
                 if($request->hasFile('project_note')){
                     $project_note_name = time().$request->project_note->getClientOriginalName();
                     $request->project_note->storeAs('scheme-documents/'.date('Y'),$project_note_name,'public');
@@ -1266,18 +1270,22 @@ class APIController extends Controller
                     if(count($request->other_documents)>0){
                         foreach($request->other_documents as $key => $file)
                         { 
-                            $other_documents_name = time().$file->getClientOriginalName();
-                            $other_documents_names[$key] = $other_documents_name;
-                            $file->storeAs('scheme-documents/'.date('Y'),$other_documents_name,'public');
+                            if(!empty($file)){
+                                $other_documents_name = time().$file->getClientOriginalName();
+                                $other_documents_names[$key] = $other_documents_name;
+                                $file->storeAs('scheme-documents/'.date('Y'),$other_documents_name,'public');
+                            }else{
+                                $old_other = json_decode($check_apply_scheme->other_documents);
+                                if(!empty($old_other)){
+                                    $other_documents_names[$key]=$old_other[$key];
+                                }
+                            }                            
                         }
                     }
                 }
                 $bank_details = FarmerLandDetail::where('farmer_id', $farmer_id)->where('id', $land_address_id)->first();
 
-                $check_apply_scheme = AppliedScheme::where('farmer_id', $farmer_id)
-                    ->where('land_address_id', $land_address_id)
-                    ->where('scheme_id', $scheme_id)
-                    ->first();
+                
                 $user = new User;
                 $districtInfo =$user->officertehsil($bank_details->tehsil_id); 
                 
@@ -1325,6 +1333,8 @@ class APIController extends Controller
                     }
                 }else{
                     if(!empty($request->reject)){
+                        
+                        
                         $applied_schemes = AppliedScheme::where('id', $check_apply_scheme->id)->update([
                             'project_note' => $project_note_name,
                             'technical_datasheet' => $technical_datasheet_name,
