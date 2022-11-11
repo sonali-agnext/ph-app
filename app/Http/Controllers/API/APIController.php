@@ -1267,6 +1267,7 @@ class APIController extends Controller
                     $request->self_declaration->storeAs('scheme-documents/'.date('Y'),$self_declaration_name,'public');
                 }
                 if(!empty($request->other_documents)){
+                    
                     if(count($request->other_documents)>0){
                         foreach($request->other_documents as $key => $file)
                         { 
@@ -1274,17 +1275,13 @@ class APIController extends Controller
                                 $other_documents_name = time().$file->getClientOriginalName();
                                 $other_documents_names[$key] = $other_documents_name;
                                 $file->storeAs('scheme-documents/'.date('Y'),$other_documents_name,'public');
-                            }else{
-                                $old_other = json_decode($check_apply_scheme->other_documents);
-                                if(!empty($old_other)){
-                                    $other_documents_names[$key]=$old_other[$key];
-                                }
-                            }                            
+                            }                           
                         }
+                        // dd($other_documents_names);
                     }
                 }
+                
                 $bank_details = FarmerLandDetail::where('farmer_id', $farmer_id)->where('id', $land_address_id)->first();
-
                 
                 $user = new User;
                 $districtInfo =$user->officertehsil($bank_details->tehsil_id); 
@@ -1333,8 +1330,21 @@ class APIController extends Controller
                     }
                 }else{
                     if(!empty($request->reject)){
-                        
-                        
+                        $old = (array)json_decode($check_apply_scheme->other_documents);
+                        if(!empty($old)){
+                           $old= array_replace($old,$other_documents_names);
+                        }
+                        $i = 0;
+                        ksort($old);
+                        foreach($old as $k => $v) {
+                            while($i < $k) {
+                                // if $i < $k we're missing some keys.
+                                $old[$i] = '';
+                                $i ++;
+                            }
+                            $i++;
+                        }
+                        ksort($old);
                         $applied_schemes = AppliedScheme::where('id', $check_apply_scheme->id)->update([
                             'project_note' => $project_note_name,
                             'technical_datasheet' => $technical_datasheet_name,
@@ -1346,7 +1356,7 @@ class APIController extends Controller
                             'location_plan' => $location_plan_name,
                             'land_documents' => $land_documents_name,
                             'self_declaration' => $self_declaration_name,
-                            'other_documents' => json_encode($other_documents_names),
+                            'other_documents' => json_encode($old),
                             'state' => $bank_details->state, 
                             'district_id' => $bank_details->district_id, 
                             'tehsil_id' => $bank_details->tehsil_id,
@@ -1376,6 +1386,7 @@ class APIController extends Controller
                         ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
             }
         }catch (\Exception $e) {
+            dd($e);
             return response()
                     ->json(['message' => 'Data not processed!'], 401);
         }
