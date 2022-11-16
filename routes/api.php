@@ -48,7 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/fetch-scheme-filter',[APIController::class,'fetchCategorySchemes']);
     Route::get('/fetch-component-list',[APIController::class,'fetchComponentList']);
     Route::get('/search-video',[APIController::class,'searchVideos']);
-    
+    Route::get('/fetch-notification',[APIController::class,'notification']);
+    Route::post('/post-notification',[APIController::class,'notification']);
 });
 Route::get('/fetchallschemes',[APIController::class, 'fetchAllSchemes']);
 // Route::post('/register', [API/APIController::class, 'register']);

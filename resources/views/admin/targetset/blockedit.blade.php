@@ -238,6 +238,7 @@ th.card-title{
                                                                                         <td class="w-8">
                                                                                         <input type="hidden" name="target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>                                                                                            
                                                                                             <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
                                                                                             <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
                                                                                             <input type="hidden" name="old_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format(isset($alltargetdistrict->public)?$alltargetdistrict->public:0, 2)) : number_format($targetsset->physical_target, 2)) }}"/>
                                                                                             <input type="hidden" name="un_assigned[]" value="{{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format(isset($alltargetdistrict->public)?$alltargetdistrict->public:0, 2)) : number_format($targetsset->physical_target, 2)) }}"/>
@@ -363,6 +364,7 @@ th.card-title{
                                                                                             </td> -->
                                                                                             <td class="w-8">  
                                                                                             <input type="hidden" name="target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>                                                                                          
+                                                                                            
                                                                                                 <input type="hidden" name="target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
                                                                                                 <input type="hidden" name="target_id[]" value="{{$targetsset->id}}"/>
                                                                                                 <input type="hidden" name="old_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_physical_target) ? (number_format($targetsset->physical_target, 2)-number_format(isset($alltargetdistrict->public)?$alltargetdistrict->public:0, 2)) : number_format($targetsset->physical_target, 2)) }}"/>

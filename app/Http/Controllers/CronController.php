@@ -159,6 +159,7 @@ class CronController extends Controller
         ->get();
         if(!empty($farmers)){
             foreach($farmers as $key => $farmer){
+                $farmer_id = $user->farmer($farmer->farmer_id);
                 if($farmer->stage == 'Tehsil' && empty($farmer->tehsil_updated) && ($farmer->applied_status == "In Progress")){
 
                     $date1= date('Y-m-d',strtotime($farmer->aupdated_at.'+7 day'));
@@ -177,6 +178,11 @@ class CronController extends Controller
                             'district_status' => 'In Progress',
                             'approved_district' => $districtInfo->officer_id,
                             'attempts' => 0
+                        ]);
+                        
+                        Notification::create([
+                            'user_id' => $farmer_id->id,
+                            'message'=>('Your Application is Auto Approved')
                         ]);
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
@@ -208,6 +214,10 @@ class CronController extends Controller
                                 'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                             Notification::create([
+                                'user_id' => $farmer_id->id,
+                                'message'=>('Your Application is Auto Approved')
+                            ]);
+                            Notification::create([
                                 'user_id' => $districtInfo->user_id,
                                 'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
@@ -222,6 +232,10 @@ class CronController extends Controller
                         Notification::create([
                             'user_id' => 1,
                             'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                        ]);
+                        Notification::create([
+                            'user_id' => $farmer_id->id,
+                            'message'=>('Your Application is Auto Rejected')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
@@ -264,6 +278,10 @@ class CronController extends Controller
                             'user_id' => 1,
                             'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
+                        Notification::create([
+                            'user_id' => $farmer_id->id,
+                            'message'=>('Your Application is Auto Approved')
+                        ]);
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
@@ -289,6 +307,10 @@ class CronController extends Controller
                                 'district_updated' => date('Y-m-d H:i:s'),
                                 'district_status' => 'Auto Approved',
                                 'attempts' => 0
+                            ]);
+                            Notification::create([
+                                'user_id' => $farmer_id->id,
+                                'message'=>('Your Application is Auto Approved')
                             ]);
                             Notification::create([
                                 'user_id' => 1,
@@ -319,6 +341,10 @@ class CronController extends Controller
                                     $users->update(['status' => 2]);
                             }
                         }
+                        Notification::create([
+                            'user_id' => $farmer_id->id,
+                            'message'=>('Your Application is Auto Rejected')
+                        ]);
                         $user = new User;
                         Notification::create([
                             'user_id' => 1,

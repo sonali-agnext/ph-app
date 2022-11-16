@@ -1325,6 +1325,7 @@ class APIController extends Controller
                             'user_id' => 1,
                             'message'=>('New Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
+                        
                         return response()
                                 ->json(['message' => 'Scheme Applied','document_url'=>'storage/scheme-documents/'.date('Y').'/' ,'application_id'=> 'PHSCHM'.str_pad($applied_schemes->id,6, "0", STR_PAD_LEFT)], 200);
                     }
@@ -1386,7 +1387,6 @@ class APIController extends Controller
                         ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
             }
         }catch (\Exception $e) {
-            dd($e);
             return response()
                     ->json(['message' => 'Data not processed!'], 401);
         }
@@ -1553,6 +1553,17 @@ class APIController extends Controller
         }
 
         return response()->json(['message' => 'Fetch Component and Sub components' ,'components'=>$components], 200);
+    }
+
+    public function notification(Request $request){
+        if(empty($request->save)){
+            $count_notify = Notification::where('read_status',1)->where('user_id',$request->user_id)->count();
+            $notify = Notification::all();
+            return response()->json(['message' => 'Fetch Notification Lists' , 'count'=>$count_notify, 'data'=>$notify], 200);
+        }else{
+            $count_notify = Notification::where('read_status',0)->where('user_id',$request->user_id)->update(['read_status'=>1]);
+            return response()->json(['message' => 'Save Notification Lists'], 200);
+        }        
     }
 
 }
