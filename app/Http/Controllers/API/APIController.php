@@ -1387,6 +1387,7 @@ class APIController extends Controller
                         ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
             }
         }catch (\Exception $e) {
+            dd($e);
             return response()
                     ->json(['message' => 'Data not processed!'], 401);
         }
