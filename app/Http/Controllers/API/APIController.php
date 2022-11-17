@@ -1285,7 +1285,6 @@ class APIController extends Controller
                 
                 $user = new User;
                 $districtInfo =$user->officertehsil($bank_details->tehsil_id);
-                dd($districtInfo); 
                 
                 if(empty($check_apply_scheme) && empty($request->reject)){ 
                               
@@ -1388,7 +1387,6 @@ class APIController extends Controller
                         ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
             }
         }catch (\Exception $e) {
-            dd($e);
             return response()
                     ->json(['message' => 'Data not processed!'], 401);
         }
