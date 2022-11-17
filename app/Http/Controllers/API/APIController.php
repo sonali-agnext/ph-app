@@ -1556,8 +1556,7 @@ class APIController extends Controller
     }
 
     public function notification(Request $request){
-    dd($request);
-        if(empty($request->user_id)){
+        if(!empty($request->user_id)){
             if(empty($request->save)){
                 $count_notify = Notification::where('read_status',1)->where('user_id',$request->user_id)->count();
                 $notify = Notification::where('user_id',$request->user_id)->orderBy('id', 'DESC')->get();
