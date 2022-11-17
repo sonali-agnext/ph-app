@@ -1556,6 +1556,7 @@ class APIController extends Controller
     }
 
     public function notification(Request $request){
+    dd($request);
         if(empty($request->user_id)){
             if(empty($request->save)){
                 $count_notify = Notification::where('read_status',1)->where('user_id',$request->user_id)->count();
@@ -1565,7 +1566,10 @@ class APIController extends Controller
                 $count_notify = Notification::where('read_status',0)->where('user_id',$request->user_id)->update(['read_status'=>1]);
                 return response()->json(['message' => 'Save Notification Lists'], 200);
             }
-        }        
+        }else{
+            return response()
+                            ->json(['message' =>'Please provide user_id'], 200);
+        }       
     }
 
 }
