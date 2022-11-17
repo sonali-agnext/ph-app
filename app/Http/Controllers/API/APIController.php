@@ -1284,7 +1284,8 @@ class APIController extends Controller
                 $bank_details = FarmerLandDetail::where('farmer_id', $farmer_id)->where('id', $land_address_id)->first();
                 
                 $user = new User;
-                $districtInfo =$user->officertehsil($bank_details->tehsil_id); 
+                $districtInfo =$user->officertehsil($bank_details->tehsil_id);
+                dd($districtInfo); 
                 
                 if(empty($check_apply_scheme) && empty($request->reject)){ 
                               
