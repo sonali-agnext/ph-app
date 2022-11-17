@@ -672,14 +672,14 @@ class APIController extends Controller
     }
 
     public function fetchVideos(Request $request){
-        $video = YoutubeVideo::paginate();
+        $video = YoutubeVideo::orderBy('id', 'DESC')->paginate();
         return response()
             ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
     }
 
     public function searchVideos(Request $request){
         if(!empty($request->keyword)){
-            $video = YoutubeVideo::where('title', 'LIKE', '%'.$request->keyword.'%')->paginate();
+            $video = YoutubeVideo::where('title', 'LIKE', '%'.$request->keyword.'%')->orderBy('id', 'DESC')->paginate();
             return response()
                 ->json(['message' => 'Fetch Latest Videos', 'data' => $video], 200);
         }else{
@@ -1556,13 +1556,15 @@ class APIController extends Controller
     }
 
     public function notification(Request $request){
-        if(empty($request->save)){
-            $count_notify = Notification::where('read_status',1)->where('user_id',$request->user_id)->count();
-            $notify = Notification::all();
-            return response()->json(['message' => 'Fetch Notification Lists' , 'count'=>$count_notify, 'data'=>$notify], 200);
-        }else{
-            $count_notify = Notification::where('read_status',0)->where('user_id',$request->user_id)->update(['read_status'=>1]);
-            return response()->json(['message' => 'Save Notification Lists'], 200);
+        if(empty($request->user_id)){
+            if(empty($request->save)){
+                $count_notify = Notification::where('read_status',1)->where('user_id',$request->user_id)->count();
+                $notify = Notification::where('user_id',$request->user_id)->orderBy('id', 'DESC')->get();
+                return response()->json(['message' => 'Fetch Notification Lists' , 'count'=>$count_notify, 'data'=>$notify], 200);
+            }else{
+                $count_notify = Notification::where('read_status',0)->where('user_id',$request->user_id)->update(['read_status'=>1]);
+                return response()->json(['message' => 'Save Notification Lists'], 200);
+            }
         }        
     }
 
