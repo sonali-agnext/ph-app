@@ -1347,7 +1347,7 @@ class APIController extends Controller
                         }
                         ksort($old);
                         $applied_schemes = AppliedScheme::where('id', $check_apply_scheme->id)->update([
-                            'project_note' => $project_note_name,
+                            'project_note' => empty($project_note_name)?$check_apply_scheme->project_note:$project_note_name,
                             'technical_datasheet' => $technical_datasheet_name,
                             'bank_sanction' => $bank_sanction_name,
                             'quotation_solar' => $quotation_solar_name,
@@ -1356,7 +1356,7 @@ class APIController extends Controller
                             'pan_aadhar' => $pan_aadhar_name,
                             'location_plan' => $location_plan_name,
                             'land_documents' => $land_documents_name,
-                            'self_declaration' => $self_declaration_name,
+                            'self_declaration' => empty($self_declaration_name)?$check_apply_scheme->self_declaration:$self_declaration_name,
                             'other_documents' => json_encode($old),
                             'state' => $bank_details->state, 
                             'district_id' => $bank_details->district_id, 
