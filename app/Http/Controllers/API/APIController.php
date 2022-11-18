@@ -1347,6 +1347,8 @@ class APIController extends Controller
                         }
                         ksort($old);
                         $applied_schemes = AppliedScheme::where('id', $check_apply_scheme->id)->update([
+                            'land_applied' => $land_applied,
+                            'land_address_id' => $land_address_id,
                             'project_note' => empty($project_note_name)?$check_apply_scheme->project_note:$project_note_name,
                             'technical_datasheet' => $technical_datasheet_name,
                             'bank_sanction' => $bank_sanction_name,
