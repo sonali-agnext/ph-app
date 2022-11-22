@@ -38,11 +38,8 @@ class OfficerController extends Controller
 
     //manage state
     public static function manageState(Request $request){
-        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        $states = Officer::select('officers.*','users.id as user_id','users.name','users.email')
         ->join('users','users.id','=','officers.user_id')
-        ->join('cities','officers.city_id','=','cities.id')
-        ->join('districts','officers.district_id','=','districts.id')
-        ->join('tehsils','officers.tehsil_id','=','tehsils.id')
         ->where('users.role_id',3)
         ->get();
 
@@ -54,10 +51,7 @@ class OfficerController extends Controller
         $state = Officer::select('officers.*', 'users.id as user_id','users.name','users.email','users.password','users.status')
         ->join('users','users.id','=','officers.user_id')
         ->where('officers.id', $id)->first();
-        $cities = City::all();
-        $districts = District::all();
-        $tehsils = Tehsil::all();
-        return view('admin.state_officer.edit',['state' => $state, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils]);
+        return view('admin.state_officer.edit',['state' => $state]);
     }
 
     public function updateState(Request $request){
@@ -70,12 +64,8 @@ class OfficerController extends Controller
         $name = $request->name;
         $email = $request->email;
         
-        $state = $request->state;
-        $district_id = $request->district_id;
-        $tehsil_id = $request->tehsil_id;
-        $city_id = $request->city_id;
-        $full_address = $request->address;
-        $postal_code = $request->pincode;
+        $ihrm = $request->ihrm;
+        $designation = $request->designation;
         $farmer_unique_id = '';
         $farmer = Officer::find($id);
         if ($validator->fails()) {
@@ -86,12 +76,8 @@ class OfficerController extends Controller
             $request->avatar->storeAs('images',$filename,'public');
             $district = Officer::where('id',$id)->update([
                 'phone_number' => $mobile_number,                
-                'state'=> $state, 
-                'district_id' => $district_id, 
-                'tehsil_id' => $tehsil_id, 
-                'city_id' => $city_id, 
-                'address'=> $full_address, 
-                'pincode'=> $postal_code, 
+                'ihrm'=> $ihrm, 
+                'designation' => $designation,
                 'avatar' => $filename
             ]);
                 if($district){
@@ -103,12 +89,8 @@ class OfficerController extends Controller
         }else{
             $district = Officer::where('id',$id)->update([
                 'phone_number' => $mobile_number,                
-                'state'=> $state, 
-                'district_id' => $district_id, 
-                'tehsil_id' => $tehsil_id, 
-                'city_id' => $city_id, 
-                'address'=> $full_address, 
-                'pincode'=> $postal_code, 
+                'ihrm'=> $ihrm, 
+                'designation' => $designation,
             ]);
                 if($district){
                     if(!empty($request->password)){
@@ -152,23 +134,15 @@ class OfficerController extends Controller
                 if($user->save()){            
                                        
                     $id = $user->id;                    
-                    $state = $request->state;
-                    $district_id = $request->district_id;
-                    $tehsil_id = $request->tehsil_id;
-                    $city_id = $request->city_id;
-                    $full_address = $request->address;
-                    $postal_code = $request->pincode;
+                    $ihrm = $request->ihrm;
+                    $designation = $request->designation;
                     
                     if($filename){
                         $farmer = Officer::create([
                             'user_id'=>$id,                            
                             'phone_number' => $mobile_number,                             
-                            'state'=> $state, 
-                            'district_id' => $district_id, 
-                            'tehsil_id' => $tehsil_id, 
-                            'city_id' => $city_id, 
-                            'address'=> $full_address,                             
-                            'pincode'=> $postal_code, 
+                            'ihrm'=> $ihrm, 
+                            'designation' => $designation,
                             'avatar' => $filename]);
                     
                         if($farmer){                            
@@ -189,10 +163,7 @@ class OfficerController extends Controller
         }   
     }
     public function addState(Request $request){
-        $cities = City::all();
-        $districts = District::all();
-        $tehsils = Tehsil::all();
-        return view('admin.state_officer.add',['cities' => $cities, 'districts' => $districts,'tehsils' => $tehsils]);
+        return view('admin.state_officer.add');
     }
 
     public function deleteState(Request $request){
@@ -211,11 +182,8 @@ class OfficerController extends Controller
 
     //manage district
     public static function manageDistrict(Request $request){
-        $states = Officer::select('officers.*','users.id as user_id','assign_to_officers.district_id as district_officer_id','users.name','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        $states = Officer::select('officers.*','users.id as user_id','assign_to_officers.district_id as district_officer_id','users.name','users.email')
         ->join('users','users.id','=','officers.user_id')
-        ->join('cities','officers.city_id','=','cities.id')
-        ->join('districts','officers.district_id','=','districts.id')
-        ->join('tehsils','officers.tehsil_id','=','tehsils.id')
         ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('users.role_id',4)
         ->get();
@@ -229,10 +197,8 @@ class OfficerController extends Controller
         ->join('users','users.id','=','officers.user_id')
         ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('officers.id', $id)->first();
-        $cities = City::all();
         $districts = District::all();
-        $tehsils = Tehsil::all();
-        return view('admin.district_officer.edit',['state' => $state, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils]);
+        return view('admin.district_officer.edit',['state' => $state,'districts'=>$districts]);
     }
 
     public function updateDistrict(Request $request){
@@ -245,12 +211,8 @@ class OfficerController extends Controller
         $name = $request->name;
         $email = $request->email;
         
-        $state = $request->state;
-        $district_id = $request->district_id;
-        $tehsil_id = $request->tehsil_id;
-        $city_id = $request->city_id;
-        $full_address = $request->address;
-        $postal_code = $request->pincode;
+        $ihrm = $request->ihrm;
+        $designation = $request->designation;
         $farmer_unique_id = '';
         $farmer = Officer::find($id);
         if ($validator->fails()) {
@@ -260,13 +222,9 @@ class OfficerController extends Controller
             $filename = time().$request->avatar->getClientOriginalName();
             $request->avatar->storeAs('images',$filename,'public');
             $district = Officer::where('id',$id)->update([
-                'phone_number' => $mobile_number,                
-                'state'=> $state, 
-                'district_id' => $district_id, 
-                'tehsil_id' => $tehsil_id, 
-                'city_id' => $city_id, 
-                'address'=> $full_address, 
-                'pincode'=> $postal_code, 
+                'phone_number' => $mobile_number,
+                'ihrm'=> $ihrm, 
+                'designation' => $designation,
                 'avatar' => $filename
             ]);
                 if($district){
@@ -288,13 +246,9 @@ class OfficerController extends Controller
                 } 
         }else{
             $district = Officer::where('id',$id)->update([
-                'phone_number' => $mobile_number,                
-                'state'=> $state, 
-                'district_id' => $district_id, 
-                'tehsil_id' => $tehsil_id, 
-                'city_id' => $city_id, 
-                'address'=> $full_address, 
-                'pincode'=> $postal_code, 
+                'phone_number' => $mobile_number,  
+                'ihrm'=> $ihrm, 
+                'designation' => $designation,
             ]);
                 if($district){
                     if(!empty($request->password)){
@@ -358,24 +312,16 @@ class OfficerController extends Controller
                 if($user->save()){            
                                        
                     $id = $user->id;                    
-                    $state = $request->state;
-                    $district_id = $request->district_id;
-                    $tehsil_id = $request->tehsil_id;
-                    $city_id = $request->city_id;
-                    $full_address = $request->address;
-                    $postal_code = $request->pincode;
+                    $ihrm = $request->ihrm;
+                    $designation = $request->designation;
                     $assign_district_id = $request->assign_district_id;
                     
                     if($filename){
                         $farmer = Officer::create([
                             'user_id'=>$id,                            
                             'phone_number' => $mobile_number,                             
-                            'state'=> $state, 
-                            'district_id' => $district_id, 
-                            'tehsil_id' => $tehsil_id, 
-                            'city_id' => $city_id, 
-                            'address'=> $full_address,                             
-                            'pincode'=> $postal_code, 
+                            'ihrm'=> $ihrm, 
+                            'designation' => $designation,
                             'avatar' => $filename]);
                     
                         if($farmer){
@@ -397,19 +343,14 @@ class OfficerController extends Controller
         }   
     }
     public function addDistrict(Request $request){
-        $cities = City::all();
         $districts = District::all();
-        $tehsils = Tehsil::all();
-        return view('admin.district_officer.add',['cities' => $cities, 'districts' => $districts,'tehsils' => $tehsils]);
+        return view('admin.district_officer.add',['districts' => $districts]);
     }
 
     //manage tehsil
     public static function manageTehsil(Request $request){
-        $states = Officer::select('officers.*','users.id as user_id','users.name','assign_to_officers.tehsil_id as tehsil_officer_id','users.email','cities.city_name','districts.district_name','tehsils.tehsil_name')
+        $states = Officer::select('officers.*','users.id as user_id','users.name','assign_to_officers.tehsil_id as tehsil_officer_id','users.email')
         ->join('users','users.id','=','officers.user_id')
-        ->join('cities','officers.city_id','=','cities.id')
-        ->join('districts','officers.district_id','=','districts.id')
-        ->join('tehsils','officers.tehsil_id','=','tehsils.id')
         ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('users.role_id',5)
         ->get();
@@ -423,10 +364,8 @@ class OfficerController extends Controller
         ->join('users','users.id','=','officers.user_id')
         ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('officers.id', $id)->first();
-        $cities = City::all();
-        $districts = District::all();
-        $tehsils = Tehsil::all();
-        return view('admin.tehsil_officer.edit',['state' => $state, 'cities'=>$cities, 'districts'=>$districts, 'tehsils'=>$tehsils]);
+        $cities = Tehsil::all();
+        return view('admin.tehsil_officer.edit',['state' => $state,'tehsils' => $cities]);
     }
 
     public function updateTehsil(Request $request){
@@ -440,11 +379,8 @@ class OfficerController extends Controller
         $email = $request->email;
         
         $state = $request->state;
-        $district_id = $request->district_id;
-        $tehsil_id = $request->tehsil_id;
-        $city_id = $request->city_id;
-        $full_address = $request->address;
-        $postal_code = $request->pincode;
+        $ihrm = $request->ihrm;
+        $designation = $request->designation;
         $farmer_unique_id = '';
         $farmer = Officer::find($id);
         if ($validator->fails()) {
@@ -454,13 +390,9 @@ class OfficerController extends Controller
             $filename = time().$request->avatar->getClientOriginalName();
             $request->avatar->storeAs('images',$filename,'public');
             $district = Officer::where('id',$id)->update([
-                'phone_number' => $mobile_number,                
-                'state'=> $state, 
-                'district_id' => $district_id, 
-                'tehsil_id' => $tehsil_id, 
-                'city_id' => $city_id, 
-                'address'=> $full_address, 
-                'pincode'=> $postal_code, 
+                'phone_number' => $mobile_number,
+                'ihrm'=> $ihrm, 
+                'designation' => $designation,
                 'avatar' => $filename
             ]);
                 if($district){
@@ -481,13 +413,9 @@ class OfficerController extends Controller
                 } 
         }else{
             $district = Officer::where('id',$id)->update([
-                'phone_number' => $mobile_number,                
-                'state'=> $state, 
-                'district_id' => $district_id, 
-                'tehsil_id' => $tehsil_id, 
-                'city_id' => $city_id, 
-                'address'=> $full_address, 
-                'pincode'=> $postal_code, 
+                'phone_number' => $mobile_number, 
+                'ihrm'=> $ihrm, 
+                'designation' => $designation
             ]);
                 if($district){
                     if(!empty($request->password)){
@@ -547,25 +475,17 @@ class OfficerController extends Controller
                 if($user->save()){            
                                        
                     $id = $user->id;                    
-                    $state = $request->state;
-                    $district_id = $request->district_id;
-                    $tehsil_id = $request->tehsil_id;
-                    $city_id = $request->city_id;
-                    $full_address = $request->address;
-                    $postal_code = $request->pincode;
+                    $ihrm = $request->ihrm;
+                    $designation = $request->designation;
                     
                     if($request->hasFile('avatar')){            
                         $filename = time().$request->avatar->getClientOriginalName();
                         $request->avatar->storeAs('images',$filename,'public');
                         $farmer = Officer::create([
                             'user_id'=>$id,                            
-                            'phone_number' => $mobile_number,                             
-                            'state'=> $state, 
-                            'district_id' => $district_id, 
-                            'tehsil_id' => $tehsil_id, 
-                            'city_id' => $city_id, 
-                            'address'=> $full_address,                             
-                            'pincode'=> $postal_code, 
+                            'phone_number' => $mobile_number,
+                            'ihrm'=> $ihrm, 
+                            'designation' => $designation,
                             'avatar' => $filename]);
                     
                         if($farmer){
@@ -587,10 +507,8 @@ class OfficerController extends Controller
         }   
     }
     public function addTehsil(Request $request){
-        $cities = City::all();
-        $districts = District::all();
-        $tehsils = Tehsil::all();
-        return view('admin.tehsil_officer.add',['cities' => $cities, 'districts' => $districts,'tehsils' => $tehsils]);
+        $cities = Tehsil::all();
+        return view('admin.tehsil_officer.add',['tehsils' => $cities]);
     }
 
 }

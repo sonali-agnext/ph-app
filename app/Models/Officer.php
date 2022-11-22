@@ -8,7 +8,7 @@ class Officer extends Model
 {
     public $timestamps = true;
     protected $fillable = [
-        'user_id', 'phone_number', 'address', 'city_id', 'tehsil_id','district_id', 'state', 'pincode','avatar'
+        'user_id', 'phone_number', 'designation', 'ihrm','avatar'
     ];
     public function assignedOfficer()
     {

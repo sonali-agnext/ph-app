@@ -73,60 +73,15 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" required name="state" id="state" aria-label="State">
-                                            <option value="">Select State</option>                                       
-                                            <option value="Punjab">Punjab</option>
-                                        </select>
-                                        <label for="state">State<span class="text-danger">*</span></label>
+                                    <div class="form-floating">
+                                        <input type="text" name="designation" required class="form-control" id="designation" placeholder="Enter Designation" value="">
+                                        <label for="designation">Designation<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" required name="district_id" id="district_id" aria-label="District">
-                                            <option value="">Select District</option>
-                                            @forelse($districts as $district)                                            
-                                            <option value="{{ $district->id }}">{{$district->district_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="district_id">District<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" required name="tehsil_id" id="tehsil_id" aria-label="Tehsil">
-                                            <option value="">Select Block</option>
-                                            @forelse($tehsils as $tehsil)                                            
-                                            <option value="{{ $tehsil->id }}">{{$tehsil->tehsil_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="tehsil_id">Block<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" required name="city_id" id="city_id" aria-label="City">
-                                            <option value="">Select Village/City</option>
-                                            @forelse($cities as $city)                                            
-                                            <option value="{{ $city->id }}">{{$city->city_name}}</option>                                            
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <label for="city_id">Village/City<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" name="address" required class="form-control" id="address" placeholder="Enter Full Address" value="">
-                                        <label for="address">Full Address<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" name="pincode" maxlength="6" required class="form-control" id="pincode" placeholder="Enter Pin Code" value="">
-                                        <label for="pincode">Pin Code<span class="text-danger">*</span></label>
+                                    <div class="form-floating">
+                                        <input type="text" name="ihrm" required class="form-control" id="ihrm" placeholder="Enter IHRM" value="">
+                                        <label for="ihrm">IHRM<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
 
