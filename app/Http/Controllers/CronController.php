@@ -10,6 +10,7 @@ use App\Models\YoutubeVideo;
 use App\Models\AppliedScheme;
 use App\Models\User;
 use App\Models\Notification;
+use App\Services\FCMService;
 
 class CronController extends Controller
 {
@@ -184,6 +185,17 @@ class CronController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Your Application is Auto Approved')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Auto Approved',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Auto Approved',
+                                'icon' => 'new',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
                             'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
@@ -217,6 +229,17 @@ class CronController extends Controller
                                 'user_id' => $farmer_id->id,
                                 'message'=>('Your Application is Auto Approved')
                             ]);
+                            FCMService::send(
+                                $farmer_id->fcm_token,
+                                [
+                                    'title' =>  $farmer->application_number,
+                                    'body' => 'Your Application is Auto Approved',
+                                    'user_id' => $farmer_id->id,
+                                    'message' => 'Your Application is Auto Approved',
+                                    'icon' => 'new',
+                                    'sound' => 'default'
+                                ],
+                            );
                             Notification::create([
                                 'user_id' => $districtInfo->user_id,
                                 'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
@@ -233,6 +256,17 @@ class CronController extends Controller
                             'user_id' => 1,
                             'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Auto Rejected',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Auto Rejected',
+                                'icon' => 'error',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => $farmer_id->id,
                             'message'=>('Your Application is Auto Rejected')
@@ -282,6 +316,17 @@ class CronController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Your Application is Auto Approved')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Auto Approved',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Auto Approved',
+                                'icon' => 'new',
+                                'sound' => 'default'
+                            ],
+                        );
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
@@ -308,6 +353,17 @@ class CronController extends Controller
                                 'district_status' => 'Auto Approved',
                                 'attempts' => 0
                             ]);
+                            FCMService::send(
+                                $farmer_id->fcm_token,
+                                [
+                                    'title' =>  $farmer->application_number,
+                                    'body' => 'Your Application is Auto Approved',
+                                    'user_id' => $farmer_id->id,
+                                    'message' => 'Your Application is Auto Approved',
+                                    'icon' => 'new',
+                                    'sound' => 'default'
+                                ],
+                            );
                             Notification::create([
                                 'user_id' => $farmer_id->id,
                                 'message'=>('Your Application is Auto Approved')
@@ -341,6 +397,17 @@ class CronController extends Controller
                                     $users->update(['status' => 2]);
                             }
                         }
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Auto Rejected',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Auto Rejected',
+                                'icon' => 'error',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => $farmer_id->id,
                             'message'=>('Your Application is Auto Rejected')

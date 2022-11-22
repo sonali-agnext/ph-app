@@ -1581,7 +1581,11 @@ class APIController extends Controller
             'do7UBYI-To-JJZCFqb_gmL:APA91bGrzHx8fOGGc8DxCHpR1JQcsV55NVKJKaAidbBvnVk4KYj14u6tP4v6bGdq3nXpVXNUhkVFBLlGw3SeUmIUsokYWdrhL8Bfz2Rw61Sk03ykNiwfQT1taa13T-m9qPHDiR53DfZV',
             [
                 'title' => 'your title',
-                'body' => 'your body'
+                'body' => 'your body',
+                'user_id' => 1,
+                'message' => 'your body',
+                'icon' => 'new',
+                'sound' => 'default'
             ],
         );
     }

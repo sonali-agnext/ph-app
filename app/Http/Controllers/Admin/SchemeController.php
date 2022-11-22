@@ -22,6 +22,7 @@ use App\Models\TargetState;
 use App\Models\AppliedScheme;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Validator;
+use App\Services\FCMService;
 
 class SchemeController extends Controller
 {
@@ -362,6 +363,7 @@ class SchemeController extends Controller
         $id = $request->id;
         $dpr_upload='';
         $self_upload='';
+        $filename='';
         if($request->hasFile('dpr_upload')){            
             $dpr_upload = time().$request->dpr_upload->getClientOriginalName();
             $request->dpr_upload->storeAs('scheme-doc',$dpr_upload,'public');
@@ -375,6 +377,11 @@ class SchemeController extends Controller
         if($request->hasFile('scheme_image')){            
             $filename = time().$request->scheme_image->getClientOriginalName();
             $request->scheme_image->storeAs('scheme-images',$filename,'public');
+        }
+        if($filename){
+            $scheme = Scheme::where('id',$id)->update(['scheme_image' => $filename,]);
+        }
+
             if(!empty($dpr_upload) && !empty($self_upload)){
                 $scheme = Scheme::where('id',$id)->update([
                     'units' => $request->units,
@@ -393,7 +400,7 @@ class SchemeController extends Controller
                     'terms' => json_encode($request->terms),
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
-                    'scheme_image' => $filename,
+                    // 'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
@@ -430,7 +437,7 @@ class SchemeController extends Controller
                     'terms' => json_encode($request->terms),
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
-                    'scheme_image' => $filename,
+                    // 'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
@@ -466,7 +473,7 @@ class SchemeController extends Controller
                     'terms' => json_encode($request->terms),
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
-                    'scheme_image' => $filename,
+                    // 'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
@@ -502,7 +509,7 @@ class SchemeController extends Controller
                     'terms' => json_encode($request->terms),
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
-                    'scheme_image' => $filename,
+                    // 'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured                   
@@ -520,151 +527,151 @@ class SchemeController extends Controller
                 }
             }
             
-        }else{
-            if(!empty($dpr_upload) && !empty($self_upload)){
-                $scheme = Scheme::where('id',$id)->update([
-                    'units' => $request->units,
-                    'year' => $request->year,
-                    'govt_id' => $request->govt_id,
-                    'category_id'=>$request->scheme_category_id,
-                    'component_id' => $request->component_id,
-                    'sub_component_id' => $request->sub_component_id,
-                    'scheme_subcategory_id' => $request->scheme_subcategory_id,
-                    'scheme_name' => $request->scheme_name,
-                    'subsidy' => $request->subsidy,
-                    'public_sector' => ($request->public_sector),
-                    'private_sector' => ($request->private_sector),
-                    'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
-                    'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
-                    'terms' => json_encode($request->terms),
-                    'cost_norms' => $request->cost_norms,
-                    'detailed_description' => $request->detailed_description,
-                    'videos' => json_encode($request->video),
-                    'videos_title' => json_encode($request->title),
-                    'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
-                    'self_upload' => $self_upload,
-                    'dpr_upload' => $dpr_upload
-                ]);
-                if($scheme){
-                    $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
+        // }else{
+        //     if(!empty($dpr_upload) && !empty($self_upload)){
+        //         $scheme = Scheme::where('id',$id)->update([
+        //             'units' => $request->units,
+        //             'year' => $request->year,
+        //             'govt_id' => $request->govt_id,
+        //             'category_id'=>$request->scheme_category_id,
+        //             'component_id' => $request->component_id,
+        //             'sub_component_id' => $request->sub_component_id,
+        //             'scheme_subcategory_id' => $request->scheme_subcategory_id,
+        //             'scheme_name' => $request->scheme_name,
+        //             'subsidy' => $request->subsidy,
+        //             'public_sector' => ($request->public_sector),
+        //             'private_sector' => ($request->private_sector),
+        //             'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+        //             'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
+        //             'terms' => json_encode($request->terms),
+        //             'cost_norms' => $request->cost_norms,
+        //             'detailed_description' => $request->detailed_description,
+        //             'videos' => json_encode($request->video),
+        //             'videos_title' => json_encode($request->title),
+        //             'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
+        //             'self_upload' => $self_upload,
+        //             'dpr_upload' => $dpr_upload
+        //         ]);
+        //         if($scheme){
+        //             $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
     
-                    if(empty($targets)){
-                        $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
-                    }else{
-                        $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
-                    }
-                    return back()->with('success','Schemes updated successfully!');
-                }else{
-                    return back()->with('error','Something Went Wrong!');
-                }
-            }elseif(!empty($dpr_upload) && empty($self_upload)){
-                $scheme = Scheme::where('id',$id)->update([
-                    'units' => $request->units,
-                    'year' => $request->year,
-                    'govt_id' => $request->govt_id,
-                    'category_id'=>$request->scheme_category_id,
-                    'component_id' => $request->component_id,
-                    'sub_component_id' => $request->sub_component_id,
-                    'scheme_subcategory_id' => $request->scheme_subcategory_id,
-                    'scheme_name' => $request->scheme_name,
-                    'subsidy' => $request->subsidy,
-                    'public_sector' => ($request->public_sector),
-                    'private_sector' => ($request->private_sector),
-                    'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
-                    'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
-                    'terms' => json_encode($request->terms),
-                    'cost_norms' => $request->cost_norms,
-                    'detailed_description' => $request->detailed_description,
-                    'videos' => json_encode($request->video),
-                    'videos_title' => json_encode($request->title),
-                    'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
-                    'dpr_upload' => $dpr_upload
-                ]);
-                if($scheme){
-                    $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
+        //             if(empty($targets)){
+        //                 $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
+        //             }else{
+        //                 $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
+        //             }
+        //             return back()->with('success','Schemes updated successfully!');
+        //         }else{
+        //             return back()->with('error','Something Went Wrong!');
+        //         }
+        //     }elseif(!empty($dpr_upload) && empty($self_upload)){
+        //         $scheme = Scheme::where('id',$id)->update([
+        //             'units' => $request->units,
+        //             'year' => $request->year,
+        //             'govt_id' => $request->govt_id,
+        //             'category_id'=>$request->scheme_category_id,
+        //             'component_id' => $request->component_id,
+        //             'sub_component_id' => $request->sub_component_id,
+        //             'scheme_subcategory_id' => $request->scheme_subcategory_id,
+        //             'scheme_name' => $request->scheme_name,
+        //             'subsidy' => $request->subsidy,
+        //             'public_sector' => ($request->public_sector),
+        //             'private_sector' => ($request->private_sector),
+        //             'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+        //             'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
+        //             'terms' => json_encode($request->terms),
+        //             'cost_norms' => $request->cost_norms,
+        //             'detailed_description' => $request->detailed_description,
+        //             'videos' => json_encode($request->video),
+        //             'videos_title' => json_encode($request->title),
+        //             'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
+        //             'dpr_upload' => $dpr_upload
+        //         ]);
+        //         if($scheme){
+        //             $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
     
-                    if(empty($targets)){
-                        $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
-                    }else{
-                        $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
-                    }
-                    return back()->with('success','Schemes updated successfully!');
-                }else{
-                    return back()->with('error','Something Went Wrong!');
-                }
-            }elseif(empty($dpr_upload) && !empty($self_upload)){
-                $scheme = Scheme::where('id',$id)->update([
-                    'units' => $request->units,
-                    'year' => $request->year,
-                    'govt_id' => $request->govt_id,
-                    'category_id'=>$request->scheme_category_id,
-                    'component_id' => $request->component_id,
-                    'sub_component_id' => $request->sub_component_id,
-                    'scheme_subcategory_id' => $request->scheme_subcategory_id,
-                    'scheme_name' => $request->scheme_name,
-                    'subsidy' => $request->subsidy,
-                    'public_sector' => ($request->public_sector),
-                    'private_sector' => ($request->private_sector),
-                    'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
-                    'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
-                    'terms' => json_encode($request->terms),
-                    'cost_norms' => $request->cost_norms,
-                    'detailed_description' => $request->detailed_description,
-                    'videos' => json_encode($request->video),
-                    'videos_title' => json_encode($request->title),
-                    'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
-                    'self_upload' => $self_upload
-                ]);
-                if($scheme){
-                    $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
+        //             if(empty($targets)){
+        //                 $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
+        //             }else{
+        //                 $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
+        //             }
+        //             return back()->with('success','Schemes updated successfully!');
+        //         }else{
+        //             return back()->with('error','Something Went Wrong!');
+        //         }
+        //     }elseif(empty($dpr_upload) && !empty($self_upload)){
+        //         $scheme = Scheme::where('id',$id)->update([
+        //             'units' => $request->units,
+        //             'year' => $request->year,
+        //             'govt_id' => $request->govt_id,
+        //             'category_id'=>$request->scheme_category_id,
+        //             'component_id' => $request->component_id,
+        //             'sub_component_id' => $request->sub_component_id,
+        //             'scheme_subcategory_id' => $request->scheme_subcategory_id,
+        //             'scheme_name' => $request->scheme_name,
+        //             'subsidy' => $request->subsidy,
+        //             'public_sector' => ($request->public_sector),
+        //             'private_sector' => ($request->private_sector),
+        //             'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+        //             'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
+        //             'terms' => json_encode($request->terms),
+        //             'cost_norms' => $request->cost_norms,
+        //             'detailed_description' => $request->detailed_description,
+        //             'videos' => json_encode($request->video),
+        //             'videos_title' => json_encode($request->title),
+        //             'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
+        //             'self_upload' => $self_upload
+        //         ]);
+        //         if($scheme){
+        //             $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
     
-                    if(empty($targets)){
-                        $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
-                    }else{
-                        $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
-                    }
-                    return back()->with('success','Schemes updated successfully!');
-                }else{
-                    return back()->with('error','Something Went Wrong!');
-                }
-            }
-            else{
-                $scheme = Scheme::where('id',$id)->update([
-                    'units' => $request->units,
-                    'year' => $request->year,
-                    'govt_id' => $request->govt_id,
-                    'category_id'=>$request->scheme_category_id,
-                    'component_id' => $request->component_id,
-                    'sub_component_id' => $request->sub_component_id,
-                    'scheme_subcategory_id' => $request->scheme_subcategory_id,
-                    'scheme_name' => $request->scheme_name,
-                    'subsidy' => $request->subsidy,
-                    'public_sector' => ($request->public_sector),
-                    'private_sector' => ($request->private_sector),
-                    'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
-                    'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
-                    'terms' => json_encode($request->terms),
-                    'cost_norms' => $request->cost_norms,
-                    'detailed_description' => $request->detailed_description,
-                    'videos' => json_encode($request->video),
-                    'videos_title' => json_encode($request->title),
-                    'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
-                ]);
-                if($scheme){
-                    $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
+        //             if(empty($targets)){
+        //                 $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
+        //             }else{
+        //                 $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
+        //             }
+        //             return back()->with('success','Schemes updated successfully!');
+        //         }else{
+        //             return back()->with('error','Something Went Wrong!');
+        //         }
+        //     }
+        //     else{
+        //         $scheme = Scheme::where('id',$id)->update([
+        //             'units' => $request->units,
+        //             'year' => $request->year,
+        //             'govt_id' => $request->govt_id,
+        //             'category_id'=>$request->scheme_category_id,
+        //             'component_id' => $request->component_id,
+        //             'sub_component_id' => $request->sub_component_id,
+        //             'scheme_subcategory_id' => $request->scheme_subcategory_id,
+        //             'scheme_name' => $request->scheme_name,
+        //             'subsidy' => $request->subsidy,
+        //             'public_sector' => ($request->public_sector),
+        //             'private_sector' => ($request->private_sector),
+        //             'public_range' => empty($request->public_range)? '0.00': $request->public_range ,
+        //             'private_range' => empty($request->private_range)? '0.00' : $request->private_range,
+        //             'terms' => json_encode($request->terms),
+        //             'cost_norms' => $request->cost_norms,
+        //             'detailed_description' => $request->detailed_description,
+        //             'videos' => json_encode($request->video),
+        //             'videos_title' => json_encode($request->title),
+        //             'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
+        //         ]);
+        //         if($scheme){
+        //             $targets= TargetState::where('crop_id', $request->id)->where('component_type_id', $request->scheme_subcategory_id)->where('sub_component_id', $request->sub_component_id)->first();
     
-                    if(empty($targets)){
-                        $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
-                    }else{
-                        $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
-                    }
-                    return back()->with('success','Schemes updated successfully!');
-                }else{
-                    return back()->with('error','Something Went Wrong!');
-                }
-            }
+        //             if(empty($targets)){
+        //                 $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"",'private_remarks'=>"", 'year' =>$request->year]);
+        //             }else{
+        //                 $target = TargetState::where('crop_id', $request->id)->update(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => $targets->physical_target,'financial_target' => "0",'private_physical_target'=>$targets->private_physical_target, 'remarks'=>$targets->remarks, 'private_remarks'=>$targets->private_remarks, 'year' =>$request->year]);
+        //             }
+        //             return back()->with('success','Schemes updated successfully!');
+        //         }else{
+        //             return back()->with('error','Something Went Wrong!');
+        //         }
+        //     }
             
-        }       
+        // }       
     }
 
     public function deleteScheme(Request $request){
@@ -696,9 +703,10 @@ class SchemeController extends Controller
         if ($validator->fails()) {
             return back()->with('error','Scheme name should be unique and fill required!');
         }else{
-            if($request->hasFile('scheme_image')){
+            // if($request->hasFile('scheme_image')){
                 $dpr_upload = '';
                 $self_upload = '';
+                $filename = '';
                 if($request->hasFile('dpr_upload')){
                     $dpr_upload = time().$request->dpr_upload->getClientOriginalName();
                     $request->dpr_upload->storeAs('scheme-doc',$dpr_upload,'public');
@@ -708,9 +716,11 @@ class SchemeController extends Controller
                     $self_upload = time().$request->self_upload->getClientOriginalName();
                     $request->self_upload->storeAs('scheme-doc',$self_upload,'public');
                 }
-
-                $filename = time().$request->scheme_image->getClientOriginalName();
-                $request->scheme_image->storeAs('scheme-images',$filename,'public');
+                if($request->hasFile('scheme_image')){            
+                    $filename = time().$request->scheme_image->getClientOriginalName();
+                    $request->scheme_image->storeAs('scheme-images',$filename,'public');
+                }
+                
                 $scheme = Scheme::create([
                     'units' => $request->units,
                     'year' => $request->year,
@@ -741,9 +751,9 @@ class SchemeController extends Controller
                 }else{
                     return back()->with('error','Something Went Wrong!');
                 }
-            }else{
-                return back()->with('error','Something Went Wrong!');
-            }
+            // }else{
+            //     return back()->with('error','Something Went Wrong!');
+            // }
             
         }        
     }
@@ -905,6 +915,17 @@ class SchemeController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Application Approved by Tehsil Officer')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Approved',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Approved',
+                                'icon' => 'new',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => 1,
                             'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
@@ -931,6 +952,17 @@ class SchemeController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Application Approved by District Officer')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Auto Approved',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Approved',
+                                'icon' => 'new',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => 1,
                             'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
@@ -967,6 +999,17 @@ class SchemeController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Application Resubmitted by Tehsil Officer')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Resubmitted',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Resubmitted',
+                                'icon' => 'old',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => 1,
                             'message'=>('Application Resubmitted by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
@@ -993,6 +1036,17 @@ class SchemeController extends Controller
                             'user_id' => 1,
                             'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Rejected',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Rejected',
+                                'icon' => 'error',
+                                'sound' => 'default'
+                            ],
+                        );
                         Notification::create([
                             'user_id' => $farmer_id->id,
                             'message'=>('Application Rejected by Tehsil Officer')
@@ -1017,6 +1071,17 @@ class SchemeController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Application Resubmitted by District Officer')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Resubmitted',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Resubmitted',
+                                'icon' => 'old',
+                                'sound' => 'default'
+                            ],
+                        );
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
@@ -1043,6 +1108,17 @@ class SchemeController extends Controller
                             'user_id' => $farmer_id->id,
                             'message'=>('Application Rejected by District Officer')
                         ]);
+                        FCMService::send(
+                            $farmer_id->fcm_token,
+                            [
+                                'title' =>  $farmer->application_number,
+                                'body' => 'Your Application is Rejected',
+                                'user_id' => $farmer_id->id,
+                                'message' => 'Your Application is Rejected',
+                                'icon' => 'error',
+                                'sound' => 'default'
+                            ],
+                        );
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){

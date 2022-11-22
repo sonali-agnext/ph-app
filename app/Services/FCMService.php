@@ -14,13 +14,7 @@ class FCMService
                 'to' => $token,
                 'notification' => $notification,
             ]
-            // "body" : "' . $message . '",
-            //      "title" : "' . $title . '",
-            //       "type" : "' . $type . '",
-            //      "id" : "' . $id . '",
-            //      "message" : "' . $message . '",
-            //     "icon" : "new",
-            //     "sound" : "default"
+            
         );
     }
 }
