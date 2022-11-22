@@ -357,16 +357,16 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <p class="text-warning">Note* If Scheme Based is changed then need to add file which is required otherwise reload the page to previous stage.
                                 <div class="col-md-6 mt-1">
                                     <div class="form-floating">
-                                        <input type="file" name="dpr_upload" @if(empty($scheme->dpr_upload)) required @endif class="form-control" id="dpr_upload" value="" >
+                                        <input type="file" name="dpr_upload" @if($scheme->non_project_based != "Non-Project Based" && empty($scheme->dpr_upload)) required @endif class="form-control" id="dpr_upload" value="" >
                                         <label for="dpr_upload">DPR Upload</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mt-1">
                                     <div class="form-floating">
-                                        <input type="file" name="self_upload" @if(empty($scheme->self_upload)) required @endif class="form-control" id="self_upload" value="" >
+                                        <input type="file" name="self_upload" @if($scheme->non_project_based == "Non-Project Based" && empty($scheme->self_upload)) required @endif class="form-control" id="self_upload" value="" >
                                         <label for="self_upload">Self Declaration Upload</label>
                                     </div>
                                 </div>
@@ -469,6 +469,18 @@
                         $('#component_id').html(html);
                     }
                 }); 
+        });
+
+        $("#non_project_based").on('change', function(){
+            var p_value = $(this).val();
+            console.log(p_value);
+            if(p_value == 'Non-Project Based'){
+                $('#dpr_upload').removeAttr('required');
+                $('#self_upload').attr('required',true);
+            }else{
+                $('#dpr_upload').attr('required',true);
+                $('#self_upload').removeAttr('required');
+            }
         });
 
         $('#component_id').on('change', function(){
