@@ -78,7 +78,7 @@
                                     <div class="form-floating">
                                         @php
                                         $minYear = date("Y", time()) - 10;
-                                        $curYear = date("Y", time());
+                                        $curYear = date("Y", time()) + 1;
 
                                         $yearRange = range($minYear, $curYear);
                                         $prevYear = date('Y',strtotime('-1 Year'));

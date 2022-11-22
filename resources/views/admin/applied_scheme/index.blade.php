@@ -63,21 +63,15 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select id="tehsil_id" class="form-select form-select-sm">
+                            <select id="status_id" class="form-select form-select-sm">
                                 <option value="">Search Status</option>
-                            @foreach($tehsils as $tehsil)
-                                <option value="{{$tehsil->tehsil_name}}">{{$tehsil->tehsil_name}}</option>
-                            @endforeach
+                                <option value="Auto Approved">Auto Approved</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Resubmitted">Resubmit</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <select id="tehsil_id" class="form-select form-select-sm">
-                                <option value="">Search Day/Monthwise</option>                            
-                                <option value="Daily">Daily</option>
-                                <option value="Weekly">Weekly</option>
-                                <option value="Monthly">Monthly</option>
-                            </select>
-                        </div>
+                        
                         <div class="col-md-2"></div>
                     </div>
                     <table id="example" class="table table-striped" style="width:100%">
@@ -288,10 +282,13 @@ https://youtu.be/61pqsIRc_6E End Left side columns -->
             }
         });
         $('#district_id').on('change', function () {
-            table.columns(5).search( this.value ).draw();
-        } );
+            table.columns(7).search( this.value ).draw();
+        });
 
         $('#tehsil_id').on('change', function () {
+            table.columns(6).search( this.value ).draw();
+        } );
+        $('#status_id').on('change', function () {
             table.columns(4).search( this.value ).draw();
         } );
     });

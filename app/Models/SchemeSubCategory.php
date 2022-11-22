@@ -72,8 +72,13 @@ class SchemeSubCategory extends Model
     }
 
     public function fetchtargettehsil($district_id,$tehsil_id,$target_district_id,$target_id, $year){
-        $targets = TargetBlock::where('target_state_id',$target_id)->where('target_district_id',$target_district_id)->where('district_year',$year)->where('tehsil_id',$tehsil_id)->where('district_id',$district_id)->first();
-
+        
+        $targets = TargetBlock::where('target_state_id',$target_id)
+        ->where('target_district_id',$target_district_id)
+        ->where('district_year',$year)
+        ->where('tehsil_id',$tehsil_id)
+        ->where('district_id',$district_id)
+        ->first();
         if(empty($targets)){
             return false;
         }else{

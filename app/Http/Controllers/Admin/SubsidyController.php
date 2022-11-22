@@ -1057,10 +1057,6 @@ class SubsidyController extends Controller
         $year = $request->year;
         $district = $request->district_id;
         $block = $request->block_id;
-        print_r($all_gen_targets);
-        print_r($all_sc_targets);
-        echo 'hi';
-        dd($request->private_gen_target);
         
         foreach($all_targets as $key=> $target){ 
             $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->where('target_district_id',$all_district_targets[$key])->first();           
@@ -1095,10 +1091,11 @@ class SubsidyController extends Controller
                 ]);
             }
         }
-
+        
         foreach($all_private_targets as $key=> $target){ 
             $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->first();           
-            if(empty($all_tehsil_targets[$key]) && empty($targets)){                
+            if(empty($all_tehsil_targets[$key]) && empty($targets)){  
+                             
                 $targets = TargetBlock::create([
                     'district_id'=> $district,
                     'tehsil_id'=> $block, 

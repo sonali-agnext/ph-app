@@ -45,7 +45,7 @@
     }
 </style>
 <div class="pagetitle">
-    <h1>View Farmer Application</h1>
+    <h1>View Applied Application</h1>
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
@@ -745,12 +745,12 @@
             }
         });
         $('#district_id').on('change', function () {
-            table.columns(5).search( this.value ).draw();
+            table.columns(8).search( this.value ).draw();
         } );
 
         $('#tehsil_id').on('change', function () {
             table.columns(4).search( this.value ).draw();
-        } );
+        });
     });
 </script>
 @endpush

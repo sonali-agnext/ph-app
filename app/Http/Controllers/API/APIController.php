@@ -27,6 +27,7 @@ use App\Models\FarmerLandDetail;
 use App\Models\AppliedScheme;
 use App\Models\Notification;
 use App\Models\Officer;
+use App\Services\FCMService;
 
 class APIController extends Controller
 {
@@ -79,6 +80,7 @@ class APIController extends Controller
                 $user->email = $mobile_number.'@gmail.com';
                 $user->password = Hash::make('phApp@abc');
                 $user->status = 1;
+                $user->fcm_token = $request->device_token;
                 $user->role_id = $role_id;
                 if($user->save()){
                     $farmer = new Farmer;
@@ -127,6 +129,7 @@ class APIController extends Controller
                     return response()
                     ->json(['message' => 'Mobile Number not exists!'], 401);
                 }else{
+                    User::where('id', $userFound->id)->update(['fcm_token', $request->device_token]);
                     $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
                     return response()
                     ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
@@ -1571,6 +1574,16 @@ class APIController extends Controller
             return response()
                             ->json(['message' =>'Please provide user_id'], 200);
         }       
+    }
+
+    public function fcm_service(){
+        FCMService::send(
+            'do7UBYI-To-JJZCFqb_gmL:APA91bGrzHx8fOGGc8DxCHpR1JQcsV55NVKJKaAidbBvnVk4KYj14u6tP4v6bGdq3nXpVXNUhkVFBLlGw3SeUmIUsokYWdrhL8Bfz2Rw61Sk03ykNiwfQT1taa13T-m9qPHDiR53DfZV',
+            [
+                'title' => 'your title',
+                'body' => 'your body'
+            ],
+        );
     }
 
 }

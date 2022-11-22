@@ -61,7 +61,7 @@
 
                                         $yearRange = range($minYear, $curYear);
                                         $prevYear = date('Y',strtotime('-1 Year'));
-                                        $currYear = date('y',strtotime('+2 Year'));
+                                        $currYear = date('y');
                                         $conselValue = $prevYear.'-'.$currYear;
                                         @endphp
                                         <select class="form-select" required name="year" id="year" aria-label="Select Financial Year">
@@ -229,7 +229,7 @@
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating">
                                         <input type="text" name="cost_norms" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="">
-                                        <label for="cost_norms">Cost Norms</label>
+                                        <label for="cost_norms">Cost Norms(Enter Full Amount i.e 10 thousand = 10000.00)</label>
                                     </div>
                                 </div>
 
@@ -279,7 +279,7 @@
                                         <div class="row" >
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
-                                                        <input type="url" name="video[]" class="form-control" id="video" placeholder="Enter Cost Norms" value="">
+                                                        <input type="url" name="video[]" class="form-control" id="video" placeholder="Enter Video Url" value="">
                                                         <label for="video">Video URL</label>
                                                     </div>
                                                 </div>

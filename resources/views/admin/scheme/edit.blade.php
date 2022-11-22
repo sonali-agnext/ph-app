@@ -63,7 +63,7 @@
 
                                         $yearRange = range($minYear, $curYear);
                                         $prevYear = date('Y',strtotime('-1 Year'));
-                                        $currYear = date('y',strtotime('+2 Year'));
+                                        $currYear = date('y');
                                         $conselValue = $prevYear.'-'.$currYear;
                                         @endphp
                                         <select class="form-select" required name="year" id="year" aria-label="Select Financial Year">

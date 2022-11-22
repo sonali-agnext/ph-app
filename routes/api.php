@@ -51,5 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/fetch-notification',[APIController::class,'notification']);
     Route::post('/post-notification',[APIController::class,'notification']);
 });
+Route::get('/fcm_service',[APIController::class,'fcm_service']);
 Route::get('/fetchallschemes',[APIController::class, 'fetchAllSchemes']);
 // Route::post('/register', [API/APIController::class, 'register']);
