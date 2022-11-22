@@ -261,8 +261,8 @@
 
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating">
-                                        <input type="text" name="cost_norms" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="{{$scheme->cost_norms}}">
-                                        <label for="cost_norms">Cost Norms</label>
+                                        <input type="text" name="cost_norms" pattern="^\d*(\.\d{0,2})?$" required class="form-control" id="cost_norms" placeholder="Enter Cost Norms" value="{{$scheme->cost_norms}}">
+                                        <label for="cost_norms">Cost Norms(ex: 10 thousand = 10000.00)</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
