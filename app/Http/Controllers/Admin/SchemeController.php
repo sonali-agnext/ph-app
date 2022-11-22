@@ -701,12 +701,12 @@ class SchemeController extends Controller
                 $self_upload = '';
                 if($request->hasFile('dpr_upload')){
                     $dpr_upload = time().$request->dpr_upload->getClientOriginalName();
-                    $request->dpr_upload->storeAs('scheme-doc',$filename,'public');
+                    $request->dpr_upload->storeAs('scheme-doc',$dpr_upload,'public');
                 }
 
                 if($request->hasFile('self_upload')){
                     $self_upload = time().$request->self_upload->getClientOriginalName();
-                    $request->self_upload->storeAs('scheme-doc',$filename,'public');
+                    $request->self_upload->storeAs('scheme-doc',$self_upload,'public');
                 }
 
                 $filename = time().$request->scheme_image->getClientOriginalName();
