@@ -129,7 +129,7 @@ class APIController extends Controller
                     return response()
                     ->json(['message' => 'Mobile Number not exists!'], 401);
                 }else{
-                    User::where('id', $userFound->id)->update(['fcm_token', $request->device_token]);
+                    $user = User::where('id', $userFound->id)->update(['fcm_token'=> $request->device_token]);
                     $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
                     return response()
                     ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
@@ -1438,7 +1438,7 @@ class APIController extends Controller
 
     public function fetchCategorySchemes(Request $request){
         if(!empty($request->component_id) && !empty($request->subcomponent_id)){
-            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2020-21')->orWhere('year', '2022-23')->paginate();
+            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2022-23')->paginate();
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
                     $terms=[];
@@ -1492,7 +1492,7 @@ class APIController extends Controller
                             ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }elseif(empty($request->component_id) && !empty($request->subcomponent_id)){
-            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2020-21')->orWhere('year', '2022-23')->paginate();
+            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('sub_component_id',$request->subcomponent_id)->where('year', '2022-23')->paginate();
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
                     $terms=[];
