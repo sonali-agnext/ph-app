@@ -166,6 +166,13 @@ class SettingController extends Controller
     public function deleteDistrict(Request $request){
         $id = $request->id;
         $district = District::where('id',$id)->firstorfail()->delete();
+        $districts = Tehsil::where('district_id', $id)->get();
+        if(!empty($districts)){
+            foreach($districts as $district){
+                $tehsil = Tehsil::where('id', $district->id)->delete();
+                $city = City::where('tehsil_id',$district->id)->firstorfail()->delete();
+            }
+        }
         if($district){
             return response()
             ->json(['message' => 'success']);
@@ -225,6 +232,12 @@ class SettingController extends Controller
     public function deleteTehsil(Request $request){
         $id = $request->id;
         $tehsil = Tehsil::where('id',$id)->firstorfail()->delete();
+        $districts = City::where('tehsil_id', $id)->get();
+        if(!empty($districts)){
+            foreach($districts as $district){
+                $tehsil = City::where('id', $district->id)->delete();
+            }
+        }
         if($tehsil){
             return response()
             ->json(['message' => 'success']);

@@ -1334,21 +1334,34 @@ class APIController extends Controller
                     }
                 }else{
                     if(!empty($request->reject)){
+                        $index=$request->index;
                         $old = (array)json_decode($check_apply_scheme->other_documents);
+                                                
                         if(!empty($old)){
-                           $old= array_replace($old,$other_documents_names);
-                        }
-                        $i = 0;
-                        ksort($old);
-                        foreach($old as $k => $v) {
-                            while($i < $k) {
-                                // if $i < $k we're missing some keys.
-                                $old[$i] = '';
-                                $i ++;
+                           if(!empty($index)){
+                            foreach($index as $key => $in){
+                                if(count($old) > $in){
+                                    if(array_key_exists($in,$old)){
+                                        $old[$in] = $other_documents_names[$key];
+                                    }
+                                }else{
+                                    array_push($old,$other_documents_names[$key]);
+                                }
+                                
                             }
-                            $i++;
+                           }
                         }
-                        ksort($old);
+                        // $i = 0;
+                        // ksort($old);
+                        // foreach($old as $k => $v) {
+                        //     while($i < $k) {
+                        //         // if $i < $k we're missing some keys.
+                        //         $old[$i] = '';
+                        //         $i ++;
+                        //     }
+                        //     $i++;
+                        // }
+                        // ksort($old);
                         $applied_schemes = AppliedScheme::where('id', $check_apply_scheme->id)->update([
                             'land_applied' => $land_applied,
                             'land_address_id' => $land_address_id,
@@ -1392,6 +1405,7 @@ class APIController extends Controller
                         ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
             }
         }catch (\Exception $e) {
+            dd($e);
             return response()
                     ->json(['message' => 'Data not processed!'], 401);
         }
@@ -1407,17 +1421,13 @@ class APIController extends Controller
             ->get();
         foreach($fetchapp as $fetch){
             if($fetch->stage == 'Tehsil'){
-                $fetch['officer_details'] = Officer::select('officers.*','users.name','districts.district_name','tehsils.tehsil_name')
-                ->join('users','users.id','=','officers.user_id') 
-                ->join('districts','districts.id','=','officers.district_id')   
-                ->join('tehsils','tehsils.id','=','officers.tehsil_id')          
+                $fetch['officer_details'] = Officer::select('officers.*','users.name')
+                ->join('users','users.id','=','officers.user_id')          
                 ->where('officers.id', $fetch->approved_tehsil)
                 ->first();
             }else{
-                $fetch['officer_details'] = Officer::select('officers.*','users.name','districts.district_name','tehsils.tehsil_name')
+                $fetch['officer_details'] = Officer::select('officers.*','users.name')
                 ->join('users','users.id','=','officers.user_id') 
-                ->join('districts','districts.id','=','officers.district_id')   
-                ->join('tehsils','tehsils.id','=','officers.tehsil_id')          
                 ->where('officers.id', $fetch->approved_district)
                 ->first();
             }            

@@ -863,7 +863,6 @@ class SchemeController extends Controller
             ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
             ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
             ->get();
-
             return view('admin.applied_scheme.index',['farmers' => $farmers]);
         }
     }
