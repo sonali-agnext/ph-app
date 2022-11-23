@@ -1465,7 +1465,7 @@ class APIController extends Controller
                             ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }elseif(!empty($request->component_id) && empty($request->subcomponent_id)){
-            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('year', '2020-21')->orWhere('year', '2021-22')->paginate();
+            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('component_id',$request->component_id)->where('year', '2022-23')->paginate();
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
                     $terms=[];
@@ -1519,7 +1519,7 @@ class APIController extends Controller
                             ->json(['message' => 'Fetched Scheme Successfully','media_url'=>'storage/scheme-images/' ,'doc_url'=>'storage/scheme-doc/','schemes'=> $schemes], 200);
             }
         }else{
-            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('year', '2021-22')->paginate();
+            $schemes = Scheme::where('scheme_subcategory_id', $request->id)->where('year', '2022-23')->paginate();
 
             if(!empty($schemes)){
                 foreach($schemes as $key=>$scheme){
