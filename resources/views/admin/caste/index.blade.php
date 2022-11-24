@@ -46,7 +46,9 @@
                             <tr>
                                 <td>{{ ($key+1) }}</td>
                                 <td>{{ $caste->caste_name}}</td>
-                                <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> <a href="{{route('edit-caste-category',['id' => $caste->id])}}"><i class="bi bi-pencil-square"></i></a> <a href="#" class="delete" data-id="{{$caste->id}}"><i class="bi bi-trash-fill"></i></a></td>
+                                <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> <a href="{{route('edit-caste-category',['id' => $caste->id])}}"><i class="bi bi-pencil-square"></i></a> 
+                                <!-- <a href="#" class="delete" data-id="{{$caste->id}}"><i class="bi bi-trash-fill"></i></a> -->
+                            </td>
                             </tr>
                             <!-- Modal -->
                             <div class="modal fade" id="viewModal{{($key+1)}}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">

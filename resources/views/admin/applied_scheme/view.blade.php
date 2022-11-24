@@ -265,7 +265,7 @@
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <div class="alert alert-info">
-                                            <p>Sum of state targets and sum of applied</p>
+                                            <p>Remaining Targets: sum of total targets and sum of applied</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">

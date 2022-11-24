@@ -1213,6 +1213,8 @@ class APIController extends Controller
             $other_documents = $request->other_documents;
             $public_private = $request->public_private;
 
+
+
             if(!empty($farmer_id) && !empty($scheme_id) && !empty($land_address_id)){
                 $project_note_name ='';
                 $technical_datasheet_name ='';
@@ -1229,6 +1231,10 @@ class APIController extends Controller
                     ->where('land_address_id', $land_address_id)
                     ->where('scheme_id', $scheme_id)
                     ->first();
+
+                if(!empty($check_apply_scheme)){
+
+                }
                 if($request->hasFile('project_note')){
                     $project_note_name = time().$request->project_note->getClientOriginalName();
                     $request->project_note->storeAs('scheme-documents/'.date('Y'),$project_note_name,'public');
@@ -1602,4 +1608,16 @@ class APIController extends Controller
         );
     }
 
+    public function schemetargets(){
+        $targets = AppliedScheme::select('applied_schemes.*','farmers.gender')
+        ->leftJoin('farmers','farmers.id','=','applied_schemes.farmer_id')
+        ->where('stage','State')
+        ->get();
+        dd($targets);
+        // foreach($targets as $target){
+        //     $tehsi 
+        // }
+
+        // $gen_targets = TargetState::where('', )->get();
+    }
 }

@@ -38,6 +38,8 @@
                             <tr>
                                 <th>Sr No</th>
                                 <th>Scheme Component Type</th>
+                                <th>Scheme Component</th>
+                                <th>Scheme Sub Component</th>
                                 <th>Scheme</th>
                                 <th>Action</th>
                             </tr>
@@ -47,6 +49,8 @@
                             <tr>
                                 <td>{{ ($key+1) }}</td>
                                 <td>{{ $scheme->subcategory_name}}</td>
+                                <td>{{ $scheme->component_name}}</td>
+                                <td>{{ $scheme->sub_component_name}}</td>
                                 <td>{{ $scheme->scheme_name}}</td>
                                 <td><a href="#" role="button" data-bs-toggle="modal" data-bs-target="#viewModal{{($key+1)}}"><i class="bi bi-eye-fill"></i></a> <a href="{{route('edit-scheme',['id' => $scheme->id])}}"><i class="bi bi-pencil-square"></i></a> <a href="#" class="delete" data-id="{{$scheme->id}}"><i class="bi bi-trash-fill"></i></a></td>
                             </tr>
@@ -61,11 +65,19 @@
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-6"><b>Scheme ID</b></div>
-                                                <div class="col-md-6"><p>{{ $scheme->id}}</p></div>
+                                                <div class="col-md-6"><p>{{ $scheme->id }}</p></div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-6"><b>Scheme Sub Category Name</b></div>
-                                                <div class="col-md-6"><p>{{ $scheme->subcategory_name}}</p></div>
+                                                <div class="col-md-6"><b>Scheme Component Type</b></div>
+                                                <div class="col-md-6"><p>{{ $scheme->subcategory_name }}</p></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6"><b>Scheme Component</b></div>
+                                                <div class="col-md-6"><p>{{ $scheme->component_name }}</p></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6"><b>Scheme Sub Component</b></div>
+                                                <div class="col-md-6"><p>{{ $scheme->sub_component_type }}</p></div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6"><b>Scheme Name</b></div>

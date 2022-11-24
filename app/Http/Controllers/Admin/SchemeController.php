@@ -341,9 +341,12 @@ class SchemeController extends Controller
 
     //Scheme
     public function manageScheme(Request $request){
-        $schemes = Scheme::select('schemes.*','scheme_sub_categories.subcategory_name')
+        $schemes = Scheme::select('schemes.*','scheme_sub_categories.subcategory_name','components.component_name', 'sub_components.sub_component_name')
         ->join('scheme_sub_categories','schemes.scheme_subcategory_id','=','scheme_sub_categories.id')
+        ->leftJoin('components','components.id','=','schemes.component_id')
+        ->leftJoin('sub_components','sub_components.id','=','schemes.sub_component_id')
         ->get();
+        // dd($schemes);
         return view('admin.scheme.index',['schemes' => $schemes]);
     }
 
