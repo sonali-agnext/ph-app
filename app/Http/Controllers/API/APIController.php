@@ -1288,7 +1288,10 @@ class APIController extends Controller
                 
                 $user = new User;
                 $districtInfo =$user->officertehsil($bank_details->tehsil_id);
-                
+                if(empty($districtInfo)){
+                    return response()
+                    ->json(['message' => 'Officer not Available for this location!'], 401);
+                }
                 if(empty($check_apply_scheme) && empty($request->reject)){ 
                               
                     $applied_schemes = AppliedScheme::create([
@@ -1405,7 +1408,6 @@ class APIController extends Controller
                         ->json(['message' => 'Please provide Farmer ID, Scheme ID, Land Address ID'], 401);
             }
         }catch (\Exception $e) {
-            dd($e);
             return response()
                     ->json(['message' => 'Data not processed!'], 401);
         }

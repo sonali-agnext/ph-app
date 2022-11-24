@@ -264,6 +264,11 @@
                             <div class="col-md-12 card-body">
                                 <div class="row g-3">
                                     <div class="col-md-12">
+                                        <div class="alert alert-info">
+                                            <p>Sum of state targets and sum of applied</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
                                         <div class="form-floating">
                                             <input type="text" name="c" class="form-control" disabled value="{{ $farmers->scheme_name }}">
                                             <label for="sector">Scheme Applied</label>
@@ -354,11 +359,11 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-6"><b>Upload Fard</b></div>
-                                                                <div class="col-md-6"><a href="{{url('/storage/land-images/'. $land->upload_fard)}}" print>{{ $land->upload_fard}}</a></div>
+                                                                <div class="col-md-6"><a target="_blank" href="{{url('/storage/land-images/'. $land->upload_fard)}}" print>{{ $land->upload_fard}}</a></div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-6"><b>Upload Pattedar</b></div>
-                                                                <div class="col-md-6"><a href="{{url('/storage/land-images/'. $land->upload_pattedar)}}" print>{{ $land->upload_pattedar}}</a></div>
+                                                                <div class="col-md-6"><a target="_blank" href="{{url('/storage/land-images/'. $land->upload_pattedar)}}" print>{{ $land->upload_pattedar}}</a></div>
                                                             </div>
                                                             <hr />
                                                             @endforeach
@@ -406,11 +411,11 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-6"><b>Upload Cancel Check</b></div>
-                                                                <div class="col-md-6"><a href="{{url('/storage/bank-images/'. $farmers->upload_cancel_check)}}" print>{{ $farmers->upload_cancel_check}}</a></div>
+                                                                <div class="col-md-6"><a target="_blank" href="{{url('/storage/bank-images/'. $farmers->upload_cancel_check)}}" print>{{ $farmers->upload_cancel_check}}</a></div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-6"><b>Upload Passbook</b></div>
-                                                                <div class="col-md-6"><a href="{{url('/storage/bank-images/'. $farmers->upload_passbook)}}" print>{{ $farmers->upload_passbook}}</a></div>
+                                                                <div class="col-md-6"><a target="_blank" href="{{url('/storage/bank-images/'. $farmers->upload_passbook)}}" print>{{ $farmers->upload_passbook}}</a></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -422,7 +427,7 @@
                                         <div class="jumbotron">
                                             <h5>Detail Project Report</h5>
                                             @if(!empty($farmers->project_note))
-                                            <a href="{{url('/storage/scheme-documents/'.date('Y').'/'.$farmers->project_note)}}" class="btn btn-md btn-info" role="button">View</a>
+                                            <a target="_blank" href="{{url('/storage/scheme-documents/'.date('Y').'/'.$farmers->project_note)}}" class="btn btn-md btn-info" role="button">View</a>
                                             @else
                                             <p>No Record</p>
                                             @endif
@@ -432,7 +437,7 @@
                                         <div class="jumbotron">
                                             <h5>Self Declaration</h5>
                                             @if(!empty($farmers->self_declaration))
-                                            <a href="{{url('/storage/scheme-documents/'.date('Y').'/'.$farmers->self_declaration)}}" class="btn btn-md btn-info" role="button">View</a>
+                                            <a target="_blank" href="{{url('/storage/scheme-documents/'.date('Y').'/'.$farmers->self_declaration)}}" class="btn btn-md btn-info" role="button">View</a>
                                             @else
                                             <p>No Record</p>
                                             @endif
@@ -450,70 +455,6 @@
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Basic Technical Data Sheet of Solar Plant</b></div>
-                                                                @if(!empty($farmers->technical_datasheet))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'.$farmers->technical_datasheet)}}" print>{{ $farmers->technical_datasheet}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Bank Sanction Letter with Process Note</b></div>
-                                                                @if(!empty($farmers->bank_sanction))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->bank_sanction)}}" print>{{ $farmers->bank_sanction}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Quotation of Solar PV Plant</b></div>
-                                                                @if(!empty($farmers->quotation_solar))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->quotation_solar)}}" print>{{ $farmers->quotation_solar}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Site Plan</b></div>
-                                                                @if(!empty($farmers->site_plan))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->site_plan)}}" print>{{ $farmers->site_plan}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Partnership Deed Copy</b></div>
-                                                                @if(!empty($farmers->partnership_deep))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->partnership_deep)}}" print>{{ $farmers->partnership_deep}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Pan Card and Aadhaar Card</b></div>
-                                                                @if(!empty($farmers->pan_aadhar))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->pan_aadhar)}}" print>{{ $farmers->pan_aadhar}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Location Plan</b></div>
-                                                                @if(!empty($farmers->location_plan))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->location_plan)}}" print>{{ $farmers->location_plan}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6"><b>Land Documents</b></div>
-                                                                @if(!empty($farmers->land_documents))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->land_documents)}}" print>{{ $farmers->land_documents}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
-                                                            </div>
                                                             <div class="row">
                                                                 <div class="col-md-6"><b>Other Documents(Optional)</b></div>
                                                                 @if(!empty($farmers->other_documents))
