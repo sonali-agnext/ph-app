@@ -892,21 +892,7 @@ class SchemeController extends Controller
         $farmer = AppliedScheme::where('id', $request->id)->first();
         $user = new User;
         $farmer_id = User::farmer($farmer->farmer_id);
-        $send=FCMService::send(
-            $farmer_id->fcm_token,
-            [
-                'title' =>  $farmer->application_number,
-                'body' => 'Your Application is Approved',
-                'user_id' => $farmer_id->id,
-                'message' => 'Your Application is Approved',
-                'icon' => 'new',
-                'sound' => 'default'
-            ],
-        );
-        echo $farmer_id->fcm_token;
-        echo $farmer_id->id;
-        dd($send);
-        die();
+        
         if(!empty($farmer) && $request->accept == 'accept'){
             if($farmer->stage == 'Tehsil'){
                 $user_id = $user->officerdistrict($farmer->district_id);
