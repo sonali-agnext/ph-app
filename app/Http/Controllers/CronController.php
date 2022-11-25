@@ -159,6 +159,7 @@ class CronController extends Controller
         ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
         ->get();
         if(!empty($farmers)){
+            $user = new User;
             foreach($farmers as $key => $farmer){
                 $farmer_id = $user->farmer($farmer->farmer_id);
                 if($farmer->stage == 'Tehsil' && empty($farmer->tehsil_updated) && ($farmer->applied_status == "In Progress")){
@@ -170,7 +171,7 @@ class CronController extends Controller
 
                     $dateDifference = date_diff($date11, $date22)->format('%d');
                     if(empty($dateDifference) && $farmer->stage == "Tehsil"){
-                        $user = new User;
+                        
                         $districtInfo =$user->officerdistrict($farmer->a_district);
                         $applied_schemes = AppliedScheme::where('id', $farmer->apply_id)->update([
                             'stage' => 'District',

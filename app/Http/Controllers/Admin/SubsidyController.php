@@ -641,9 +641,9 @@ class SubsidyController extends Controller
         $all_private_remarks = $request->private_remarks;
         $all_physical_target = $request->physical_target;
         $all_private_physical_target=$request->private_physical_target;
-        
-        foreach($all_targets as $key=> $target){
-            $privatetargets = TargetState::where('id',$all_private_targets[$key])->update(['private_physical_target'=> $all_private_physical_target[$key],'private_remarks' => $all_private_remarks[$key]]);
+
+        foreach($all_targets as $key=> $target){            
+            $privatetarget = TargetState::where('id',$all_targets[$key])->update(['physical_target'=> $all_physical_target[$key],'remarks' => $all_remarks[$key]]);
         }
 
         foreach($all_private_targets as $key=> $target){
