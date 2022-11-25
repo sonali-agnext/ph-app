@@ -903,6 +903,8 @@ class SchemeController extends Controller
                 'sound' => 'default'
             ],
         );
+        echo $farmer_id->fcm_token;
+        echo $farmer_id->id;
         dd($send);
         die();
         if(!empty($farmer) && $request->accept == 'accept'){

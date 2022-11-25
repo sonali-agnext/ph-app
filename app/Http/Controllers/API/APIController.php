@@ -1596,7 +1596,7 @@ class APIController extends Controller
     }
 
     public function fcm_service(){
-        FCMService::send(
+        $send =FCMService::send(
             'fNXjf3XZRmCFmStDLJYfj3:APA91bFblMvrePWsdMZLskS2omOmwEstsjhKFtoAUXXVoOWnTb8nl4ELgFmWJ_3bw4pGxp1IDGDp35BxNDBKBu84pducWuq_0A_UkAPHQ9YMH9-Ap-85xSC6S8S_3XTXpNWFnON-FCE6',
             [
                 'title' => 'your title',
@@ -1607,6 +1607,7 @@ class APIController extends Controller
                 'sound' => 'default'
             ],
         );
+        dd($send);
     }
 
     public function schemetargets(){
