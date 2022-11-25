@@ -42,6 +42,7 @@
                             $tehsils = App\Models\Tehsil::all();
                         @endphp
                     </div>
+                    <div class="table-responsive">
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -128,6 +129,7 @@
                             @endforelse                    
                         </tbody>
                     </table>
+                    </div>
                     <!-- </div>                      -->
                 </div>
             </div>     

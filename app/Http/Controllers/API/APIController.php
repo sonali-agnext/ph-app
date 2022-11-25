@@ -1618,7 +1618,6 @@ class APIController extends Controller
         
         foreach($targets as $target){
             $gen_targets = TargetBlock::where('tehsil_id', $target->tehsil_id)->get();
-            dd($gen_targets);
         }
 
         // 

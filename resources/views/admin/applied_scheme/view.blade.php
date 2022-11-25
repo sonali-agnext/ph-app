@@ -456,12 +456,16 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row">
-                                                                <div class="col-md-6"><b>Other Documents(Optional)</b></div>
-                                                                @if(!empty($farmers->other_documents))
-                                                                <div class="col-md-6"><p><a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $farmers->other_documents)}}" print>{{ $farmers->other_documents}}</a></p></div>
-                                                                @else
-                                                                <div class="col-md-6"><p>No Record</p></div>
-                                                                @endif
+                                                                <div class="col-md-6"><b>Required Documents</b></div>
+                                                                    @forelse(json_decode($farmers->other_documents) as $doc)
+                                                                    <div class="col-md-12">
+                                                                        <p>
+                                                                            <a href="{{url('/storage/scheme-documents/'.date('Y').'/'. $doc)}}" print>{{ $doc}}</a>
+                                                                        </p>
+                                                                    </div>
+                                                                    @empty
+                                                                    <div class="col-md-6"><p>No Record</p></div>
+                                                                    @endforelse
                                                             </div>
                                                         </div>
                                                     </div>

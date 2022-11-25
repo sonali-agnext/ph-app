@@ -43,6 +43,7 @@
                     <div class="row mb-3 float-right">
                         @inject('district', 'App\Models\District')
                     </div>
+                    <div class="table-responsive">
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -135,6 +136,7 @@
                             @endforelse                    
                         </tbody>
                     </table>
+                    </div>
                     <!-- </div>                      -->
                 </div>
             </div>     

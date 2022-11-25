@@ -42,6 +42,7 @@
                     <!-- <div class="table-responsive"> -->
                     <div class="row mb-3 float-right">
                     </div>@inject('tehsil', 'App\Models\Tehsil')
+                    <div class="table-responsive">
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -133,6 +134,7 @@
                             @endforelse                    
                         </tbody>
                     </table>
+                    </div>
                     <!-- </div>                      -->
                 </div>
             </div>     

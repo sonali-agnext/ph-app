@@ -74,6 +74,7 @@
                         
                         <div class="col-md-2"></div>
                     </div>
+                    <div class="table-responsive">
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -227,6 +228,7 @@
                             @endforelse                    
                         </tbody>
                     </table>
+                    </div>
                     <!-- </div>                      -->
                 </div>
             </div>     

@@ -32,7 +32,7 @@
              <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">List of Scheme Sub Component <a href="{{route('add-scheme-subcomponent')}}" role="button" class="btn btn-success btn-sm btn-add">Add</a></h5>
-                    
+                    <div class="table-responsive">
                     <table id="example" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
@@ -99,7 +99,8 @@
                             </tr>
                             @endforelse                    
                         </tbody>
-                    </table>                       
+                    </table> 
+                    </div>                      
                 </div>
             </div>     
         </div><!-- End Left side columns -->
