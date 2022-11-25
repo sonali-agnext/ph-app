@@ -25,6 +25,7 @@ use App\Models\YoutubeVideo;
 use App\Models\FarmerBankDetail;
 use App\Models\FarmerLandDetail;
 use App\Models\AppliedScheme;
+use App\Models\TargetBlock;
 use App\Models\Notification;
 use App\Models\Officer;
 use App\Services\FCMService;
@@ -1596,7 +1597,7 @@ class APIController extends Controller
 
     public function fcm_service(){
         FCMService::send(
-            'do7UBYI-To-JJZCFqb_gmL:APA91bGrzHx8fOGGc8DxCHpR1JQcsV55NVKJKaAidbBvnVk4KYj14u6tP4v6bGdq3nXpVXNUhkVFBLlGw3SeUmIUsokYWdrhL8Bfz2Rw61Sk03ykNiwfQT1taa13T-m9qPHDiR53DfZV',
+            'fNXjf3XZRmCFmStDLJYfj3:APA91bFblMvrePWsdMZLskS2omOmwEstsjhKFtoAUXXVoOWnTb8nl4ELgFmWJ_3bw4pGxp1IDGDp35BxNDBKBu84pducWuq_0A_UkAPHQ9YMH9-Ap-85xSC6S8S_3XTXpNWFnON-FCE6',
             [
                 'title' => 'your title',
                 'body' => 'your body',
@@ -1613,11 +1614,12 @@ class APIController extends Controller
         ->leftJoin('farmers','farmers.id','=','applied_schemes.farmer_id')
         ->where('stage','State')
         ->get();
-        dd($targets);
-        // foreach($targets as $target){
-        //     $tehsi 
-        // }
+        
+        foreach($targets as $target){
+            $gen_targets = TargetBlock::where('tehsil_id', $target->tehsil_id)->get();
+            dd($gen_targets);
+        }
 
-        // $gen_targets = TargetState::where('', )->get();
+        // 
     }
 }
