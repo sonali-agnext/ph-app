@@ -892,7 +892,7 @@ class SchemeController extends Controller
         $farmer = AppliedScheme::where('id', $request->id)->first();
         $user = new User;
         $farmer_id = User::farmer($farmer->farmer_id);
-        FCMService::send(
+        $send=FCMService::send(
             $farmer_id->fcm_token,
             [
                 'title' =>  $farmer->application_number,
@@ -903,6 +903,7 @@ class SchemeController extends Controller
                 'sound' => 'default'
             ],
         );
+        dd($send);
         die();
         if(!empty($farmer) && $request->accept == 'accept'){
             if($farmer->stage == 'Tehsil'){
