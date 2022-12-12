@@ -408,11 +408,12 @@ class SchemeController extends Controller
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
                     'self_upload' => $self_upload,
+                    'non_project_based' => $request->non_project_based,
                     'dpr_upload' => $dpr_upload
                 ]);
                 if($scheme){
-    
-                    $targets= TargetState::where('crop_id', $scheme->id)->where('component_type_id', $scheme->scheme_subcategory_id)->where('sub_component_id', $scheme->sub_component_id)->first();
+                    $schemes= Scheme::where('id',$id)->first();
+                    $targets= TargetState::where('crop_id', $schemes->id)->where('component_type_id', $schemes->scheme_subcategory_id)->where('sub_component_id', $schemes->sub_component_id)->first();
     
                     if(empty($targets)){
                         $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"", 'year' =>$request->year]);
@@ -441,14 +442,15 @@ class SchemeController extends Controller
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
                     // 'scheme_image' => $filename,
+                    'non_project_based' => $request->non_project_based,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
                     'dpr_upload' => $dpr_upload
                 ]);
                 if($scheme){
-    
-                    $targets= TargetState::where('crop_id', $scheme->id)->where('component_type_id', $scheme->scheme_subcategory_id)->where('sub_component_id', $scheme->sub_component_id)->first();
+                    $schemes= Scheme::where('id',$id)->first();
+                    $targets= TargetState::where('crop_id', $schemes->id)->where('component_type_id', $schemes->scheme_subcategory_id)->where('sub_component_id', $schemes->sub_component_id)->first();
     
                     if(empty($targets)){
                         $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"", 'year' =>$request->year]);
@@ -478,13 +480,15 @@ class SchemeController extends Controller
                     'detailed_description' => $request->detailed_description,
                     // 'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
+                    'non_project_based' => $request->non_project_based,
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
                     'self_upload' => $self_upload
                 ]);
                 if($scheme){
+                    $schemes= Scheme::where('id',$id)->first();
     
-                    $targets= TargetState::where('crop_id', $scheme->id)->where('component_type_id', $scheme->scheme_subcategory_id)->where('sub_component_id', $scheme->sub_component_id)->first();
+                    $targets= TargetState::where('crop_id', $schemes->id)->where('component_type_id', $schemes->scheme_subcategory_id)->where('sub_component_id', $schemes->sub_component_id)->first();
     
                     if(empty($targets)){
                         $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"", 'year' =>$request->year]);
@@ -515,11 +519,12 @@ class SchemeController extends Controller
                     // 'scheme_image' => $filename,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
+                    'non_project_based' => $request->non_project_based,
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured                   
                 ]);
                 if($scheme){
-    
-                    $targets= TargetState::where('crop_id', $scheme->id)->where('component_type_id', $scheme->scheme_subcategory_id)->where('sub_component_id', $scheme->sub_component_id)->first();
+                    $schemes= Scheme::where('id',$id)->first();
+                    $targets= TargetState::where('crop_id', $id)->where('component_type_id', $schemes->scheme_subcategory_id)->where('sub_component_id', $schemes->sub_component_id)->first();
     
                     if(empty($targets)){
                         $target = TargetState::create(['crop_id' => $request->id, 'component_type_id' => $request->scheme_subcategory_id,'component_id'=>$request->component_id, 'sub_component_id'=> $request->sub_component_id, 'physical_target' => "0",'financial_target' => "0",'private_physical_target'=>"0", 'remarks'=>"", 'year' =>$request->year]);
@@ -742,6 +747,7 @@ class SchemeController extends Controller
                     'cost_norms' => $request->cost_norms,
                     'detailed_description' => $request->detailed_description,
                     'scheme_image' => $filename,
+                    'non_project_based' => $request->non_project_based,
                     'videos' => json_encode($request->video),
                     'videos_title' => json_encode($request->title),
                     'is_featured' => empty($request->is_featured)?"0":$request->is_featured,
@@ -958,7 +964,7 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Auto Approved',
+                                'body' => 'Your Application is Approved',
                                 'user_id' => $farmer_id->id,
                                 'message' => 'Your Application is Approved',
                                 'icon' => 'new',
