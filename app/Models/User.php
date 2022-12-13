@@ -79,6 +79,13 @@ class User extends Authenticatable
         ->get();
         return $items;
     }
+    public function district_id($tehsil){
+        $items = DB::table('tehsils')
+        ->select('tehsils.district_id')
+        ->where('id', $tehsil)
+        ->first();
+        return $items;
+    }
 
     public function admin()
     {

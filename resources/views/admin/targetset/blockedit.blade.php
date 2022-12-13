@@ -130,7 +130,7 @@ th.card-title{
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating">                                        
-                                        <select class="form-select" readonly="readonly" required name="district_id" id="district_id" aria-label="Select District">
+                                        <select class="form-select" disabled="disabled" required name="district_id" id="district_id" aria-label="Select District">
                                             <option value="">Select District</option>
                                             @forelse($districts as $district)
                                             <option @if(!empty($sdistrict)) @if($sdistrict == $district->id) selected @endif @endif value="{{$district->id}}">{{$district->district_name}}</option>
@@ -142,7 +142,7 @@ th.card-title{
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating">                                        
-                                        <select class="form-select" required name="block_id" id="block_id" aria-label="Select Block">
+                                        <select class="form-select" @if(auth()->user()->role_id == 5) disabled="disabled" @endif required name="block_id" id="block_id" aria-label="Select Block">
                                             <option value="">Select Block</option>
                                             @forelse($blocks as $block)
                                             <option @if(!empty($sblock)) @if($sblock == $block->id) selected @endif @endif value="{{$block->id}}">{{$block->tehsil_name}}</option>

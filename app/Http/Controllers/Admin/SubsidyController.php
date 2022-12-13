@@ -1031,9 +1031,14 @@ class SubsidyController extends Controller
         $districts = District::all();
         $user= new User;
         $sdistrict= $user->officer();
-        $blocks= Tehsil::where('district_id',$sdistrict->assigned_district)->get();
+        $district= $user->district_id($sdistrict->assigned_tehsil);
+        if(auth()->user()->role_id == 4){
+            $blocks= Tehsil::where('district_id',$sdistrict->assigned_district)->get();
+        }else{
+            $blocks= Tehsil::where('district_id',$district->district_id)->get();
+        }
 
-        return view('admin.targetset.blockedit',['districts'=>$districts,'blocks'=>$blocks,'sblock'=>(auth()->user()->role_id==4) ? $request->block_id : ($sdistrict->assigned_tehsil),'sdistrict'=>$sdistrict->assigned_district,'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
+        return view('admin.targetset.blockedit',['districts'=>$districts,'blocks'=>$blocks,'sblock'=>(auth()->user()->role_id==4) ? $request->block_id : ($sdistrict->assigned_tehsil),'sdistrict'=>(auth()->user()->role_id==5) ? $district->district_id : ($sdistrict->assigned_district),'year'=>$request->year,'subcomponents'=>$subcomponents,'components' => $components,'scheme_category'=>$scheme_category,'govt_schemes' => $govt_schemes, 'scheme_subcategory' => $all_schemes]);
     }
 
     public static function updateBlockSubsidy(Request $request){
