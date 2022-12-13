@@ -276,13 +276,13 @@
                                             <p>Total Public Targets :{{ $target_sum }}</p>
                                             <p>Total Private Targets : {{ $ptarget_sum }}</p>
                                             @elseif(auth()->user()->role_id == 3)
-                                            @php $target_sum=App\Models\TargetState::sum('assigned_physical_target'); 
-                                            $ptarget_sum=App\Models\TargetState::sum('assigned_private_physical_target'); @endphp
+                                            @php $target_sum=App\Models\TargetState::where('crop_id', $farmers->id)->sum('physical_target'); 
+                                            $ptarget_sum=App\Models\TargetState::where('crop_id', $farmers->id)->sum('private_physical_target'); @endphp
                                             <p>Total Public Targets :{{ $target_sum }}</p>
                                             <p>Total Private Targets : {{ $ptarget_sum }}</p>
                                             @else
-                                            @php $target_sum=App\Models\TargetState::sum('assigned_physical_target'); 
-                                            $ptarget_sum=App\Models\TargetState::sum('assigned_private_physical_target'); @endphp
+                                            @php $target_sum=App\Models\TargetState::where('crop_id', $farmers->id)->sum('physical_target'); 
+                                            $ptarget_sum=App\Models\TargetState::where('crop_id', $farmers->id)->sum('private_physical_target'); @endphp
                                             <p>Total Public Targets :{{ $target_sum }}</p>
                                             <p>Total Private Targets : {{ $ptarget_sum }}</p>
                                             @endif
