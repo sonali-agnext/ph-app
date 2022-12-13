@@ -2,7 +2,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 @php $image = \App\Models\AdminProfile::where('user_id', Auth::user()->id)->first();  @endphp
 <div class="d-flex align-items-center justify-content-between">
-  <a href="index.html" class="logo d-flex align-items-center">
+  <a href="{{url('/')}}" class="logo d-flex align-items-center">
     <img src="{{ asset('img/apple-icon-72x72.png')}}" alt="">
     <span class="d-none d-lg-block">PH App</span>
   </a>

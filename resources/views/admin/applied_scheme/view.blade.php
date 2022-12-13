@@ -435,7 +435,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="jumbotron">
-                                            <h5>Self Declaration</h5>
+                                            <h5>Application Form</h5>
                                             @if(!empty($farmers->self_declaration))
                                             <a target="_blank" href="{{url('/storage/scheme-documents/'.date('Y').'/'.$farmers->self_declaration)}}" class="btn btn-md btn-info" role="button">View</a>
                                             @else

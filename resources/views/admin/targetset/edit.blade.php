@@ -95,7 +95,7 @@ th.card-title{
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         @php
-                                        $minYear = date("Y", time()) - 10;
+                                        $minYear = date("Y", time()) - 1;
                                         $curYear = date("Y", time()) + 1;
 
                                         $yearRange = range($minYear, $curYear);

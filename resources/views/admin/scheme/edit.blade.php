@@ -58,7 +58,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         @php
-                                        $minYear = date("Y", time()) - 10;
+                                        $minYear = date("Y", time()) - 1;
                                         $curYear = date("Y", time()) + 1;
 
                                         $yearRange = range($minYear, $curYear);
@@ -363,12 +363,18 @@
                                         <input type="file" name="dpr_upload" class="form-control" id="dpr_upload" value="" >
                                         <label for="dpr_upload">DPR Upload</label>
                                     </div>
+                                    @if(!empty($scheme->dpr_upload))
+                                        <a href="{{asset('storage/scheme-doc/'.$scheme->dpr_upload)}}" target="_blank" width="100">View DPR</a>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 mt-1">
                                     <div class="form-floating">
                                         <input type="file" name="self_upload" class="form-control" id="self_upload" value="" >
-                                        <label for="self_upload">Self Declaration Upload</label>
+                                        <label for="self_upload">Application Form Upload</label>
                                     </div>
+                                    @if(!empty($scheme->self_upload))
+                                        <a href="{{asset('storage/scheme-doc/'.$scheme->self_upload)}}" target="_blank" width="100">View Form</a>
+                                    @endif
                                 </div>
 
                                 <div class="row">
