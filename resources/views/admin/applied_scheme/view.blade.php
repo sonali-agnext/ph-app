@@ -265,7 +265,27 @@
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <div class="alert alert-info">
-                                            <p>Remaining Targets: sum of total targets and sum of applied</p>
+                                            @if(auth()->user()->role_id == 5)
+                                            @php $target_sum=App\Models\TargetBlock::where('tehsil_id', $farmers->tehsil_id)->sum('assigned_physical_target'); 
+                                            $ptarget_sum=App\Models\TargetBlock::where('tehsil_id', $farmers->tehsil_id)->sum('assigned_private_physical_target'); @endphp
+                                            <p>Total Public Targets :{{ $target_sum }}</p>
+                                            <p>Total Private Targets : {{ $ptarget_sum }}</p>
+                                            @elseif(auth()->user()->role_id == 4)
+                                            @php $target_sum=App\Models\TargetDistrict::where('district_id', $farmers->district_id)->sum('assigned_physical_target'); 
+                                            $ptarget_sum=App\Models\TargetDistrict::where('district_id', $farmers->district_id)->sum('assigned_private_physical_target'); @endphp
+                                            <p>Total Public Targets :{{ $target_sum }}</p>
+                                            <p>Total Private Targets : {{ $ptarget_sum }}</p>
+                                            @elseif(auth()->user()->role_id == 3)
+                                            @php $target_sum=App\Models\TargetState::sum('assigned_physical_target'); 
+                                            $ptarget_sum=App\Models\TargetState::sum('assigned_private_physical_target'); @endphp
+                                            <p>Total Public Targets :{{ $target_sum }}</p>
+                                            <p>Total Private Targets : {{ $ptarget_sum }}</p>
+                                            @else
+                                            @php $target_sum=App\Models\TargetState::sum('assigned_physical_target'); 
+                                            $ptarget_sum=App\Models\TargetState::sum('assigned_private_physical_target'); @endphp
+                                            <p>Total Public Targets :{{ $target_sum }}</p>
+                                            <p>Total Private Targets : {{ $ptarget_sum }}</p>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="col-md-12">

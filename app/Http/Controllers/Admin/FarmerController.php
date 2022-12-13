@@ -157,9 +157,9 @@ class FarmerController extends Controller
     public function deleteFarmer(Request $request){
         $id = $request->id;
         $user_id = Farmer::find($id);
-        
+        $user = User::where('id',$user_id->user_id)->firstorfail()->delete();
         $district = Farmer::where('id',$id)->firstorfail()->delete();
-        $district = User::where('id',$user_id->user_id)->firstorfail()->delete();
+        
         if($district){
             return response()
             ->json(['message' => 'success']);

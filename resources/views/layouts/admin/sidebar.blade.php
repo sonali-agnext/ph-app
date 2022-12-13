@@ -141,6 +141,18 @@
       </li>
       @endif 
       <li class="nav-item">
+        <a @if($route == 'manage-applied-scheme') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-applied-nav" data-bs-toggle="collapse" href="#" @if( $route == 'manage-applied-scheme') aria-expanded="true" @endif>
+          <i class="bi bi-gem"></i><span>Manage Applied Schemes</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="manage-applied-nav" @if($route == 'manage-applied-scheme') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
+          <li class="nav-item">
+            <a @if($route == 'manage-applied-scheme') class="active" @endif href="{{route('manage-applied-scheme')}}">
+            <i class="bi bi-circle"></i><span>Manage Applied Scheme</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
         <a @if($route == 'manage-subsidy-state' || $route == 'manage-subsidy-district') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-subsidy-nav" data-bs-toggle="collapse" href="#" @if($route == 'manage-subsidy-state' || $route == 'manage-subsidy-district') aria-expanded="true" @endif>
           <i class="bi bi-gem"></i><span>Manage Subsidy</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -168,18 +180,7 @@
           @endif
         </ul>
       </li>
-      <li class="nav-item">
-        <a @if($route == 'manage-applied-scheme') class="nav-link" @else class="nav-link collapsed" @endif data-bs-target="#manage-applied-nav" data-bs-toggle="collapse" href="#" @if( $route == 'manage-applied-scheme') aria-expanded="true" @endif>
-          <i class="bi bi-gem"></i><span>Manage Applied Schemes</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="manage-applied-nav" @if($route == 'manage-applied-scheme') class="nav-content collapse show" @else class="nav-content collapse " @endif data-bs-parent="#sidebar-nav">
-          <li class="nav-item">
-            <a @if($route == 'manage-applied-scheme') class="active" @endif href="{{route('manage-applied-scheme')}}">
-            <i class="bi bi-circle"></i><span>Manage Applied Scheme</span>
-            </a>
-          </li>
-        </ul>
-      </li>
+      
       <!-- End Schemes Nav -->
 
     </ul>
