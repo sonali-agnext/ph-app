@@ -183,3 +183,4 @@ Route::get('getAllMoveSchemes','CronController@getAllMoveSchemes');
 Route::get('fetchCategorySchemes','API\APIController@fetchCategorySchemes');
 Route::get('fetch-notification','AjaxController@fetchNotification');
 Route::get('fetch-targets','API\APIController@schemetargets');
+Route::post('notification','API\APIController@notification');

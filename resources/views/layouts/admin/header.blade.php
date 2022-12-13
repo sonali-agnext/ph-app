@@ -197,7 +197,7 @@ $.ajax({
             }
             // html += '<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications show">';
             html += '<li class="dropdown-header">';
-            html += 'You have '+resultData.count+' new notifications';
+            html += 'You have '+resultData.count+' new notifications. <span class="badge rounded-pill bg-primary p-2 ms-2 mark-all">Marked all</span>';
             // html += '<a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>';
             
             $.each(resultData.data, function (key, val) {
@@ -227,8 +227,22 @@ $.ajax({
           }
           $('.ajax-dropdown').empty();
           $('.ajax-dropdown').append(html);
+          $('.mark-all').on('click', function(){
+            var user = {{auth()->user()->id}}
+              $.ajax({
+                  type: 'POST',
+                  url: "{{url('notification')}}",
+                  data: {'user_id': user,'save':1},
+                  dataType: "json",
+                  success: function() {
+                    $('.ajax-badge').empty();
+                  }
+              });
+            });
             console.log(resultData.data.length);
         }
-    }); }
+    }); 
+    
+  }
     </script>
 @endpush

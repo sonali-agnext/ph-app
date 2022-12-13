@@ -79,7 +79,8 @@
                         <thead>
                             <tr>
                                 <th>Sr No</th>
-                                <th>Application Number</th>
+                                <th class="col-1">Application Number</th>
+                                <th class="col-2">Scheme Applied</th>
                                 <th>Farmer Name</th>
                                 <th>Days Left</th>
                                 <th>Status</th>
@@ -97,7 +98,8 @@
                             @forelse($farmers as $key => $farmer)
                             <tr>
                                 <td>{{ ($key+1) }}</td>
-                                <td>{{ $farmer->application_number }}</td>
+                                <td class="col-1">{{ $farmer->application_number }}</td>
+                                <td class="col-2">{{ $farmer->scheme_name }}</td>
                                 <td>{{ $farmer->name }}</td>
                                 <td>@if($role_id == 5 && $farmer->stage != 'Tehsil')
                                     --
