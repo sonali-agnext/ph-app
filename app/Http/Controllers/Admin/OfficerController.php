@@ -41,6 +41,7 @@ class OfficerController extends Controller
         $states = Officer::select('officers.*','users.id as user_id','users.name','users.email')
         ->join('users','users.id','=','officers.user_id')
         ->where('users.role_id',3)
+        ->orderBy('farmers.id','DESC')
         ->get();
 
         return view('admin.state_officer.index',['states' => $states]);
@@ -186,6 +187,7 @@ class OfficerController extends Controller
         ->join('users','users.id','=','officers.user_id')
         ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('users.role_id',4)
+        ->orderBy('farmers.id','DESC')
         ->get();
 
         return view('admin.district_officer.index',['states' => $states]);
@@ -353,6 +355,7 @@ class OfficerController extends Controller
         ->join('users','users.id','=','officers.user_id')
         ->join('assign_to_officers', 'assign_to_officers.officer_id','=','officers.id')
         ->where('users.role_id',5)
+        ->orderBy('farmers.id','DESC')
         ->get();
 
         return view('admin.tehsil_officer.index',['states' => $states]);
