@@ -42,6 +42,7 @@ class FarmerController extends Controller
             ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
             ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
             ->where('farmers.tehsil_id',auth()->user()->officer()->assigned_tehsil)
+            ->orderBy('farmers.id','DESC')
             ->get();
 
             return view('admin.farmer.index',['farmers' => $farmers]);
@@ -54,6 +55,7 @@ class FarmerController extends Controller
             ->join('tehsils','farmers.tehsil_id','=','tehsils.id')
             ->join('applicant_types','farmers.applicant_type_id','=','applicant_types.id')
             ->join('caste_categories','farmers.caste_category_id','=','caste_categories.id')
+            ->orderBy('farmers.id','DESC')
             ->get();
 
             return view('admin.farmer.index',['farmers' => $farmers]);
