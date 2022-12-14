@@ -1,6 +1,10 @@
 <!-- ======= Header ======= -->
 <style>
+  .bg-info{
+    background: #d6f3f9 !important;
+  }
   .blink_me {
+    color: #ff0606c9 !important;
   animation: blinker 1s linear infinite;
 }
 
@@ -42,7 +46,6 @@
 
       <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
         <i class="bi bi-bell"></i>
-        <span class="badge bg-primary badge-number ajax-badge"></span>
       </a>
       <!-- End Notification Icon -->
 
@@ -202,9 +205,9 @@ $.ajax({
           var html = '';
           if(resultData.data.length > 0){
             if(resultData.count){
-              $('.ajax-badge').text(resultData.count);
+              $('.bi-bell').addClass('blink_me');
             }else{
-              $('.ajax-badge').empty();
+              $('.bi-bell').removeClass('blink_me');
             }
             // html += '<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications show">';
             html += '<li class="dropdown-header">';
@@ -257,7 +260,7 @@ $.ajax({
                   data: {'user_id': user,'save':1},
                   dataType: "json",
                   success: function() {
-                    $('.ajax-badge').empty();
+                    $('.bi-bell').removeClass('blink_me');
                   }
               });
             });
