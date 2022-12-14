@@ -197,7 +197,7 @@ $.ajax({
             }
             // html += '<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications show">';
             html += '<li class="dropdown-header">';
-            html += 'You have '+resultData.count+' new notifications. <span class="badge rounded-pill bg-primary p-2 ms-2 mark-all">Marked all</span>';
+            html += 'You have '+resultData.count+' new notifications. <span class="badge rounded-pill bg-primary p-2 ms-2 mark-all">Mark Read</span>';
             // html += '<a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>';
             
             $.each(resultData.data, function (key, val) {
