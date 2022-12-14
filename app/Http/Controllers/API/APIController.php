@@ -133,7 +133,7 @@ class APIController extends Controller
                     $user = User::where('id', $userFound->id)->update(['fcm_token'=> $request->device_token]);
                     $farmerFound = Farmer::where('mobile_number', $mobile_number)->where('user_id', $userFound->id)->first();
                     return response()
-                    ->json(['message' => 'Login Successfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
+                    ->json(['message' => 'Logged in Sucessfully!!','token' => $userFound->createToken("auth_token")->plainTextToken,'token_type' => 'Bearer', 'user_id' => $userFound->id, 'userInfo' => $farmerFound], 200);
                 }
             }else{
                 return response()
@@ -518,17 +518,17 @@ class APIController extends Controller
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('district','like', '%' .$request->district.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('district','like', '%' .$request->district.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('district','like', '%' .$request->district.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }elseif(!empty($request->commodity) && !empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
@@ -537,15 +537,15 @@ class APIController extends Controller
             $min_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('district','like', '%' .$request->district.'%')
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('district','like', '%' .$request->district.'%')
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('district','like', '%' .$request->district.'%')
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }elseif(!empty($request->commodity) && empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
@@ -554,15 +554,15 @@ class APIController extends Controller
             $min_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }elseif(empty($request->commodity) && !empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('district',$request->district)
@@ -571,15 +571,15 @@ class APIController extends Controller
             $min_price = MarketPrice::select("*")
                             ->where('district','like', '%' .$request->district.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('district','like', '%' .$request->district.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('district','like', '%' .$request->district.'%')
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }
         elseif(!empty($request->commodity) && empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
@@ -587,48 +587,48 @@ class APIController extends Controller
                             ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('commodity','like', '%' .$request->commodity.'%')
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }elseif(empty($request->commodity) && !empty($request->district) && empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('district',$request->district)
                             ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('district',$request->district)
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('district',$request->district)
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('district',$request->district)
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }elseif(empty($request->commodity) && empty($request->district) && !empty($request->market)){
             $marketPrice = MarketPrice::select("*")
                             ->where('market','like', '%' .$request->market.'%')
                             ->paginate();
             $min_price = MarketPrice::select("*")
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
                             ->where('market','like', '%' .$request->market.'%')
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }else{
             $marketPrice = MarketPrice::select("*")
                             ->paginate();
             $min_price = MarketPrice::select("*")
-                            ->sum('min_price');
+                            ->avg('min_price');
             $max_price = MarketPrice::select("*")
-                            ->sum('max_price');
+                            ->avg('max_price');
             $modal_price = MarketPrice::select("*")
-                            ->sum('modal_price');
+                            ->avg('modal_price');
         }
         
         return response()

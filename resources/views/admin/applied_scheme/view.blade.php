@@ -67,53 +67,8 @@
                     <h5 class="card-title">Farmer Application Details</h5>
                     <p></p>
                     <!-- <div class="table-responsive"> -->
-                    <div class="row mb-3 float-right">
+                    <div class="row mb-3 float-right">                       
                         
-                        <div class="col-md-12">
-                            <div class="nested card-body">
-                                <h6 class="card-title">Your Remarks</h6> 
-                                <div class="card-p">
-                                    @if(!empty($farmers->reason) && !empty($farmers->district_reason)) 
-                                        @php $reason = json_decode($farmers->reason);
-                                        $district_reason = json_decode($farmers->district_reason);
-                                        @endphp
-                                        <p>
-                                        @forelse($reason as $ress)
-                                        {{ ucwords($ress) }} <br>
-                                        @empty
-                                        @endforelse
-                                        @forelse($district_reason as $res)
-                                        {{ ucwords($res) }} <br>
-                                        @empty
-                                        @endforelse
-                                        </p>
-                                    @elseif(!empty($farmers->reason) && empty($farmers->district_reason))
-                                        @php $reason = json_decode($farmers->reason);
-                                        @endphp
-                                        <p>
-                                        @forelse($reason as $ress)
-                                        {{ ucwords($ress) }} <br>
-                                        @empty
-                                        @endforelse
-                                        </p>
-                                        @elseif(empty($farmers->reason) && !empty($farmers->district_reason))
-                                        @php
-                                        $district_reason = json_decode($farmers->district_reason);
-                                        @endphp
-                                        <p>
-                                        @forelse($district_reason as $res)
-                                        {{ ucwords($res) }} <br>
-                                        @empty
-                                        @endforelse
-                                        </p>
-                                    @elseif(empty($farmers->reason) && empty($farmers->district_reason))
-                                        <p>No Remarks Found</p>
-                                    @endif
-
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-md-12">
                             <div class="inform card-body">
                                 <h6 class="card-title">Farmer Information</h6>                               
@@ -496,6 +451,50 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="nested card-body">
+                                <h6 class="card-title">Remarks(if any)</h6> 
+                                <div class="card-p">
+                                    @if(!empty($farmers->reason) && !empty($farmers->district_reason)) 
+                                        @php $reason = json_decode($farmers->reason);
+                                        $district_reason = json_decode($farmers->district_reason);
+                                        @endphp
+                                        <p>
+                                        @forelse($reason as $ress)
+                                        {{ ucwords($ress) }} <br>
+                                        @empty
+                                        @endforelse
+                                        @forelse($district_reason as $res)
+                                        {{ ucwords($res) }} <br>
+                                        @empty
+                                        @endforelse
+                                        </p>
+                                    @elseif(!empty($farmers->reason) && empty($farmers->district_reason))
+                                        @php $reason = json_decode($farmers->reason);
+                                        @endphp
+                                        <p>
+                                        @forelse($reason as $ress)
+                                        {{ ucwords($ress) }} <br>
+                                        @empty
+                                        @endforelse
+                                        </p>
+                                        @elseif(empty($farmers->reason) && !empty($farmers->district_reason))
+                                        @php
+                                        $district_reason = json_decode($farmers->district_reason);
+                                        @endphp
+                                        <p>
+                                        @forelse($district_reason as $res)
+                                        {{ ucwords($res) }} <br>
+                                        @empty
+                                        @endforelse
+                                        </p>
+                                    @elseif(empty($farmers->reason) && empty($farmers->district_reason))
+                                        <p>No Remarks Found</p>
+                                    @endif
+
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-md-12">
                             <input type="hidden" id="applied_id" value="{{$farmers->apply_id}}"/>
@@ -649,7 +648,13 @@
                         dataType: "json",
                         success: function(resultData) { 
                             if(resultData.message == 'success'){
-                                swal("Farmer Application Successfully Transfered to District Officer!!", {
+                                var officer ='';
+                                @if(auth()->user()->role_id == 5)
+                                officer = 'District';
+                                @else
+                                officer = 'State';
+                                @endif
+                                swal("Farmer Application Successfully Transfered to "+officer+" Officer!!", {
                                     icon: "success",
                                 }).then((willDelete) => {
                                     if (willDelete) {
