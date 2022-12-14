@@ -200,7 +200,7 @@
                                         <select class="form-select" name="status" id="status" aria-label="Status">
                                             <option @if($user->status) selected @endif value="1">True</option>
                                             <option @if(!$user->status) selected @endif value="0">False</option>
-                                            <option @if($user->status) selected @endif value="2">Blocked</option>
+                                            <option @if($user->status == 2) selected @endif value="2">Blocked</option>
                                         </select>
                                         <label for="status">Status<span class="text-danger">*</span></label>
                                     </div>
