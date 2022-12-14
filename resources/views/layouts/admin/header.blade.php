@@ -1,7 +1,7 @@
 <!-- ======= Header ======= -->
 <style>
   .bg-info{
-    background: #d6f3f9 !important;
+    background: #f6fcfd !important;
   }
   .blink_me {
     color: #ff0606c9 !important;
