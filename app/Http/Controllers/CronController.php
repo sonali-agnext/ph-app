@@ -184,7 +184,7 @@ class CronController extends Controller
                         
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Your Application is Auto Approved')
+                            'message'=>($farmer->application_number.' Application is Auto Approved')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
@@ -192,14 +192,14 @@ class CronController extends Controller
                                 'title' =>  $farmer->application_number,
                                 'body' => 'Your Application is Auto Approved',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Auto Approved',
+                                'message' => $farmer->application_number.' Application is Auto Approved',
                                 'icon' => 'new',
                                 'sound' => 'default'
                             ],
                         );
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
-                            'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                     }
                 }
@@ -224,11 +224,11 @@ class CronController extends Controller
                             ]);
                             Notification::create([
                                 'user_id' => 1,
-                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                             Notification::create([
                                 'user_id' => $farmer_id->id,
-                                'message'=>('Your Application is Auto Approved')
+                                'message'=>($farmer->application_number.' Application is Auto Approved')
                             ]);
                             FCMService::send(
                                 $farmer_id->fcm_token,
@@ -236,14 +236,14 @@ class CronController extends Controller
                                     'title' =>  $farmer->application_number,
                                     'body' => 'Your Application is Auto Approved',
                                     'user_id' => $farmer_id->id,
-                                    'message' => 'Your Application is Auto Approved',
+                                    'message' => $farmer->application_number.' Application is Auto Approved',
                                     'icon' => 'new',
                                     'sound' => 'default'
                                 ],
                             );
                             Notification::create([
                                 'user_id' => $districtInfo->user_id,
-                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                         }
                     }else{
@@ -255,7 +255,7 @@ class CronController extends Controller
                         $user = new User;
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
@@ -263,21 +263,21 @@ class CronController extends Controller
                                 'title' =>  $farmer->application_number,
                                 'body' => 'Your Application is Auto Rejected',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Auto Rejected',
+                                'message' => $farmer->application_number.' Application is Auto Rejected',
                                 'icon' => 'error',
                                 'sound' => 'default'
                             ],
                         );
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Your Application is Auto Rejected')
+                            'message'=>($farmer->application_number.' Application is Auto Rejected')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                 ]);
                             }
                         }
@@ -311,19 +311,19 @@ class CronController extends Controller
                         $stateInfo =$user->officerstate();
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Your Application is Auto Approved')
+                            'message'=>($farmer->application_number.' Application is Auto Approved')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Auto Approved',
+                                'body' => $farmer->application_number.' Application is Auto Approved',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Auto Approved',
+                                'message' => $farmer->application_number.' Application is Auto Approved',
                                 'icon' => 'new',
                                 'sound' => 'default'
                             ],
@@ -332,7 +332,7 @@ class CronController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                 ]);
                             }
                         }
@@ -358,20 +358,20 @@ class CronController extends Controller
                                 $farmer_id->fcm_token,
                                 [
                                     'title' =>  $farmer->application_number,
-                                    'body' => 'Your Application is Auto Approved',
+                                    'body' => $farmer->application_number.' Application is Auto Approved',
                                     'user_id' => $farmer_id->id,
-                                    'message' => 'Your Application is Auto Approved',
+                                    'message' => $farmer->application_number.' Application is Auto Approved',
                                     'icon' => 'new',
                                     'sound' => 'default'
                                 ],
                             );
                             Notification::create([
                                 'user_id' => $farmer_id->id,
-                                'message'=>('Your Application is Auto Approved')
+                                'message'=>($farmer->application_number.' Application is Auto Approved')
                             ]);
                             Notification::create([
                                 'user_id' => 1,
-                                'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                             ]);
                             $user = new User;
                             $stateInfo =$user->officerstate();
@@ -379,7 +379,7 @@ class CronController extends Controller
                                 foreach($stateInfo as $state){
                                     Notification::create([
                                         'user_id' => $state->user_id,
-                                        'message'=>('Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                        'message'=>($farmer->application_number.' Auto Approved Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                     ]);
                                 }
                             }
@@ -402,28 +402,28 @@ class CronController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Auto Rejected',
+                                'body' => $farmer->application_number.' Application is Auto Rejected',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Auto Rejected',
+                                'message' => $farmer->application_number.' Application is Auto Rejected',
                                 'icon' => 'error',
                                 'sound' => 'default'
                             ],
                         );
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Your Application is Auto Rejected')
+                            'message'=>($farmer->application_number.' Application is Auto Rejected')
                         ]);
                         $user = new User;
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Auto Rejected Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                                 ]);
                             }
                         }

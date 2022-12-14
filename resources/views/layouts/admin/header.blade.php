@@ -1,4 +1,15 @@
 <!-- ======= Header ======= -->
+<style>
+  .blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+</style>
 <header id="header" class="header fixed-top d-flex align-items-center">
 @php $image = \App\Models\AdminProfile::where('user_id', Auth::user()->id)->first();  @endphp
 <div class="d-flex align-items-center justify-content-between">
@@ -197,7 +208,7 @@ $.ajax({
             }
             // html += '<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications show">';
             html += '<li class="dropdown-header">';
-            html += 'You have '+resultData.count+' new notifications. <span class="badge rounded-pill bg-primary p-2 ms-2 mark-all">Mark Read</span>';
+            html += 'You have '+resultData.count+' new notifications.'; if(resultData.count != 0) {html+=' <span class="badge rounded-pill bg-primary p-2 ms-2 mark-all">Mark Read</span>'};
             // html += '<a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>';
             
             $.each(resultData.data, function (key, val) {
@@ -206,14 +217,26 @@ $.ajax({
               html += '<li>';
               html += '<hr class="dropdown-divider">';
               html += '</li>';
-              html += '<li class="notification-item">';
-              html += '<i class="bi bi-info-circle text-info"></i>';
-              html += '<div>';
-              // html += '<h4>Lorem Ipsum</h4>';
-              html += '<p>'+val.message+'</p>';
-              // html += '<p>'++'</p>';
-              html += '</div>';
-              html += '</li>';
+              if(val.read_status){
+                html += '<li class="notification-item">';
+                html += '<i class="bi bi-info-circle text-info"></i>';
+                html += '<div>';
+                // html += '<h4>Lorem Ipsum</h4>';
+                html += '<p>'+val.message+'</p>';
+                // html += '<p>'++'</p>';
+                html += '</div>';
+                html += '</li>';
+              }else{
+                html += '<li class="notification-item bg-info">';
+                html += '<i class="bi bi-info-circle text-info"></i>';
+                html += '<div>';
+                // html += '<h4>Lorem Ipsum</h4>';
+                html += '<p>'+val.message+'</p>';
+                // html += '<p>'++'</p>';
+                html += '</div>';
+                html += '</li>';
+              }
+              
             });
  
             // html +='<li class="dropdown-footer">';
@@ -223,7 +246,6 @@ $.ajax({
             // html +='</ul>';
             
           }else{
-
           }
           $('.ajax-dropdown').empty();
           $('.ajax-dropdown').append(html);

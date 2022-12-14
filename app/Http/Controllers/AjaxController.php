@@ -27,7 +27,7 @@ class AjaxController extends Controller
     public function fetchNotification(Request $request){
         $user_id = auth()->user()->id;
         $count = Notification::where('user_id', $user_id)->where('read_status', 0)->count();
-        $notification = Notification::where('user_id', $user_id)->where('read_status', 0)->orderBy('id', 'DESC')->get();
+        $notification = Notification::where('user_id', $user_id)->orderBy('id', 'DESC')->get();
         return response()->json(['data' => $notification,'count' => $count]);
     }
 }

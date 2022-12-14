@@ -910,21 +910,21 @@ class SchemeController extends Controller
                     
                         Notification::create([
                             'user_id' => $user_id->user_id,
-                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         $stateInfo = $user->officerstate();
                         if(!empty($stateInfo)){
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Application Approved by Tehsil Officer')
+                            'message'=>($farmer->application_number.' Application Approved by Tehsil Officer')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
@@ -932,14 +932,14 @@ class SchemeController extends Controller
                                 'title' =>  $farmer->application_number,
                                 'body' => 'Your Application is Approved',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Approved',
+                                'message' => $farmer->application_number.' Application is Approved',
                                 'icon' => 'new',
                                 'sound' => 'default'
                             ],
                         );
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Application Approved by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                     return response()
                     ->json(['message' => 'success']);
@@ -955,13 +955,13 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Application Approved by District Officer')
+                            'message'=>($farmer->application_number.' Application Approved by District Officer')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
@@ -969,14 +969,14 @@ class SchemeController extends Controller
                                 'title' =>  $farmer->application_number,
                                 'body' => 'Your Application is Approved',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Approved',
+                                'message' => $farmer->application_number.' Application is Approved',
                                 'icon' => 'new',
                                 'sound' => 'default'
                             ],
                         );
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Application Approved by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                     return response()
                     ->json(['message' => 'success']);
@@ -1001,20 +1001,20 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Application Resubmitted by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Application Resubmitted by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                                 
                             }
                         }
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Application Resubmitted by Tehsil Officer')
+                            'message'=>($farmer->application_number.' Application Resubmitted by Tehsil Officer')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Resubmitted',
+                                'body' => $farmer->application_number.' Application is Resubmitted',
                                 'user_id' => $farmer_id->id,
                                 'message' => 'Your Application is Resubmitted',
                                 'icon' => 'old',
@@ -1023,7 +1023,7 @@ class SchemeController extends Controller
                         );
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Application Resubmitted by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Application Resubmitted by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         return response()
                         ->json(['message' => 'success']);
@@ -1039,28 +1039,28 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Rejected by Tehsil Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Rejected',
+                                'body' => $farmer->application_number.' Application is Rejected',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Rejected',
+                                'message' => $farmer->application_number.' Application is Rejected',
                                 'icon' => 'error',
                                 'sound' => 'default'
                             ],
                         );
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Application Rejected by Tehsil Officer')
+                            'message'=>($farmer->application_number.' Application Rejected by Tehsil Officer')
                         ]);
                         return response()
                         ->json(['message' => 'success']);
@@ -1076,11 +1076,11 @@ class SchemeController extends Controller
                     if($updateFarmer){
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Resubmitted by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Resubmitted by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Application Resubmitted by District Officer')
+                            'message'=>($farmer->application_number.' Application Resubmitted by District Officer')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
@@ -1088,7 +1088,7 @@ class SchemeController extends Controller
                                 'title' =>  $farmer->application_number,
                                 'body' => 'Your Application is Resubmitted',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Resubmitted',
+                                'message' => $farmer->application_number.'  Application is Resubmitted',
                                 'icon' => 'old',
                                 'sound' => 'default'
                             ],
@@ -1098,7 +1098,7 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Resubmitted by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Resubmitted by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }
@@ -1113,11 +1113,11 @@ class SchemeController extends Controller
                     if($updateFarmer){
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Rejected by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                            'message'=>($farmer->application_number.' Rejected by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                         ]);
                         Notification::create([
                             'user_id' => $farmer_id->id,
-                            'message'=>('Application Rejected by District Officer')
+                            'message'=>($farmer->application_number.' Application Rejected by District Officer')
                         ]);
                         FCMService::send(
                             $farmer_id->fcm_token,
@@ -1125,7 +1125,7 @@ class SchemeController extends Controller
                                 'title' =>  $farmer->application_number,
                                 'body' => 'Your Application is Rejected',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Rejected',
+                                'message' => $farmer->application_number.'  Application is Rejected',
                                 'icon' => 'error',
                                 'sound' => 'default'
                             ],
@@ -1135,7 +1135,7 @@ class SchemeController extends Controller
                             foreach($stateInfo as $state){
                                 Notification::create([
                                     'user_id' => $state->user_id,
-                                    'message'=>('Rejected by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
+                                    'message'=>($farmer->application_number.' Rejected by District Officer <a href="/view-applied-scheme?id='.$farmer->id.'">Click to view</a>')
                                 ]);
                             }
                         }

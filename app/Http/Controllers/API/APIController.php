@@ -1343,11 +1343,11 @@ class APIController extends Controller
                         $user_id = User::farmer($farmer_id);
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
-                            'message'=>('New Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                            'message'=>('PHSCHM000'.$applied_schemes->id.' New Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('New Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
+                            'message'=>('PHSCHM000'.$applied_schemes->id.' New Application Received <a href="/view-applied-scheme?id='.$applied_schemes->id.'">Click to view</a>')
                         ]);
                         
                         return response()
@@ -1407,11 +1407,11 @@ class APIController extends Controller
                         $user_id = User::farmer($farmer_id);
                         Notification::create([
                             'user_id' => $districtInfo->user_id,
-                            'message'=>('Resubmitted Application Received <a href="/view-applied-scheme?id='.$check_apply_scheme->id.'">Click to view</a>')
+                            'message'=>($check_apply_scheme->application_number.' Resubmitted Application Received <a href="/view-applied-scheme?id='.$check_apply_scheme->id.'">Click to view</a>')
                         ]);
                         Notification::create([
                             'user_id' => 1,
-                            'message'=>('Resubmitted Application Received <a href="/view-applied-scheme?id='.$check_apply_scheme->id.'">Click to view</a>')
+                            'message'=>($check_apply_scheme->application_number.' Resubmitted Application Received <a href="/view-applied-scheme?id='.$check_apply_scheme->id.'">Click to view</a>')
                         ]);
                         return response()
                                 ->json(['message' => 'Resubmitted Scheme Successfully','document_url'=>'storage/scheme-documents/'.date('Y').'/' ], 200);
