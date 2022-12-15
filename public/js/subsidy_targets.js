@@ -10,6 +10,7 @@ function getprivategenvalues(event){
         var allunass= document.getElementsByName('private_un_assigned[]');
         for (var ai = 0; ai <allunass.length; ai++) {
             if(ai == i){
+                console.log(allunass[ai].value)
                 unass = allunass[ai].value;
             }
         }
