@@ -8,6 +8,7 @@ function getprivategenvalues(event){
         var oldunass;
         var ounass;
         var allunass= document.getElementsByName('private_un_assigned[]');
+        console.log(allunass);
         for (var ai = 0; ai <allunass.length; ai++) {
             if(ai == i){
                 console.log(allunass[ai].value)
