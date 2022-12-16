@@ -249,13 +249,19 @@
                                             <label for="sector">Scheme Applied</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="text" name="land" class="form-control" disabled value="{{ $farmers->land_applied }}">
+                                            <label for="land">Scheme Total Land Applied</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
                                         <div class="form-floating">
                                             <input type="text" name="sector" class="form-control" disabled value="{{ empty($farmers->public_private)? 'Public' :'Private' }}">
                                             <label for="sector">Sector</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-floating">
                                             <input type="text" name="application_number" class="form-control" disabled value="{{ $farmers->application_number }}">
                                             <label for="application_number">Application Number</label>

@@ -673,65 +673,183 @@ class SubsidyController extends Controller
         $all_women_targets = $request->women_target;
         $year = $request->year;
         $district = $request->district_id;
-        
         foreach($all_targets as $key=> $target){ 
             $targets = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();           
             if(empty($all_district_targets[$key]) && empty($targets)){                
-                $targets = TargetDistrict::create([
+                $targetsave = TargetDistrict::create([
                     'district_id' => $district, 
                     'target_state_id' => $target, 
-                    'assigned_physical_target'=> ((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
-                    'district_remarks'=>$all_remarks[$key],
+                    'assigned_physical_target'=> number_format((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key], 2), 
+                    'district_remarks'=>number_format($all_remarks[$key], 2),
                     'district_year' => $year,
-                    'gen_target' => $all_gen_targets[$key],
-                    'sc_target' => $all_sc_targets[$key],
-                    'st_target' => $all_st_targets[$key],
-                    'women_target' => $all_women_targets[$key]
+                    'gen_target' => number_format($all_gen_targets[$key], 2),
+                    'sc_target' => number_format($all_sc_targets[$key], 2),
+                    'st_target' => number_format($all_st_targets[$key], 2),
+                    'women_target' => number_format($all_women_targets[$key], 2)
                 ]);
             }else{
-                $targets = TargetDistrict::where('id', $targets->id)->update([
-                    'district_id' => $district, 
-                    'target_state_id' => $target, 
-                    'assigned_physical_target'=> ((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
-                    'district_remarks'=>$all_remarks[$key],
-                    'district_year' => $year,
-                    'gen_target' => $all_gen_targets[$key],
-                    'sc_target' => $all_sc_targets[$key],
-                    'st_target' => $all_st_targets[$key],
-                    'women_target' => $all_women_targets[$key]
-                ]);
+                // $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                //     'district_id' => $district, 
+                //     'target_state_id' => $target, 
+                //     'assigned_physical_target'=> number_format((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key], 2), 
+                //     'district_remarks'=>number_format($all_remarks[$key], 2),
+                //     'district_year' => $year,
+                //     'gen_target' => number_format($all_gen_targets[$key], 2),
+                //     'sc_target' => number_format($all_sc_targets[$key], 2),
+                //     'st_target' => number_format($all_st_targets[$key], 2),
+                //     'women_target' => number_format($all_women_targets[$key], 2),
+                //     'updated_at' => date('Y-m-d H:i:s')
+                // ]);
+                if(!empty((int)$all_gen_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_physical_target'=> number_format((float)$all_gen_targets[$key]+(float)$targetn->sc_target+(float)$targetn->st_target+(float)$targetn->women_target, 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'gen_target' => number_format((float)$all_gen_targets[$key], 2),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                if(!empty((int)$all_sc_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_physical_target'=> number_format((float)$targetn->gen_target+(float)$all_sc_targets[$key]+(float)$targetn->st_target+(float)$targetn->women_target, 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'sc_target' => number_format((float)$all_sc_targets[$key], 2),                            
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                if(!empty((int)$all_st_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_physical_target'=> number_format((float)$targetn->gen_target+(float)$targetn->sc_target+(float)$all_st_targets[$key]+(float)$targetn->women_target, 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'st_target' => number_format((float)$all_st_targets[$key], 2),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                if(!empty((int)$all_women_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targetn->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_physical_target'=> number_format((float)$targetn->gen_target+(float)$targetn->sc_target+(float)$targetn->st_target+(float)$all_women_targets[$key], 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'women_target' => number_format((float)$all_women_targets[$key], 2)
+                        ]);
+                }
+                if(!empty($all_remarks[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targetn->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            // 'assigned_physical_target'=> number_format((float)$targetn->private_gen_target+(float)$targetn->private_sc_target+(float)$targetn->private_st_target+(float)$all_private_women_targets[$key], 2), 
+                            'district_remarks'=>$all_remarks[$key],
+                            'district_year' => $year
+                        ]);
+                }
             }
         }
 
         foreach($all_private_targets as $key=> $target){ 
             $targets = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();           
-            if(empty($all_district_targets[$key]) && empty($targets)){                
-                $targets = TargetDistrict::create([
+            
+            if(empty($all_private_target_district_ids[$key]) && empty($targets)){                
+                $targetsave = TargetDistrict::create([
                     'district_id' => $district, 
                     'target_state_id' => $target, 
-                    'assigned_private_physical_target'=> ((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]), 
-                    'district_private_remarks'=>$all_private_remarks[$key],
+                    'assigned_private_physical_target'=> number_format((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key], 2), 
+                    'district_private_remarks'=>number_format($all_private_remarks[$key], 2),
                     'district_year' => $year,
-                    'private_gen_target' => $all_private_gen_targets[$key],
-                    'private_sc_target' => $all_private_sc_targets[$key],
-                    'private_st_target' => $all_private_st_targets[$key],
-                    'private_women_target' => $all_private_women_targets[$key]
+                    'private_gen_target' => number_format($all_private_gen_targets[$key], 2),
+                    'private_sc_target' => number_format($all_private_sc_targets[$key], 2),
+                    'private_st_target' => number_format($all_private_st_targets[$key], 2),
+                    'private_women_target' => number_format($all_private_women_targets[$key], 2)
                 ]);
             }else{
-                $targets = TargetDistrict::where('id', $targets->id)->update([
-                    'district_id' => $district, 
-                    'target_state_id' => $target, 
-                    'assigned_private_physical_target'=> ((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]), 
-                    'district_private_remarks'=>$all_private_remarks[$key],
-                    'district_year' => $year,
-                    'private_gen_target' => $all_private_gen_targets[$key],
-                    'private_sc_target' => $all_private_sc_targets[$key],
-                    'private_st_target' => $all_private_st_targets[$key],
-                    'private_women_target' => $all_private_women_targets[$key]
-                ]);
+                // dd($all_private_target_district_ids[$key]);
+                // $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                //     'district_id' => $district, 
+                //     'target_state_id' => $target, 
+                //     'assigned_private_physical_target'=> number_format((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key], 2), 
+                //     'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                //     'district_year' => $year,
+                //     'private_gen_target' => number_format((float)$all_private_gen_targets[$key], 2),
+                //     'private_sc_target' => number_format((float)$all_private_sc_targets[$key], 2),
+                //     'private_st_target' => number_format((float)$all_private_st_targets[$key], 2),
+                //     'private_women_target' => number_format((float)$all_private_women_targets[$key], 2),
+                //     'updated_at' => date('Y-m-d H:i:s')
+                // ]);
+                if(!empty((int)$all_private_gen_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_private_physical_target'=> number_format((float)$all_private_gen_targets[$key]+(float)$targetn->private_sc_target+(float)$targetn->private_st_target+(float)$targetn->private_women_target, 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'private_gen_target' => number_format((float)$all_private_gen_targets[$key], 2),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                if(!empty((int)$all_private_sc_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_private_physical_target'=> number_format((float)$targetn->private_gen_target+(float)$all_private_sc_targets[$key]+(float)$targetn->private_st_target+(float)$targetn->private_women_target, 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'private_sc_target' => number_format((float)$all_private_sc_targets[$key], 2),                            
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                if(!empty((int)$all_private_st_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targets->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_private_physical_target'=> number_format((float)$targetn->private_gen_target+(float)$targetn->private_sc_target+(float)$all_private_st_targets[$key]+(float)$targetn->private_women_target, 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'private_st_target' => number_format((float)$all_private_st_targets[$key], 2),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                if(!empty((int)$all_private_women_targets[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targetn->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            'assigned_private_physical_target'=> number_format((float)$targetn->private_gen_target+(float)$targetn->private_sc_target+(float)$targetn->private_st_target+(float)$all_private_women_targets[$key], 2), 
+                            // 'district_private_remarks'=>number_format((float)$all_private_remarks[$key], 2),
+                            'district_year' => $year,
+                            'private_women_target' => number_format((float)$all_private_women_targets[$key], 2)
+                        ]);
+                }
+                if(!empty($all_private_remarks[$key])){
+                    $targetn = TargetDistrict::where('district_id',$district)->where('target_state_id',$target)->first();
+                    $targetsave = TargetDistrict::where('id', $targetn->id)->update([
+                            'district_id' => $district, 
+                            'target_state_id' => $target, 
+                            // 'assigned_private_physical_target'=> number_format((float)$targetn->private_gen_target+(float)$targetn->private_sc_target+(float)$targetn->private_st_target+(float)$all_private_women_targets[$key], 2), 
+                            'district_private_remarks'=>$all_private_remarks[$key],
+                            'district_year' => $year
+                        ]);
+                }
+            
             }
+            
         }
-
         return redirect()->route('manage-subsidy-district')->with('success','Schemes updated successfully!');
         
     }

@@ -1,4 +1,5 @@
 function getprivategenvalues(event){
+    console.log(event.target);
     var inps = document.getElementsByName('private_gen_target[]');
     
     for (var i = 0; i <inps.length; i++) {
