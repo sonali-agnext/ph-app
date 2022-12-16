@@ -139,6 +139,7 @@ th.card-title{
                                         </select>
                                         <label for="district_id">District</label>
                                     </div>
+                                    <input type="hidden" name="district_id" value="{{$sdistrict}}"/>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating">                                        
