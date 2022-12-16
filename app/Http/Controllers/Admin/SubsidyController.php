@@ -1166,6 +1166,7 @@ class SubsidyController extends Controller
         $all_private_targets = $request->private_target_id;
         $all_district_targets = $request->target_district_id;
         $all_tehsil_targets = $request->target_tehsil_id;
+        $all_private_target_tehsil_id = $request->private_target_tehsil_id;
         $all_private_target_district_ids = $request->private_target_district_id;
         $all_remarks = $request->district_remarks;
         $all_private_remarks = $request->district_private_remarks;
@@ -1187,15 +1188,15 @@ class SubsidyController extends Controller
                 $targets = TargetBlock::create([
                     'district_id'=> $district,
                     'tehsil_id'=> $block, 
-                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_district_id'=>number_format($all_district_targets[$key],2), 
                     'target_state_id'=>$target, 
-                    'assigned_physical_target'=>((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]), 
-                    'district_remarks'=>$all_remarks[$key], 
+                    'assigned_physical_target'=>number_format(((float)$all_gen_targets[$key]+(float)$all_sc_targets[$key]+(float)$all_st_targets[$key]+(float)$all_women_targets[$key]),2), 
+                    'district_remarks'=>number_format($all_remarks[$key],2), 
                     'district_year' => $year,                  
-                    'assigned_gen_target' => $all_gen_targets[$key],
-                    'assigned_sc_target' => $all_sc_targets[$key],
-                    'assigned_st_target' => $all_st_targets[$key],
-                    'assigned_women_target' => $all_women_targets[$key]
+                    'assigned_gen_target' => number_format($all_gen_targets[$key],2),
+                    'assigned_sc_target' => number_format($all_sc_targets[$key],2),
+                    'assigned_st_target' => number_format($all_st_targets[$key],2),
+                    'assigned_women_target' => number_format($all_women_targets[$key],2)
                 ]);
             }else{
                 $targets = TargetBlock::where('id', $targets->id)->update([
@@ -1217,12 +1218,12 @@ class SubsidyController extends Controller
         
         foreach($all_private_targets as $key=> $target){ 
             $targets = TargetBlock::where('district_id',$district)->where('tehsil_id',$block)->where('target_state_id',$target)->first();           
-            if(empty($all_tehsil_targets[$key]) && empty($targets)){  
+            if(empty($all_private_target_tehsil_id[$key]) && empty($targets)){  
                              
                 $targets = TargetBlock::create([
                     'district_id'=> $district,
                     'tehsil_id'=> $block, 
-                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_district_id'=>$all_private_target_district_ids[$key], 
                     'target_state_id'=>$target,                     
                     'assigned_private_physical_target'=>((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]),
                     'district_private_remarks'=>$all_private_remarks[$key], 
@@ -1237,7 +1238,7 @@ class SubsidyController extends Controller
                 $targets = TargetBlock::where('id', $targets->id)->update([
                     'district_id'=> $district,
                     'tehsil_id'=> $block, 
-                    'target_district_id'=>$all_district_targets[$key], 
+                    'target_district_id'=>$all_private_target_district_ids[$key], 
                     'target_state_id'=>$target,                     
                     'assigned_private_physical_target'=>((float)$all_private_gen_targets[$key]+(float)$all_private_sc_targets[$key]+(float)$all_private_st_targets[$key]+(float)$all_private_women_targets[$key]),
                     'district_private_remarks'=>$all_private_remarks[$key], 
