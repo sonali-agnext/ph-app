@@ -217,8 +217,9 @@ th.card-title{
                                                                                     @php
                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
                                                                                         $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
-                                                                                        $targettehsil = $type->fetchtargettehsil($sdistrict,$sblock, $targetdistrict->id, $targetsset->id, $year);
-                                                                        
+                                                                                        if(!empty($targetdistrict)){
+                                                                                                            $targettehsil = $type->fetchtargettehsil($sdistrict,$sblock, $targetdistrict->id, $targetsset->id, $year);
+                                                                                                        }
                                                                                     @endphp
                                                                                     <!-- if both sector present -->
                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -406,63 +407,67 @@ th.card-title{
                                                                                         <!-- if only private sector present -->
                                                                                         @if(!empty($scheme['private_range']))
                                                                                         <tr>
-                                                                                            <td class="w-18">
-                                                                                                Private Sector
-                                                                                            </td>
-                                                                                            <td class="w-6">
-                                                                                                <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                            </td>
-                                                                                            <!-- <td class="w-10">
-                                                                                                <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
-                                                                                            </td> -->
-                                                                                            <!-- <td class="w-6">
-                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
                                                                                         @endphp
-                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
-                                                                                            </td> -->
-                                                                                            
-                                                                                            <td class="w-6">
-                                                                                                <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
-                                                                                            </td>
-                                                                                            
-                                                                                            <td class="w-8">
-                                                                                                <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                            </td>
-                                                                                            <td class="w-8">
-                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                            </td>
-                                                                                            <td class="w-15">
-                                                                                                <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                            </td>
-                                                                                        </tr>
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                         @endif
                                                                                         <!-- else end part -->
                                                                                     @endif
@@ -500,7 +505,9 @@ th.card-title{
                                                                                                 @php
                                                                                                     $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
                                                                                                     $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
-                                                                                                    
+                                                                                                    if(!empty($targetdistrict)){
+                                                                                                            $targettehsil = $type->fetchtargettehsil($sdistrict,$sblock, $targetdistrict->id, $targetsset->id, $year);
+                                                                                                        }
                                                                                                   @endphp
                                                                                                 <!-- if both sector present -->
                                                                                                 @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -558,55 +565,67 @@ th.card-title{
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <tr>
-                                                                                                        <td class="w-18">
-                                                                                                            Private Sector
-                                                                                                        </td>
-                                                                                                        <td class="w-6">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                                        </td>
-                                                                                                        
-                                                                                                        <td class="w-6">
-                                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
-                                                                                                        </td>
-                                                                                                        
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-15">
-                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                                        </td>
-                                                                                                    </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                                 @else
                                                                                                     <!-- else part -->
                                                                                                     <!-- if only public sector present -->
@@ -675,63 +694,67 @@ th.card-title{
                                                                                                     <!-- if only private sector present -->
                                                                                                     @if(!empty($scheme['private_range']))
                                                                                                     <tr>
-                                                                                                        <td class="w-18">
-                                                                                                            Private Sector
-                                                                                                        </td>
-                                                                                                        <td class="w-6">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                                        </td>
-                                                                                                        <!-- <td class="w-10">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
-                                                                                                        </td> -->
-                                                                                                        <!-- <td class="w-6">
-                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
-                                                                                                        @endphp
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                     
-                                                                                                        </td> -->
-                                                                                                        
-                                                                                                        <td class="w-6">
-                                                                                                        <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
-                                                                                                        </td>
-                                                                                                        
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-15">
-                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                                        </td>
-                                                                                                    </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                                     @endif
                                                                                                     <!-- else end part -->
                                                                                                 @endif
@@ -769,7 +792,9 @@ th.card-title{
                                                                                                     @php 
                                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
                                                                                                         $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
-                                                                                                        
+                                                                                                        if(!empty($targetdistrict)){
+                                                                                                            $targettehsil = $type->fetchtargettehsil($sdistrict,$sblock, $targetdistrict->id, $targetsset->id, $year);
+                                                                                                        }
                                                                                                     @endphp
                                                                                                     <!-- if both sector present -->
                                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -834,63 +859,67 @@ th.card-title{
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <tr>
-                                                                                                        <td class="w-18">
-                                                                                                            Private Sector
-                                                                                                        </td>
-                                                                                                        <td class="w-6">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                                        </td>
-                                                                                                        <!-- <td class="w-10">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
-                                                                                                        </td> -->
-                                                                                                        <!-- <td class="w-6">
-                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
-                                                                                                        @endphp
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
-                                                                                                        </td> -->
-                                                                                                        
-                                                                                                        <td class="w-6">
-                                                                                                        <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
-                                                                                                        </td>
-                                                                                                        
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-15">
-                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                                        </td>
-                                                                                                    </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                                     @else
                                                                                                      <!-- else part -->
                                                                                                      <!-- if only public sector present -->
@@ -959,63 +988,67 @@ th.card-title{
                                                                                                         <!-- if only private sector present -->
                                                                                                         @if(!empty($scheme['private_range']))
                                                                                                         <tr>
-                                                                                                            <td class="w-18">
-                                                                                                                Private Sector
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                                            </td>
-                                                                                                            <!-- <td class="w-10">
-                                                                                                                <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
-                                                                                                            </td> -->
-                                                                                                            <!-- <td class="w-6">
-                                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
-                                                                                                            @endphp
-                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
-                                                                                                            </td> -->
-                                                                                                            
-                                                                                                            <td class="w-6">
-                                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                                <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                                <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                                <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                                <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}" />
-                                                                                                            </td>
-                                                                                                            
-                                                                                                            <td class="w-8">
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                                <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                                <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-15">
-                                                                                                                <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                                         @endif
                                                                                                      <!-- else end part -->
                                                                                                     @endif
@@ -1047,7 +1080,9 @@ th.card-title{
                                                                                                     @php 
                                                                                                         $targetsset= $type->fetchtargetstate($scheme['scheme_subcategory_id'], $scheme['component_id'], $scheme['sub_component_id'], $scheme['scheme_id']); 
                                                                                                         $targetdistrict = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
-                                                                                                        $targettehsil = $type->fetchtargetdistrict($sdistrict,$targetsset->id, $year);
+                                                                                                        if(!empty($targetdistrict)){
+                                                                                                            $targettehsil = $type->fetchtargettehsil($sdistrict,$sblock, $targetdistrict->id, $targetsset->id, $year);
+                                                                                                        }
                                                                                                     @endphp
                                                                                                     <!-- if both sector present -->
                                                                                                     @if(!empty($scheme['public_range']) && !empty($scheme['private_range']))
@@ -1112,63 +1147,67 @@ th.card-title{
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                     <tr>
-                                                                                                        <td class="w-18">
-                                                                                                            Private Sector
-                                                                                                        </td>
-                                                                                                        <td class="w-6">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                                        </td>
-                                                                                                        <!-- <td class="w-10">
-                                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
-                                                                                                        </td> -->
-                                                                                                        <!-- <td class="w-6">
-                                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
-                                                                                                        @endphp
-                                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
-                                                                                                        </td> -->
-                                                                                                        
-                                                                                                        <td class="w-6">
-                                                                                                        <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}" />
-                                                                                                        </td>
-                                                                                                        
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-8">
-                                                                                                            <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                                        </td>
-                                                                                                        <td class="w-15">
-                                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                                        </td>
-                                                                                                    </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                                     @else
                                                                                                      <!-- else part -->
                                                                                                      <!-- if only public sector present -->
@@ -1237,63 +1276,67 @@ th.card-title{
                                                                                                         <!-- if only private sector present -->
                                                                                                         @if(!empty($scheme['private_range']))
                                                                                                         <tr>
-                                                                                                            <td class="w-18">
-                                                                                                                Private Sector
-                                                                                                            </td>
-                                                                                                            <td class="w-6">
-                                                                                                                <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
-                                                                                                            </td>
-                                                                                                            <!-- <td class="w-10">
-                                                                                                                <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
-                                                                                                            </td> -->
-                                                                                                            <!-- <td class="w-6">
-                                                                                                            @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
-                                                                                                            @endphp
-                                                                                                            {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}
-                                                                                                            </td> -->
-                                                                                                            
-                                                                                                            <td class="w-6">
-                                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
-                                                                                                                <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
-                                                                                                                <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
-                                                                                                                <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                                <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
-                                                                                                                <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
-                                                                                                                <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}" />
-                                                                                                            </td>
-                                                                                                            
-                                                                                                            <td class="w-8">
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
-                                                                                                                <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
-                                                                                                                <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
-                                                                                                            <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
-                                                                                                                <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-8">
-                                                                                                                <input type="text" class="w-80" value="{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}" readonly="readonly" />
-                                                                                                            </td>
-                                                                                                            <td class="w-15">
-                                                                                                                <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targetdistrict->district_private_remarks)?'': $targetdistrict->district_private_remarks }}"/>
-                                                                                                            </td>
-                                                                                                        </tr>
+                                                                                        <td class="w-18">
+                                                                                            Private Sector
+                                                                                        </td>
+                                                                                        <td class="w-6">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{ $scheme['units'] }}" />
+                                                                                        </td>
+                                                                                        <!-- <td class="w-10">
+                                                                                            <input type="text" class="w-80" readonly="readonly" value="{{$scheme['cost_norms']}}"/>
+                                                                                        </td> -->
+                                                                                        <!-- <td class="w-6">
+                                                                                        @php $alltargetdistrict = $type->fetchassignedtarget(isset($targetdistrict->target_state_id)?($targetdistrict->target_state_id):0);
+                                                                                        @endphp
+                                                                                        {{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format((isset($alltargetdistrict->private)?$alltargetdistrict->private:0), 2)) : 0.00) }}  / {{ number_format($targetsset->private_physical_target, 2) }}                                                                                                
+                                                                                        </td> -->
+                                                                                        
+                                                                                        <td class="w-6">
+                                                                                            <input type="hidden" name="private_target_tehsil_id[]" value="{{!empty($targettehsil->id)?$targettehsil->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_district_id[]" value="{{!empty($targetdistrict->id)?$targetdistrict->id:''}}"/>
+                                                                                            <input type="hidden" name="private_target_id[]" value="{{$targetsset->id}}"/>
+                                                                                            <input type="hidden" name="old_private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="private_un_assigned[]" value="{{ (!empty($targetdistrict->assigned_private_physical_target) ? (number_format($targetsset->private_physical_target, 2)-number_format(isset($alltargetdistrict->private)?$alltargetdistrict->private:0, 2)) : number_format($targetsset->private_physical_target, 2)) }}"/>
+                                                                                            <input type="hidden" name="old_private_gen_target[]" value="{{ empty($targettehsil->private_gen_target)?'0.00': $targettehsil->private_gen_target }}"/>
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)?'0.00': $targetdistrict->private_gen_target }}</span>
+                                                                                            <input type="text" maxlength="9" class="w-80" id="private_gen_target[]" name="private_gen_target[]" @if(empty($targetdistrict->private_gen_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_gen_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_gen_target)?'0.00': $targettehsil->assigned_private_gen_target }}" />
+                                                                                        </td>
+                                                                                        
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)?'0.00': $targetdistrict->private_sc_target }}</span>
+                                                                                            <input type="hidden" name="old_private_sc_target[]" value="{{ empty($targettehsil->private_sc_target)?'0.00': $targettehsil->private_sc_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_sc_target[]" @if(empty($targetdistrict->private_sc_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_sc_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_sc_target)?'0.00': $targettehsil->assigned_private_sc_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)?'0.00': $targetdistrict->private_st_target }}</span>
+                                                                                            <input type="hidden" name="old_private_st_target[]" value="{{ empty($targettehsil->private_st_target)?'0.00': $targettehsil->private_st_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_st_target[]" @if(empty($targettehsil->private_st_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_st_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_st_target)?'0.00': $targettehsil->assigned_private_st_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)?'0.00': $targetdistrict->private_women_target }}</span>
+                                                                                        <input type="hidden" name="old_private_women_target[]" value="{{ empty($targettehsil->private_women_target)?'0.00': $targettehsil->private_women_target }}"/>
+                                                                                            <input type="text" maxlength="9" class="w-80" name="private_women_target[]" @if(empty($targettehsil->private_women_target)) readonly="readonly" @else @if(empty((float)$targetdistrict->private_women_target)) readonly="readonly" @endif @endif value="{{ empty($targettehsil->assigned_private_women_target)?'0.00': $targettehsil->assigned_private_women_target }}" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_gen_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_gen_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_gen_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_sc_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_sc_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_sc_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_st_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_st_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_st_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-8">
+                                                                                            <span class="text-success">{{ empty($targetdistrict->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targetdistrict->private_women_target, 2) }}</span>
+                                                                                            <input type="text" class="w-80" value="{{ empty($targettehsil->private_women_target)? '0.00': number_format((float)$scheme['cost_norms']*(float)$targettehsil->private_women_target, 2) }}" readonly="readonly" />
+                                                                                        </td>
+                                                                                        <td class="w-15">
+                                                                                            <input type="text" class="w-80" name="district_private_remarks[]" value="{{ empty($targettehsil->district_private_remarks)?'': $targettehsil->district_private_remarks }}"/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                                         @endif
                                                                                                      <!-- else end part -->
                                                                                                     @endif
