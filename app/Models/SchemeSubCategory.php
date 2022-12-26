@@ -72,7 +72,7 @@ class SchemeSubCategory extends Model
     }
 
     public function fetchtargettehsil($district_id,$tehsil_id,$target_district_id,$target_id, $year){
-        
+
         $targets = TargetBlock::where('target_state_id',$target_id)
         ->where('target_district_id',$target_district_id)
         ->where('district_year',$year)

@@ -38,7 +38,7 @@ class MarketPrice extends Command
      */
     public function handle()
     {
-        \Log::info("Cron is working fine!");
+        \Log::info("Cron is working fine price!");
         return CronController::marketPrice();
     }
 }

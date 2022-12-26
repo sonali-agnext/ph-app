@@ -930,9 +930,9 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Approved',
+                                'body' => 'Your Application is Approved by Tehsil Officer',
                                 'user_id' => $farmer_id->id,
-                                'message' => $farmer->application_number.' Application is Approved',
+                                'message' => $farmer->application_number.' Application is Approved by Tehsil Officer',
                                 'icon' => 'new',
                                 'sound' => 'default'
                             ],
@@ -967,9 +967,9 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Approved',
+                                'body' => 'Your Application is Approved by District Officer',
                                 'user_id' => $farmer_id->id,
-                                'message' => $farmer->application_number.' Application is Approved',
+                                'message' => $farmer->application_number.' Application is Approved by District Officer',
                                 'icon' => 'new',
                                 'sound' => 'default'
                             ],
@@ -1014,9 +1014,9 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => $farmer->application_number.' Application is Resubmitted',
+                                'body' => $farmer->application_number.' Application is Resubmitted by Tehsil Officer. Please review it',
                                 'user_id' => $farmer_id->id,
-                                'message' => 'Your Application is Resubmitted',
+                                'message' => 'Your Application is Resubmitted by Tehsil Officer. Please review it',
                                 'icon' => 'old',
                                 'sound' => 'default'
                             ],
@@ -1051,9 +1051,9 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => $farmer->application_number.' Application is Rejected',
+                                'body' => $farmer->application_number.' Application is Rejected by Tehsil Officer. Please review it',
                                 'user_id' => $farmer_id->id,
-                                'message' => $farmer->application_number.' Application is Rejected',
+                                'message' => $farmer->application_number.' Application is Rejected by Tehsil Officer. Please review it',
                                 'icon' => 'error',
                                 'sound' => 'default'
                             ],
@@ -1086,9 +1086,9 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Resubmitted',
+                                'body' => 'Your Application is Resubmitted by District Officer',
                                 'user_id' => $farmer_id->id,
-                                'message' => $farmer->application_number.'  Application is Resubmitted',
+                                'message' => $farmer->application_number.'  Application is Resubmitted by District Officer',
                                 'icon' => 'old',
                                 'sound' => 'default'
                             ],
@@ -1123,9 +1123,9 @@ class SchemeController extends Controller
                             $farmer_id->fcm_token,
                             [
                                 'title' =>  $farmer->application_number,
-                                'body' => 'Your Application is Rejected',
+                                'body' => 'Your Application is Rejected by District Officer.Please review it',
                                 'user_id' => $farmer_id->id,
-                                'message' => $farmer->application_number.'  Application is Rejected',
+                                'message' => $farmer->application_number.'  Application is Rejected by District Officer. Please review it',
                                 'icon' => 'error',
                                 'sound' => 'default'
                             ],

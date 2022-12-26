@@ -38,7 +38,7 @@ class AutoApproved extends Command
      */
     public function handle()
     {
-        \Log::info("Cron is working fine!");
+        \Log::info("Cron is working fine auto approved!");
         return CronController::getAllMoveSchemes();
     }
 }

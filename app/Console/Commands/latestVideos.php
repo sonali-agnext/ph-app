@@ -38,6 +38,7 @@ class latestVideos extends Command
      */
     public function handle()
     {
+        \Log::info("Cron is working fine video!");
         return CronController::latestVideos();
     }
 }
